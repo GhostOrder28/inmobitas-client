@@ -1,0 +1,5 @@
+form > input+input,
+form > div+input,
+form > *+* {
+  margin-top: 1rem;
+}

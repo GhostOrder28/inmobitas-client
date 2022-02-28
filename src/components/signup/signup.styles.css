@@ -1,0 +1,6 @@
+input:focus + label,
+input:not(:placeholder-shown) + label {
+  position: absolute;
+  top: -9999px;
+  /* left: -9999px; */
+}
