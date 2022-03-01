@@ -1,5 +1,11 @@
-form > input+input,
-form > div+input,
-form > *+* {
+form > div+div {
+  margin-top: 2rem;
+}
+
+.form-category > *+* {
   margin-top: 1rem;
+}
+
+.form-category > .form-category-header+* {
+  margin-top: 0;
 }

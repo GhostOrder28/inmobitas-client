@@ -13,15 +13,16 @@ export const signInFormLabels = {
 export const listingFormLabels = {
   FORM_HEADER: 'New Listing',
   FORM_SUBMIT_LABEL: 'Add Listing',
-  OWNER: 'Owner',
-  OWNER_CONTACT_PHONE: 'Owner Contact Phone',
+  NAME: 'Name',
+  CONTACT_PHONE: 'Contact Phone',
   DISTRICT: 'District',
   COUNTY: 'County',
-  LOCATION: 'Location',
+  ADDRESS: 'Address',
   TYPE_OF_CONTRACT: 'Type Of Contract',
     SALE: 'Sale',
     RENTAL: 'Rental',
   PRICE: 'Price',
+  SERVICES_INCLUDED: 'Services Included',
   COMMISSION: 'Commission',
     UNIT: 'Unit',
     PERCENTAGE: '%',
@@ -38,6 +39,7 @@ export const listingFormLabels = {
   BEDROOMS: 'Bedrooms',
   BATHROOMS: 'Bathrooms',
   GARAGES: 'Garages',
+  QUANTITY: 'Quantity',
   KITCHENS: 'Kitchens',
-  NATURAL_GAS: 'Have Natural Gas?'
+  NATURAL_GAS: 'Natural Gas'
 };
