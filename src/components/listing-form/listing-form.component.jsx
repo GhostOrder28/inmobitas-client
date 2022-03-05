@@ -1,7 +1,14 @@
 import React, { useState } from 'react';
 import { Form, Field } from 'react-final-form';
 import { Link } from 'react-router-dom';
-import { listingFormLabels } from '../../constants/language/english/english-labels.constants';
+import {
+  estateLabels,
+  ownerLabels,
+  contractLabels,
+  locationLabels,
+  featuresLabels,
+  listingLabels,
+} from '../../constants/language/english/english-labels.constants';
 import './listing-form.styles.css';
 import {
   Button,
@@ -28,8 +35,8 @@ const ListingForm = () => {
         onSubmit={onSubmit}
         // validate={validate}
         render={({ handleSubmit }) => (
-          <form className='flex flex-column' onSubmit={handleSubmit}>
-            <Heading size={800} marginBottom={20}>{ listingFormLabels.FORM_HEADER }</Heading>
+          <form className='flex flex-column pa3' onSubmit={handleSubmit}>
+            <Heading size={800} marginBottom={20}>{ listingLabels.ADD_LISTING }</Heading>
             <Pane position={'relative'} elevation={0} padding={20} className='form-category'>
               <Text
                 position={'absolute'}
@@ -40,15 +47,15 @@ const ListingForm = () => {
                 paddingRight={10}
                 size={500}
                 className='form-category-header'
-              >Owner</Text>
+              >{ ownerLabels.OWNER }</Text>
               <Field name='ownerName' component="input">
                 {props => (
-                  <TextInput {...props.input} placeholder={ listingFormLabels.NAME } width={'100%'}/>
+                  <TextInput {...props.input} placeholder={ ownerLabels.NAME } width={'100%'}/>
                 )}
               </Field>
               <Field name='ownerContactPhone' component="input">
                 {props => (
-                  <TextInput {...props.input} placeholder={ listingFormLabels.CONTACT_PHONE } width={'100%'}/>
+                  <TextInput {...props.input} placeholder={ ownerLabels.CONTACT_PHONE } width={'100%'}/>
                 )}
               </Field>
             </Pane>
@@ -62,20 +69,25 @@ const ListingForm = () => {
                 paddingRight={10}
                 size={500}
                 className='form-category-header'
-              >Location</Text>
+              >{ locationLabels.LOCATION }</Text>
+              <Field name='city' component="input">
+                {props => (
+                  <TextInput {...props.input} placeholder={ locationLabels.CITY } width={'100%'}/>
+                )}
+              </Field>
               <Field name='district' component="input">
                 {props => (
-                  <TextInput {...props.input} placeholder={ listingFormLabels.DISTRICT } width={'100%'}/>
+                  <TextInput {...props.input} placeholder={ locationLabels.DISTRICT } width={'100%'}/>
                 )}
               </Field>
-              <Field name='county' component="input">
+              <Field name='neighborhood' component="input">
                 {props => (
-                  <TextInput {...props.input} placeholder={ listingFormLabels.COUNTY } width={'100%'}/>
+                  <TextInput {...props.input} placeholder={ locationLabels.NEIGHBORHOOD } width={'100%'}/>
                 )}
               </Field>
-              <Field name='address' component="input">
+              <Field name='addressDetails' component="input">
                 {props => (
-                  <TextInput {...props.input} placeholder={ listingFormLabels.ADDRESS } width={'100%'}/>
+                  <TextInput {...props.input} placeholder={ locationLabels.ADDRESS_DETAILS } width={'100%'}/>
                 )}
               </Field>
             </Pane>
@@ -89,27 +101,27 @@ const ListingForm = () => {
                 paddingRight={10}
                 size={500}
                 className='form-category-header'
-              >Contract</Text>
+              >{ contractLabels.CONTRACT }</Text>
               <Field name='typeOfContract' component="input">
                 {props => (
                   <Combobox
                     width={'100%'}
                     openOnFocus
-                    items={[listingFormLabels.SALE, listingFormLabels.RENTAL]}
+                    items={[contractLabels.SALE, contractLabels.RENTAL]}
                     onChange={selected => props.input.onChange(selected)}
-                    placeholder={ listingFormLabels.TYPE_OF_CONTRACT }
+                    placeholder={ contractLabels.CONTRACT_TYPE }
                   />
                 )}
               </Field>
               <Field name='price' component="input">
                 {props => (
-                  <TextInput {...props.input} placeholder={ listingFormLabels.PRICE } width={'100%'}/>
+                  <TextInput {...props.input} placeholder={ estateLabels.PRICE } width={'100%'}/>
                 )}
               </Field>
               <div className='flex'>
-                <Field name='commission' component="input">
+                <Field name='fee' component="input">
                   {props => (
-                    <TextInput {...props.input} placeholder={ listingFormLabels.COMMISSION } width={'100%'}/>
+                    <TextInput {...props.input} placeholder={ contractLabels.FEE } width={'100%'}/>
                   )}
                 </Field>
                 <Field name='commissionUnit' component="input">
@@ -118,11 +130,11 @@ const ListingForm = () => {
                       width={'100%'}
                       openOnFocus
                       items={[
-                        listingFormLabels.PERCENTAGE,
-                        listingFormLabels.CURRENCY,
+                        contractLabels.PERCENTAGE,
+                        contractLabels.DOLLAR_SYMBOL,
                       ]}
                       onChange={selected => props.input.onChange(selected)}
-                      placeholder={ listingFormLabels.UNIT }
+                      placeholder={ contractLabels.UNIT }
                     />
                   )}
                 </Field>
@@ -138,73 +150,73 @@ const ListingForm = () => {
                 paddingRight={10}
                 size={500}
                 className='form-category-header'
-              >Property</Text>
+              >{ estateLabels.ESTATE }</Text>
               <Field name='propertyType' component="input">
                 {props => (
                   <Combobox
                     width={'100%'}
                     openOnFocus
                     items={[
-                      listingFormLabels.CONDO,
-                      listingFormLabels.APARTMENT,
-                      listingFormLabels.HOUSE,
-                      listingFormLabels.COMMERCIAL_POST,
+                      estateLabels.CONDO,
+                      estateLabels.APARTMENT,
+                      estateLabels.HOUSE,
+                      estateLabels.COMMERCIAL_POST,
                     ]}
                     onChange={selected => props.input.onChange(selected)}
-                    placeholder={ listingFormLabels.PROPERTY_TYPE }
+                    placeholder={ estateLabels.ESTATE_TYPE }
                   />
                 )}
               </Field>
               <div className='flex'>
                 <Field name='floorLocation' component="input">
                   {props => (
-                    <TextInput {...props.input} placeholder={ listingFormLabels.FLOOR_LOCATION } width={'100%'}/>
+                    <TextInput {...props.input} placeholder={ estateLabels.FLOOR_LOCATION } width={'100%'}/>
                   )}
                 </Field>
                 <Field name='floors' component="input">
                   {props => (
-                    <TextInput {...props.input} placeholder={ listingFormLabels.FLOORS } width={'100%'}/>
+                    <TextInput {...props.input} placeholder={ estateLabels.NUMBER_OF_FLOORS } width={'100%'}/>
                   )}
                 </Field>
               </div>
               <div className='flex'>
                 <Field name='totalArea' component="input">
                   {props => (
-                    <TextInput {...props.input} placeholder={ listingFormLabels.TOTAL_AREA } width={'100%'}/>
+                    <TextInput {...props.input} placeholder={ estateLabels.TOTAL_AREA } width={'100%'}/>
                   )}
                 </Field>
                 <Field name='builtArea' component="input">
                   {props => (
-                    <TextInput {...props.input} placeholder={ listingFormLabels.BUILT_AREA } width={'100%'}/>
+                    <TextInput {...props.input} placeholder={ estateLabels.BUILT_AREA } width={'100%'}/>
                   )}
                 </Field>
               </div>
               <div className='flex'>
                 <Field name='bedrooms' component="input">
                   {props => (
-                    <TextInput {...props.input} placeholder={ listingFormLabels.BEDROOMS } width={'100%'}/>
+                    <TextInput {...props.input} placeholder={ featuresLabels.BEDROOMS } width={'100%'}/>
                   )}
                 </Field>
                 <Field name='bathrooms' component="input">
                   {props => (
-                    <TextInput {...props.input} placeholder={ listingFormLabels.BATHROOMS } width={'100%'}/>
+                    <TextInput {...props.input} placeholder={ featuresLabels.BATHROOMS } width={'100%'}/>
                   )}
                 </Field>
                 <Field name='garages' component="input">
                   {props => (
-                    <TextInput {...props.input} placeholder={ listingFormLabels.GARAGES } width={'100%'}/>
+                    <TextInput {...props.input} placeholder={ featuresLabels.GARAGES } width={'100%'}/>
                   )}
                 </Field>
                 <Field name='kitchens' component="input">
                   {props => (
-                    <TextInput {...props.input} placeholder={ listingFormLabels.KITCHENS } width={'100%'}/>
+                    <TextInput {...props.input} placeholder={ featuresLabels.KITCHENS } width={'100%'}/>
                   )}
                 </Field>
               </div>
               <Field name='haveNaturalGas' component="input">
                 {props => (
                   <Checkbox
-                    label={ listingFormLabels.NATURAL_GAS }
+                    label={ featuresLabels.NATURAL_GAS }
                     checked={props.input.value || false}
                     onChange={e => props.input.onChange(e.target.checked)}
                   />
@@ -215,14 +227,14 @@ const ListingForm = () => {
               {props => (
                 <Textarea
                   name="extraNotesField"
-                  placeholder="Extra notes goes here..."
+                  placeholder={ estateLabels.ESTATE_DETAILS }
                   value={props.input.value}
                   onChange={e => props.input.onChange(e.target.value)}
                 />
               )}
             </Field>
             <Button width={'100%'} type='submit' appearance="primary" >
-              Add new Listing
+              { listingLabels.ADD_NEW_LISTING }
             </Button>
           </form>
         )}

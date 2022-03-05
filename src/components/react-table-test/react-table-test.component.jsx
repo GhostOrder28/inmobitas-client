@@ -2,8 +2,9 @@ import React, { useMemo, useState, useEffect } from 'react';
 import { useTable } from 'react-table';
 import { Link, useNavigate } from 'react-router-dom';
 import listingsData from '../../assets/data/listings.data';
+import { strParseOut } from '../../utils/utility-functions';
 import ownersData from '../../assets/data/owners.data';
-import './table.styles.css';
+// import './table.styles.css';
 const mobileBreakPoint = 720;
 
 const FormattedTable = () => {

@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { signOutStart } from '../../redux/user/user.actions';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 import { SideSheet, Button, MenuIcon, Position, Menu } from 'evergreen-ui';
+import LogoIcon from '../../icons/logo-icon/logo-icon.component';
 import './navigation.styles.css';
 
 const Navigation = () => {
@@ -14,7 +15,7 @@ const Navigation = () => {
   const dispatch = useDispatch();
 
   return (
-    <div className='navigation flex justify-end mb4'>
+    <div className='navigation flex justify-between items-center ph3 pv3'>
       <SideSheet
         width={260}
         position={Position.RIGHT}
@@ -36,6 +37,9 @@ const Navigation = () => {
             <Link to={'/listings'} onClick={() => setIsShown(false)}>
               Listings
             </Link>
+            <Link to={'/owners'} onClick={() => setIsShown(false)}>
+              Owners
+            </Link>
             <Link to={'/newlisting'} onClick={() => setIsShown(false)}>
               Add new listing
             </Link>
@@ -51,12 +55,18 @@ const Navigation = () => {
         </Menu>
 
       </SideSheet>
+      <Link to={'/'} className='logo-icon'>
+        <LogoIcon />
+      </Link>
       <Button
-        width={50}
+        width={40}
+        height={40}
+        padding={0}
         onClick={() => setIsShown(true)}
       >
-        <MenuIcon />
+        <MenuIcon size={20} />
       </Button>
+      {/* TODO: currently there is a fading blue shade when user click or touch the button */}
     </div>
   )
 };

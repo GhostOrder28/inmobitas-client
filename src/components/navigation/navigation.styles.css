@@ -7,3 +7,13 @@ nav a {
 nav a:hover {
   background-color: #F9FAFC;
 }
+
+.navigation {
+  background-color: #F9FAFC;
+}
+
+a.logo-icon {
+  display: flex;
+  align-items: center;
+  /* text-decoration: none;  */
+}

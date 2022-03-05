@@ -1,0 +1,25 @@
+/* TODO: in mobile there is a slight space between the blue border and the image thumbnails */
+
+.image-gallery-thumbnail .image-gallery-thumbnail-image {
+  width: 60px;
+  height: 60px;
+}
+
+.image-gallery-thumbnail.active, .image-gallery-thumbnail:focus, .image-gallery-thumbnail:hover {
+  /* border: 3px solid #337ab7; */
+  /* border: none; */
+  /* padding: 0rem; */
+}
+
+.image-gallery-thumbnail-inner img{
+  object-fit: cover;
+}
+
+.image-gallery-thumbnail {
+  width: 60px;
+}
+
+.image-gallery-slide .image-gallery-image {
+  height: 16rem;
+  object-fit: cover;
+}
