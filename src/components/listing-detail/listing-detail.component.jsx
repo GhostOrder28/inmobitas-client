@@ -34,7 +34,7 @@ const ListingDetail = ({ data, photosUrls, table }) => {
             }
             thumbnailPosition={'bottom'}
             />
-          : ''
+          : 'There is no photos...'
       }
       <Pane margin={10}>
         {table}

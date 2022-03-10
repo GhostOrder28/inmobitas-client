@@ -1,6 +1,7 @@
 export const globalLabels = {
   NOTES: 'Notes',
   EXTRA_NOTES_GOES_HERE: 'Extra notes goes here...',
+  DETAILS: 'Details',
 }
 
 export const authLabels = {
@@ -17,7 +18,7 @@ export const listingLabels = {
 }
 
 export const estateLabels = {
-  ESTATE: 'ESTATE',
+  ESTATE: 'Estate',
   PRICE: 'Price',
   SERVICES_INCLUDED: 'Services Included',
   ESTATE_TYPE: 'Estate Type',
@@ -25,7 +26,9 @@ export const estateLabels = {
   APARTMENT: 'Apartment',
   HOUSE: 'House',
   COMMERCIAL_POST: 'Commercial Post',
+  FLOOR: 'Floor',
   FLOOR_LOCATION: 'Floor Location',
+  FLOORS: 'Floors',
   NUMBER_OF_FLOORS: 'Number of Floors',
   TOTAL_AREA: 'Total Area',
   BUILT_AREA: 'Built Area',
@@ -46,7 +49,15 @@ export const featuresLabels = {
   BATHROOMS: 'Bathrooms',
   GARAGES: 'Garages',
   KITCHENS: 'Kitchens',
+  NUMBER_OF_BEDROOMS: 'Number of Bedrooms',
+  NUMBER_OF_BATHROOMS: 'Number of Bathrooms',
+  NUMBER_OF_GARAGES: 'Number of Garages',
+  NUMBER_OF_KITCHENS: 'Number of Kitchens',
   NATURAL_GAS: 'Natural Gas',
+  DOES_IT_HAVE_NATURAL_GAS: 'Does it have Natural Gas?',
+  YES: 'Yes',
+  NO: 'No',
+  FEATURES_DETAILS: 'Features Detals',
 };
 
 export const ownerLabels = {
@@ -55,8 +66,7 @@ export const ownerLabels = {
   NAME: 'Name',
   CONTACT_PHONE: 'Contact Phone',
   AGE: 'Age',
-  CIVIL_STATUS: 'Civil Status',
-  FIRST_TIME: 'First Time',
+  MOTIVATION: 'Motivation',
 }
 
 export const contractLabels = {
@@ -71,13 +81,11 @@ export const contractLabels = {
   SIGNED_DATE: 'Signed Date',
   START_DATE: 'Start Date',
   END_DATE: 'End Date',
-  CONTRACT_DETAILS: 'Contract Details',
 }
 
 export const ownerPreferencesLabels = {
-  OWNER_PREFERENCES: 'OWNER_PREFERENCES',
-  MOTIVATION: 'Motivation',
-  RENTAL_MOTIVATION: 'Rental Motivation',
+  OWNER_PREFERENCES: 'Owner Preferences',
   PETS_ALLOWED: 'Pets Allowed',
   CHILDREN_ALLOWED: 'Children Allowed',
+  DETAILS: 'Details'
 };

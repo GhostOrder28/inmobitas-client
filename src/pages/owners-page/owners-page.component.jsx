@@ -42,8 +42,6 @@ const OwnersPage = () => {
                 <StyledTh>{ownerLabels.NAME}</StyledTh>
                 <StyledTh>{ownerLabels.CONTACT_PHONE}</StyledTh>
                 <StyledTh>{ownerLabels.AGE}</StyledTh>
-                <StyledTh>{ownerLabels.CIVIL_STATUS}</StyledTh>
-                <StyledTh>{ownerLabels.FIRST_TIME}</StyledTh>
               </>
             }
           </StyledTr>
@@ -61,8 +59,6 @@ const OwnersPage = () => {
                     <StyledTdWrapped>{strParseOut(owner.name)}</StyledTdWrapped>
                     <StyledTdWrapped>{strParseOut(owner.contactPhone)}</StyledTdWrapped>
                     <StyledTdWrapped>{owner.age}</StyledTdWrapped>
-                    <StyledTdWrapped>{strParseOut(owner.civilStatus)}</StyledTdWrapped>
-                    <StyledTdWrapped>{strParseOut(owner.firstTime)}</StyledTdWrapped>
                   </>
                 }
               </StyledTr>

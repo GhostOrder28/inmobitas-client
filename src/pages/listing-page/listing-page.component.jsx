@@ -45,7 +45,7 @@ const ListingPage = () => {
                 { label: contractLabels.SIGNED_DATE, dbColumn: 'signed_date' },
                 { label: contractLabels.START_DATE, dbColumn: 'start_date' },
                 { label: contractLabels.END_DATE, dbColumn: 'end_date' },
-                { label: contractLabels.CONTRACT_DETAILS, dbColumn: 'contract_details' },
+                { label: contractLabels.DETAILS, dbColumn: 'details' },
                 ]
               },
               {
@@ -68,7 +68,6 @@ const ListingPage = () => {
                 ]
               },
             ]}
-            ignore={['id', 'ownerId', 'unit', 'photosUrls']}
           />
         }
       />

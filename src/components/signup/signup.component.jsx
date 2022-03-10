@@ -1,8 +1,6 @@
 import React from 'react';
-import { auth, createUserWithEmailAndPassword } from '../../firebase/firebase.utils';
 import { useDispatch } from 'react-redux';
 import { signUpStart } from '../../redux/user/user.actions';
-import { onTest } from '../../redux/testing/testing.actions';
 import { useNavigate, Link } from 'react-router-dom';
 import { Form, Field } from 'react-final-form';
 import './signup.styles.css';
@@ -18,7 +16,6 @@ import {
 const Signup = () => {
 
   const dispatch = useDispatch();
-
   const onSubmit = async userData => {
     const { email, password, confirmPassword } = userData;
     if (password !== confirmPassword) return;

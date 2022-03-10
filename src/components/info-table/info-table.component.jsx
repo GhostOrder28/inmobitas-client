@@ -49,7 +49,7 @@ const TableGroup = ({ content, data }) => {
   )
 };
 
-const InfoTable = ({ data, layout, ignore }) => {
+const InfoTable = ({ data, layout }) => {
 
   return (
     <StyledTable>

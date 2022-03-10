@@ -1,7 +1,10 @@
 import React, { useMemo, useState, useEffect } from 'react';
+import axios from 'axios';
+import { useSelector } from 'react-redux';
 import { useTable } from 'react-table';
 import { Link, useNavigate } from 'react-router-dom';
 import { strParseOut } from '../../utils/utility-functions';
+import { selectCurrentUserId } from '../../redux/user/user.selectors';
 import listingsData from '../../assets/data/listings.data';
 import {
   estateLabels,
@@ -27,10 +30,21 @@ const ListingsPage = () => {
 
   const [width, setWidth] = useState(window.innerWidth);
   const navigate = useNavigate();
+  const userId = useSelector(selectCurrentUserId);
 
   useEffect(() => {
     const handleWindowResize = () => setWidth(window.innerWidth);
     window.addEventListener("resize", handleWindowResize);
+
+    (async function () {
+      console.log('asasasasas');
+      try {
+        const res = await axios.get(`http://${process.env.REACT_APP_HOST_FOR_MOBILE}:3001/listings/${userId}`)
+      } catch (err) {
+        console.log(err);
+      }
+    })()
+
     return () => window.removeEventListener("resize", handleWindowResize);
   }, [])
 

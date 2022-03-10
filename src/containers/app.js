@@ -1,7 +1,6 @@
 import React, { useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Routes, Route, Navigate, useRoutes, useLocation } from "react-router-dom";
-import { checkUserSession } from '../redux/user/user.actions';
 import { selectCurrentUser } from '../redux/user/user.selectors';
 
 import ListingPage from '../pages/listing-page/listing-page.component';
@@ -25,18 +24,14 @@ const App = () => {
     return currentUser ? <ProtectedRoute /> : <Navigate to='/signin' />
   })
 
-  useEffect(() => {
-    dispatch(checkUserSession())
-  }, [checkUserSession])
-
-  useEffect(() => {
-
-  })
-
   const routes = useRoutes([
     {
       path: 'signin',
       element: currentUser ? <Navigate to='/dashboard' /> : <Signin />
+    },
+    {
+      path: 'signup',
+      element: currentUser ? <Navigate to='/dashboard' /> : <Signup />
     },
     { path: 'dashboard', element: userProtectedRoute(DashboardPage) },
     { path: 'listings', element: userProtectedRoute(ListingsPage) },

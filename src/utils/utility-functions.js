@@ -1,4 +1,4 @@
-export const strParseIn = str => {
+export const strParseIn = str => {  
   return str.replaceAll(' ', '-').toLowerCase();
 };
 

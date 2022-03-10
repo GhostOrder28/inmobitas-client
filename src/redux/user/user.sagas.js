@@ -1,5 +1,6 @@
 import { takeLatest, put, all, call } from 'redux-saga/effects';
 import userActionTypes from './user.types';
+import axios from 'axios';
 import {
   signUpSuccess,
   signUpFailure,
@@ -15,31 +16,19 @@ import {
   getCurrentUser,
 } from '../../firebase/firebase.utils';
 
-function* getSnapshotFromUserAuth(userAuth) {
-  const { email } = userAuth;
+function* signUp ({ payload: { names, email, password } }) {
   try {
-    // const userRef = yield call(createUserProfileDocument, userAuth);
-    // const userSnapshot = yield getDoc(userRef);
-    // yield put(signInSuccess({ id: userSnapshot.id, ...userSnapshot.data() }))
-    yield put(signInSuccess(email))
-  } catch (err) {
-    yield put(signInFailure(err))
-  }
-}
-
-function* signUpWithEmail ({ payload: { email, password } }) {
-  try {
-    const { user } = yield call(createUserWithEmailAndPassword, auth, email, password);
-    yield put(signUpSuccess(user));
+    const { data } = yield call(axios.post, `http://${process.env.REACT_APP_HOST_FOR_MOBILE}:3001/signup`, { names, email, password });
+    yield put(signUpSuccess(data));
   } catch (err) {
     yield put(signUpFailure(err));
   }
 }
 
-function* signInWithEmail ({ payload: { email, password } }) {
+function* signIn ({ payload: { email, password } }) {
   try {
-    const { user } = yield call(signInWithEmailAndPassword, auth, email, password);
-    yield getSnapshotFromUserAuth(user)
+    const { data } = yield call(axios.post, `http://${process.env.REACT_APP_HOST_FOR_MOBILE}:3001/signin`, { email, password });
+    yield put(signInSuccess(data));
   } catch (err) {
     yield put(signInFailure(err));
   }
@@ -54,34 +43,17 @@ function* signOut() {
   }
 }
 
-function* onCheckUserSession () {
-  try {
-    const userAuth = yield getCurrentUser();
-    if(!userAuth) return;
-    yield getSnapshotFromUserAuth(userAuth)
-  } catch (err) {
-    yield put(signInFailure(err));
-  }
-}
-
-// function* signInAfterSignUp ({ payload: { user, additionalData } }) {
-//   yield call(getSnapshotFromUserAuth, user, additionalData)
-// }
-
 function* onSignUpStart () {
-  yield takeLatest(userActionTypes.SIGN_UP_START, signUpWithEmail)
+  yield takeLatest(userActionTypes.SIGN_UP_START, signUp)
 }
 function* onSignInStart () {
-  yield takeLatest(userActionTypes.SIGN_IN_START, signInWithEmail)
+  yield takeLatest(userActionTypes.SIGN_IN_START, signIn)
 }
 function* onSignOutStart () {
   yield takeLatest(userActionTypes.SIGN_OUT_START, signOut)
 }
 function* onSignUpSuccess () {
-  yield takeLatest(userActionTypes.SIGN_UP_SUCCESS, getSnapshotFromUserAuth)
-}
-function* onCheckAuth () {
-  yield takeLatest(userActionTypes.CHECK_USER_SESSION, onCheckUserSession)
+  yield takeLatest(userActionTypes.SIGN_UP_SUCCESS, signIn)
 }
 
 export default function* userSagas () {
@@ -89,6 +61,5 @@ export default function* userSagas () {
     call(onSignUpStart),
     call(onSignInStart),
     call(onSignOutStart),
-    call(onCheckAuth),
   ])
 }
