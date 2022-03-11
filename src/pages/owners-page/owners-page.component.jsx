@@ -1,9 +1,12 @@
 import React, { useMemo, useState, useEffect } from 'react';
+import axios from 'axios';
+import { useSelector } from 'react-redux';
 import { useTable } from 'react-table';
 import { Link, useNavigate } from 'react-router-dom';
 import { strParseOut } from '../../utils/utility-functions';
-import ownersData from '../../assets/data/owners.data';
-import { ownerLabels } from '../../constants/language/english/english-labels.constants';
+import { selectCurrentUserId } from '../../redux/user/user.selectors';
+// import ownersData from '../../assets/data/owners.data';
+import { ownerLabels, contractLabels } from '../../constants/language/english/english-labels.constants';
 import {
   StyledTable,
   StyledThead,
@@ -15,17 +18,25 @@ import {
 import { Pane } from 'evergreen-ui';
 import '../../global-styles/listings-page-scroll.styles.css';
 
-const mobileBreakPoint = 720;
-
 const OwnersPage = () => {
 
   const [width, setWidth] = useState(window.innerWidth);
+  const [clients, setClients] = useState([]);
   const navigate = useNavigate();
+  const userId = useSelector(selectCurrentUserId);
 
   useEffect(() => {
-    const handleWindowResize = () => setWidth(window.innerWidth);
-    window.addEventListener("resize", handleWindowResize);
-    return () => window.removeEventListener("resize", handleWindowResize);
+
+    (async function () {
+      try {
+        const res = await axios.get(`http://${process.env.REACT_APP_HOST_FOR_MOBILE}:3001/clients/${userId}`)
+        console.log(res);
+        setClients(res.data)
+      } catch (err) {
+        console.log(err);
+      }
+    })()
+
   }, [])
 
   return (
@@ -33,34 +44,18 @@ const OwnersPage = () => {
       <StyledTable>
         <StyledThead>
           <StyledTr>
-            { width < mobileBreakPoint ?
-              <>
-                <StyledTh>{ownerLabels.NAME}</StyledTh>
-                <StyledTh>{ownerLabels.CONTACT_PHONE}</StyledTh>
-              </> :
-              <>
-                <StyledTh>{ownerLabels.NAME}</StyledTh>
-                <StyledTh>{ownerLabels.CONTACT_PHONE}</StyledTh>
-                <StyledTh>{ownerLabels.AGE}</StyledTh>
-              </>
-            }
+            <StyledTh>{ownerLabels.NAME}</StyledTh>
+            <StyledTh>{ownerLabels.CONTACT_PHONE}</StyledTh>
+            <StyledTh>{ownerLabels.CLIENT_TYPE}</StyledTh>
           </StyledTr>
         </StyledThead>
         <StyledTbody>
           {
-            ownersData.map((owner, idx) => (
-              <StyledTr clickFn={() => navigate(`/ownerdetail/${owner.id}`)} key={idx}>
-                { width < mobileBreakPoint ?
-                  <>
-                    <StyledTdWrapped>{strParseOut(owner.name)}</StyledTdWrapped>
-                    <StyledTdWrapped>{strParseOut(owner.contactPhone)}</StyledTdWrapped>
-                  </> :
-                  <>
-                    <StyledTdWrapped>{strParseOut(owner.name)}</StyledTdWrapped>
-                    <StyledTdWrapped>{strParseOut(owner.contactPhone)}</StyledTdWrapped>
-                    <StyledTdWrapped>{owner.age}</StyledTdWrapped>
-                  </>
-                }
+            clients.map((client, idx) => (
+              <StyledTr clickFn={() => navigate(`/clientdetail/${client.clientId}`)} key={idx}>
+                <StyledTdWrapped>{strParseOut(client.name)}</StyledTdWrapped>
+                <StyledTdWrapped>{strParseOut(client.contactPhone)}</StyledTdWrapped>
+                <StyledTdWrapped>{strParseOut(client.clientType)}</StyledTdWrapped>
               </StyledTr>
             ))
           }

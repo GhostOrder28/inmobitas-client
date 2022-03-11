@@ -15,19 +15,16 @@ import { Heading, Button } from 'evergreen-ui';
 import { ownerLabels, listingLabels, globalLabels } from '../../constants/language/english/english-labels.constants';
 import "react-image-gallery/styles/css/image-gallery.css";
 
-import ownersData from '../../assets/data/owners.data'; // TODO: this should be fetched
-
 const checkType = value => {
   if (typeof value === 'string') {
     return strParseOut(value)
   }
-  if (typeof value === 'number') {
-    return String(value).indexOf('.') !== -1 ? `${value*100} %` : `$ ${value}`
-  }
+  return value;
 };
 
 const TableGroup = ({ content, data }) => {
   const [isHidden, setIsHidden] = useState(false);
+
   return (
     <StyledTbody>
       <StyledTr clickFn={() => setIsHidden(!isHidden)}>
@@ -41,7 +38,7 @@ const TableGroup = ({ content, data }) => {
           return (
             <StyledTr key={`row-${idx}`}>
               <StyledTdUnwrapped>{strParseOut(row.label)}</StyledTdUnwrapped>
-              <StyledTdWrapped>{checkType(data[row.prop])}</StyledTdWrapped>
+              <StyledTdWrapped>{checkType(data[row.dbColumn])}</StyledTdWrapped>
             </StyledTr>
           )})
       }
@@ -50,15 +47,18 @@ const TableGroup = ({ content, data }) => {
 };
 
 const InfoTable = ({ data, layout }) => {
+  console.log(layout);
 
   return (
-    <StyledTable>
-      {layout.map((group, idx) => (
-        // WARNING: I'm doing prop drilling here but TableGroup is never going to
-        // trigger a re-render on its parent so isn't that bad at least for now.
-        <TableGroup key={`table-group-${idx}`} content={group} data={data}/>
-      ))}
-    </StyledTable>
+    data ?
+     <StyledTable>
+       {layout.map((group, idx) => (
+         // WARNING: I'm doing prop drilling here but TableGroup is never going to
+         // trigger a re-render on its parent so isn't that bad at least for now.
+           <TableGroup key={`table-group-${idx}`} content={group} data={data}/>
+       ))}
+     </StyledTable> :
+     'Loading data...'
   )
 };
 

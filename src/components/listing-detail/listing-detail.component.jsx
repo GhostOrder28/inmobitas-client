@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { strParseOut } from '../../utils/utility-functions';
 import {
   StyledTable,
@@ -13,18 +13,12 @@ import { ownerLabels, listingLabels, globalLabels } from '../../constants/langua
 import "react-image-gallery/styles/css/image-gallery.css";
 import './listing-detail-gallery.styles.css';
 
-import ownersData from '../../assets/data/owners.data'; // TODO: this should be fetched
-
 const ListingDetail = ({ data, photosUrls, table }) => {
-
-  const getOwner = () => {
-    return ownersData.find(owner => owner.id === data.ownerId)
-  };
 
   return (
     <div>
       {
-        photosUrls.length
+        photosUrls && photosUrls.length
           ? <ImageGallery
             items={
               photosUrls.map(photo => ({

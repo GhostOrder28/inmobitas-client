@@ -44,6 +44,7 @@ export const StyledTr = styled.tr.attrs(props => ({
 
 export const StyledTh = styled.th`
   ${cellStyle}
+  white-space: nowrap;
 `;
 
 export const StyledThWithSpan = styled.th.attrs(props => ({

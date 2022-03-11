@@ -19,6 +19,7 @@ export const listingLabels = {
 
 export const estateLabels = {
   ESTATE: 'Estate',
+  ESTATES: 'Estates',
   PRICE: 'Price',
   SERVICES_INCLUDED: 'Services Included',
   ESTATE_TYPE: 'Estate Type',
@@ -66,7 +67,7 @@ export const ownerLabels = {
   NAME: 'Name',
   CONTACT_PHONE: 'Contact Phone',
   AGE: 'Age',
-  MOTIVATION: 'Motivation',
+  CLIENT_TYPE: 'Client Type',
 }
 
 export const contractLabels = {

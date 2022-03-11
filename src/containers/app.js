@@ -36,9 +36,9 @@ const App = () => {
     { path: 'dashboard', element: userProtectedRoute(DashboardPage) },
     { path: 'listings', element: userProtectedRoute(ListingsPage) },
     { path: 'newlisting', element: userProtectedRoute(ListingPage) },
-    { path: 'listingdetail/:id', element: userProtectedRoute(ListingPage) },
+    { path: 'listingdetail/:listingid', element: userProtectedRoute(ListingPage) },
     { path: 'owners', element: userProtectedRoute(OwnersPage) },
-    { path: 'ownerdetail/:id', element: userProtectedRoute(OwnerPage) },
+    { path: 'clientdetail/:clientid', element: userProtectedRoute(OwnerPage) },
     // { path: 'ownerdetail/:id', element: userProtectedRoute(ListingsPage) },
     {
       path: '/',
