@@ -16,9 +16,13 @@ import {
   getCurrentUser,
 } from '../../firebase/firebase.utils';
 
-function* signUp ({ payload: { names, email, password } }) {
+function* signUp ({ payload: { names, email, password, confirmPassword } }) {
   try {
-    const { data } = yield call(axios.post, `http://${process.env.REACT_APP_HOST_FOR_MOBILE}:3001/signup`, { names, email, password });
+    const { data } = yield call(
+      axios.post,
+      `http://${process.env.REACT_APP_HOST_FOR_MOBILE}:3001/signup`,
+      { names, email, password, confirmPassword }
+    );
     yield put(signUpSuccess(data));
   } catch (err) {
     yield put(signUpFailure(err));
@@ -43,6 +47,14 @@ function* signOut() {
   }
 }
 
+function* signInAfterSignUp ({ payload: { names, email } }) {
+  try {
+    yield put(signInSuccess({ names, email }));
+  } catch (err) {
+    yield put(signInFailure(err));
+  }
+}
+
 function* onSignUpStart () {
   yield takeLatest(userActionTypes.SIGN_UP_START, signUp)
 }
@@ -53,7 +65,7 @@ function* onSignOutStart () {
   yield takeLatest(userActionTypes.SIGN_OUT_START, signOut)
 }
 function* onSignUpSuccess () {
-  yield takeLatest(userActionTypes.SIGN_UP_SUCCESS, signIn)
+  yield takeLatest(userActionTypes.SIGN_UP_SUCCESS, signInAfterSignUp)
 }
 
 export default function* userSagas () {

@@ -47,8 +47,6 @@ const TableGroup = ({ content, data }) => {
 };
 
 const InfoTable = ({ data, layout }) => {
-  console.log(layout);
-
   return (
     data ?
      <StyledTable>

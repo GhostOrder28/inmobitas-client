@@ -36,3 +36,6 @@ export const signOutFailure = error => ({
   type: userActionTypes.SIGN_OUT_FAILURE,
   payload: error,
 })
+export const clearErrors = () => ({
+  type: userActionTypes.CLEAR_ERRORS,
+})

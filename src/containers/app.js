@@ -1,7 +1,8 @@
 import React, { useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Routes, Route, Navigate, useRoutes, useLocation } from "react-router-dom";
-import { selectCurrentUser } from '../redux/user/user.selectors';
+import { selectCurrentUser, selectErrors } from '../redux/user/user.selectors';
+import { clearErrors } from '../redux/user/user.actions';
 
 import ListingPage from '../pages/listing-page/listing-page.component';
 import ListingsPage from '../pages/listings-page/listings-page.component';
@@ -37,15 +38,18 @@ const App = () => {
     { path: 'listings', element: userProtectedRoute(ListingsPage) },
     { path: 'newlisting', element: userProtectedRoute(ListingPage) },
     { path: 'listingdetail/:listingid', element: userProtectedRoute(ListingPage) },
+    { path: 'editlisting/:listingid', element: userProtectedRoute(ListingPage) },
     { path: 'owners', element: userProtectedRoute(OwnersPage) },
     { path: 'clientdetail/:clientid', element: userProtectedRoute(OwnerPage) },
-    // { path: 'ownerdetail/:id', element: userProtectedRoute(ListingsPage) },
     {
       path: '/',
       element: currentUser ? <Navigate to='/dashboard' /> : <Navigate to='/signin' />
     },
-    // { path: '*', element: <Navigate to='/signin' /> },
   ])
+
+  useEffect(() => {
+    dispatch(clearErrors())
+  }, [location]);
 
   return (
     <>

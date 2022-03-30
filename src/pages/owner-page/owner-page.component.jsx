@@ -9,7 +9,7 @@ import { ownerLabels, globalLabels } from '../../constants/language/english/engl
 
 const OwnerPage = () => {
 
-  const [clientData, setClientData] = useState(null);
+  const [client, setClient] = useState(null);
   const location = useLocation();
   const params = useParams();
   console.log(params);
@@ -19,8 +19,8 @@ const OwnerPage = () => {
 
     (async function () {
       try {
-        const res = await axios.get(`http://${process.env.REACT_APP_HOST_FOR_MOBILE}:3001/client/${userId}/${params.clientid}`)
-        setClientData(res.data[0])
+        const clientData = await axios.get(`http://${process.env.REACT_APP_HOST_FOR_MOBILE}:3001/client/${userId}/${params.clientid}`)
+        setClient(clientData.data[0])
       } catch (err) {
         console.log(err);
       }
@@ -30,22 +30,7 @@ const OwnerPage = () => {
 
   return (
     <OwnerDetail
-      clientName={clientData && clientData.name}
-      table={
-        <InfoTable
-          data={clientData}
-          layout={[
-            {
-              groupName: ownerLabels.OWNER_INFO,
-              rows: [
-              { label: ownerLabels.CONTACT_PHONE, dbColumn: 'contactPhone' },
-              { label: ownerLabels.AGE, dbColumn: 'age' },
-              { label: globalLabels.DETAILS, dbColumn: 'details' },
-              ]
-            },
-          ]}
-        />
-      }
+      clientData={ client }
     />
 
   )

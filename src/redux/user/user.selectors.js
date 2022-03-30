@@ -11,17 +11,21 @@ export const selectCurrentUserId = createSelector(
 export const selectValidationErrorMessage = field => createSelector(
   [selectErrors],
   errors => {
-    if (errors) {
-      const errorDetails = errors.response.data.details;
-      const error = errorDetails && errorDetails.find(errObj => errObj.context.key === field);
-      if (error) return error.message;
-    } else {
-      return null;
-    }
+    const error = errors && errors.response.data.validationErrors ?
+      errors.response.data.validationErrors.find(err => err.context.key === field) :
+      null;
+    if (error) return error.message
   }
 )
 
 export const selectAuthErrorMessage = createSelector(
   [selectErrors],
-  errors => errors ? errors.response.data.authMessage : null
+  errors => errors && errors.response.data.authErrors
+)
+
+export const duplicateEntityError = createSelector(
+  [selectErrors],
+  errors => {
+    return errors && errors.response.data.duplicateEntityError
+  }
 )

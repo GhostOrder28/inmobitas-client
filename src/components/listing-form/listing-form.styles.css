@@ -1,33 +1,31 @@
 form > div+div {
-  margin-top: 1rem;
+  margin-top: 1.5rem;
 }
 
 .features > div+div {
   margin-top: 1rem;
 }
 
-.form-category > *+* {
+.form-category > .form-field {
   margin-top: 1rem;
-  /* height: 2.7rem; */
 }
-
-.form-category > div > input, .form-category > div > div input{
-  /* height: 2.7rem; */
-}
-
-/* .form-category > div > span{
-  width: 9rem;
-} */
 
 .form-category > .form-category-header+* {
   margin-top: 0;
 }
 
+.DayPickerInput {
+  width: 100%;
+}
+
 .DayPickerInput input {
   box-sizing: border-box;
-  width: 100%;
   border: 1px solid #d8dae5;
   border-radius: 5px;
   height: 32px;
   padding: 0 12px;
+}
+
+.radio-group label + label {
+  margin-left: 1rem;
 }

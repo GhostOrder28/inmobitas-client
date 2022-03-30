@@ -14,83 +14,49 @@ import {
 import ListingForm from '../../components/listing-form/listing-form.component';
 import ListingDetail from '../../components/listing-detail/listing-detail.component';
 import InfoTable from '../../components/info-table/info-table.component';
-
 const ListingPage = () => {
 
   const location = useLocation();
   const params = useParams();
-  const [clients, setClients] = useState([]);
+  console.log(params);
+  const [listing, setListing] = useState(null);
+  const [presets, setPresets] = useState(null);
   const userId = useSelector(selectCurrentUserId);
+
+  // useEffect(() => {
+    // console.log('re-rendering...');
+    // console.log('listing page', listing);
+    // console.log('presets', presets);
+  // })
 
   useEffect(() => {
     (async function () {
       try {
-        const res = await axios.get(`http://${process.env.REACT_APP_HOST_FOR_MOBILE}:3001/listing/${userId}/${params.listingid}`)
-        setClients(res.data[0])
+        if (location.pathname !== '/newlisting') {
+          const listingData = await axios.get(`http://${process.env.REACT_APP_HOST_FOR_MOBILE}:3001/listing/${userId}/${params.listingid}`);
+          const dataPresets = await axios.get(`http://${process.env.REACT_APP_HOST_FOR_MOBILE}:3001/listingformdata`);
+          setListing(listingData.data[0]);
+          setPresets(dataPresets.data);
+        } else {
+          const dataPresets = await axios.get(`http://${process.env.REACT_APP_HOST_FOR_MOBILE}:3001/listingformdata`);
+          setPresets(dataPresets.data);
+        }
       } catch (err) {
         console.log(err);
       }
     })()
   },[])
 
-  return (
-    location.pathname === '/newlisting' ?
-      <ListingForm /> :
-      <ListingDetail
-        // photosUrls={entity.photosUrls}
-        table={
-          <InfoTable
-            data={clients}
-            layout={[
-              {
-                groupName: ownerLabels.OWNER_INFO,
-                rows: [
-                { label: ownerLabels.NAME, dbColumn: 'clientName' },
-                { label: ownerLabels.CONTACT_PHONE, dbColumn: 'clientContactPhone' },
-                ]
-              },
-              {
-                groupName: contractLabels.CONTRACT,
-                rows: [
-                { label: contractLabels.CONTRACT_TYPE, dbColumn: 'contractType' },
-                { label: estateLabels.PRICE, dbColumn: 'price' },
-                { label: contractLabels.FEE, dbColumn: clients.feeAmount ? 'feeAmount' : 'feePercentage' },
-                { label: contractLabels.SIGNED_DATE, dbColumn: 'signedDate' },
-                { label: contractLabels.START_DATE, dbColumn: 'startDate' },
-                { label: contractLabels.END_DATE, dbColumn: 'endDate' },
-                ]
-              },
-              {
-                groupName: locationLabels.LOCATION,
-                rows: [
-                { label: locationLabels.DISTRICT, dbColumn: 'district' },
-                { label: locationLabels.NEIGHBORHOOD, dbColumn: 'neighborhood' },
-                { label: locationLabels.ADDRESS_DETAILS, dbColumn: 'addressDetails' },
-                ]
-              },
-              {
-                groupName: featuresLabels.FEATURES,
-                rows: [
-                { label: featuresLabels.BEDROOMS, dbColumn: 'numberOfBedrooms' },
-                { label: featuresLabels.BATHROOMS, dbColumn: 'numberOfBathrooms' },
-                { label: featuresLabels.GARAGES, dbColumn: 'numberOfGarages' },
-                { label: featuresLabels.KITCHENS, dbColumn: 'numberOfKitchens' },
-                { label: featuresLabels.NATURAL_GAS, dbColumn: 'naturalGas' },
-                ]
-              },
-              {
-                groupName: ownerPreferencesLabels.OWNER_PREFERENCES,
-                rows: [
-                { label: ownerPreferencesLabels.PETS_ALLOWED, dbColumn: 'petsAllowed' },
-                { label: ownerPreferencesLabels.CHILDREN_ALLOWED, dbColumn: 'childrenAllowed' },
-                { label: ownerPreferencesLabels.DETAILS, dbColumn: 'ownerPreferencesDetails' },
-                ]
-              },
-            ]}
-          />
-        }
-      />
-  )
+  switch (location.pathname) {
+    case '/newlisting':
+      return <ListingForm dataPresets={presets}/>
+    case `/editlisting/${params.listingid}`:
+      return <ListingForm dataPresets={presets} data={listing}/>
+    case `/listingdetail/${params.listingid}`:
+      return <ListingDetail dataPresets={presets} data={listing}/>
+    default:
+      return 'no route matched...'
+  }
 
 };
 

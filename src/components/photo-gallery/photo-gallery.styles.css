@@ -1,0 +1,18 @@
+.gallery-img-container::before {
+  content: '';
+  display: block;
+  padding-top: 100%;
+}
+
+.gallery-img {
+  height: 100%;
+  width: 100%;
+  top: 0; left: 0;
+  position: absolute;
+  object-fit: cover;
+}
+
+.upload-icon {
+  background-color: none;
+  /* box-shadow: .3rem .3rem 5px black; */
+}

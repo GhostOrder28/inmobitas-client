@@ -4,7 +4,6 @@ import { signInStart } from '../../redux/user/user.actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { Form, Field } from 'react-final-form';
 import { useNavigate } from 'react-router-dom';
-import './signin.styles.css';
 import { Button, Pane, Text, TextInput, majorScale, Heading } from 'evergreen-ui';
 import { selectValidationErrorMessage, selectAuthErrorMessage } from '../../redux/user/user.selectors';
 import ErrorMessage from '../error-messages/error-messages.component';
@@ -21,7 +20,6 @@ const Signin = () => {
   const dispatch = useDispatch();
 
   const onSubmit = userData => {
-    if (!userData.password) return;
     dispatch(signInStart(userData))
   };
 
@@ -45,7 +43,7 @@ const Signin = () => {
                   />
                 )}
               </Field>
-              <ErrorMessage validationErrMsg={emailErrMsg}/>
+              <ErrorMessage fieldErrorMsg={emailErrMsg}/>
             </div>
             <div>
               <Field name="password" component="input">
@@ -58,8 +56,9 @@ const Signin = () => {
                   />
                 )}
               </Field>
+              <ErrorMessage fieldErrorMsg={passwordErrMsg}/>
             </div>
-            <ErrorMessage authErrMsg={authErrMsg}/>
+            <ErrorMessage fieldErrorMsg={authErrMsg}/>
             <Pane display='flex'>
               <Button width={'100%'} type='submit' appearance="primary" >
                 Sign In

@@ -60,7 +60,9 @@ export const StyledTdUnwrapped = styled.td`
   white-space: nowrap;
 `;
 
-export const StyledTdWrapped = styled.td`
+export const StyledTdWrapped = styled.td.attrs(props => ({
+  onClick: props.clickFn
+}))`
   ${cellStyle}
   white-space: normal;
 `;

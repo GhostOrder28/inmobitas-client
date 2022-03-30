@@ -20,7 +20,6 @@ export const listingLabels = {
 export const estateLabels = {
   ESTATE: 'Estate',
   ESTATES: 'Estates',
-  PRICE: 'Price',
   SERVICES_INCLUDED: 'Services Included',
   ESTATE_TYPE: 'Estate Type',
   CONDO: 'Condo',
@@ -41,6 +40,7 @@ export const locationLabels = {
   CITY: 'City',
   DISTRICT: 'District',
   NEIGHBORHOOD: 'Neighborhood',
+  DETAILS: 'Details',
   ADDRESS_DETAILS: 'Address Details',
 };
 
@@ -63,9 +63,11 @@ export const featuresLabels = {
 
 export const ownerLabels = {
   OWNER: 'Owner',
+  OWNER_NAME: 'Owner Name',
+  OWNER_CONTACT_PHONE: 'Owner Contact Phone',
   OWNER_INFO: 'Owner Info',
   NAME: 'Name',
-  CONTACT_PHONE: 'Contact Phone',
+  PHONE: 'Phone',
   AGE: 'Age',
   CLIENT_TYPE: 'Client Type',
 }
@@ -78,15 +80,26 @@ export const contractLabels = {
   FEE: 'Fee',
   UNIT: 'Unit',
   PERCENTAGE: '%',
-  DOLLAR_SYMBOL: '$',
+  CURRENCY: 'Currency',
   SIGNED_DATE: 'Signed Date',
   START_DATE: 'Start Date',
   END_DATE: 'End Date',
+  ESTATE_PRICE: 'Estate Price',
+  RENT: 'Rent',
+  RENT_COST: 'Rent Cost',
+  SIGNED_DATE: 'Signed Date',
+  START_DATE: 'Start Date',
+  END_DATE: 'End Date',
+  PRICE: 'Price',
+  UTILITIES: 'Utilities'
 }
 
 export const ownerPreferencesLabels = {
   OWNER_PREFERENCES: 'Owner Preferences',
   PETS_ALLOWED: 'Pets Allowed',
   CHILDREN_ALLOWED: 'Children Allowed',
-  DETAILS: 'Details'
+  DONT_HAVE_THAT_INFORMATION_YET: "Don't have that information yet",
+  YES: 'Yes',
+  NO: 'No',
+  PREFERENCE_DETAILS: 'Preference Details'
 };

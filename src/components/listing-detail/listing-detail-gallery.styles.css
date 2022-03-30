@@ -23,3 +23,7 @@
   height: 16rem;
   object-fit: cover;
 }
+
+.tablist>span:first-child {
+  margin: 0;
+}
