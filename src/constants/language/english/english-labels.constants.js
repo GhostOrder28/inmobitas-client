@@ -70,6 +70,7 @@ export const ownerLabels = {
   PHONE: 'Phone',
   AGE: 'Age',
   CLIENT_TYPE: 'Client Type',
+  CLIENT_DETAILS: 'Client Details'
 }
 
 export const contractLabels = {
@@ -82,14 +83,11 @@ export const contractLabels = {
   PERCENTAGE: '%',
   CURRENCY: 'Currency',
   SIGNED_DATE: 'Signed Date',
-  START_DATE: 'Start Date',
   END_DATE: 'End Date',
   ESTATE_PRICE: 'Estate Price',
   RENT: 'Rent',
   RENT_COST: 'Rent Cost',
-  SIGNED_DATE: 'Signed Date',
   START_DATE: 'Start Date',
-  END_DATE: 'End Date',
   PRICE: 'Price',
   UTILITIES: 'Utilities'
 }
