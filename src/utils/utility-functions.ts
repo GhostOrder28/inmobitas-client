@@ -24,6 +24,7 @@ export const selectValidationErrMsg = (errObj: AxiosError<{ validationErrors: Va
 type PresetSlice = (ContractPreset | CurrencyPreset | EstatePreset)[];
 
 export const presetSelector = (presetSlice: PresetSlice, target: number, entity: string): string => {
+
   const selection = presetSlice.find(item => item[`${entity}TypeId`] === target);
   if (!selection) return 'there was an error getting the option';
   if (entity === 'currency') {

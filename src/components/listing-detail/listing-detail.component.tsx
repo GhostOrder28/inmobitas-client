@@ -164,7 +164,7 @@ const ListingDetail = ({ dataPresets, listing }: ListingDetailProps) => {
                         !listing.isPercentage
                           ? presetSelector(
                               dataPresets.currencyTypes,
-                              listing.currencyType,
+                              listing.currencyTypeId,
                               "currency"
                             )
                           : ""
