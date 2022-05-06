@@ -23,7 +23,6 @@ import {
 import { presetSelector } from "../../utils/utility-functions";
 import { Tablist, Tab } from "evergreen-ui";
 import PhotoGallery from "../photo-gallery/photo-gallery.component";
-import "react-image-gallery/styles/css/image-gallery.css";
 import "./listing-detail-gallery.styles.css";
 
 import { Listing, Presets } from "../../pages/listing-page/listing-page.types";

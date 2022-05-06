@@ -18,7 +18,6 @@ import {
   estateLabels,
   ownerLabels,
 } from "../../constants/language/english/english-labels.constants";
-import "react-image-gallery/styles/css/image-gallery.css";
 import ListingsTable from "../listings-table/listings-table.component";
 
 type OwnerDetailProps = {
