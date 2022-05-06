@@ -26,12 +26,9 @@ const PhotoGallery = ({ display, listingPictures }: PhotoGalleryProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    console.log('files: ', files);
-    console.log('listingPictures: ', listingPictures);   
-    
     setFiles([...listingPictures]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [listingPictures]);
 
   const toggleMark = (pictureIdToDelete: number): void => {
     const picture = markedPictures.find(
@@ -92,7 +89,7 @@ const PhotoGallery = ({ display, listingPictures }: PhotoGalleryProps) => {
             backgroundColor="white"
             opacity=".7"
             position="absolute"
-            zIndex="100"
+            zIndex={60}
             width="100vw"
             height="100%"
           >
@@ -118,12 +115,12 @@ const PhotoGallery = ({ display, listingPictures }: PhotoGalleryProps) => {
                     border={showDeletionMenu ? "3px solid white" : ""}
                   >
                     <Pane
-                      position="absolute"
+                      //position="absolute"
                       top="0"
                       left="0"
                       zIndex={90}
-                      width={"100%"}
-                      height={"100%"}
+                      //width={"100%"}
+                      //height={"100%"}
                       cursor={"pointer"}
                       onClick={
                         showDeletionMenu

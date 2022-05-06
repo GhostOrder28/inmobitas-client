@@ -21,7 +21,7 @@ const Navigation = () => {
 
   return (
     <>
-      <div className="navigation flex justify-between items-center ph3 pv3">
+      <div className="navigation relative flex justify-between items-center ph3 pv3">
         <SideSheet
           width={260}
           position={Position.RIGHT}

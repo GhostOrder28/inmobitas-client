@@ -6,7 +6,6 @@ type ErrorMessageProps = {
 }
 
 const ErrorMessage = ({ fieldErrorMsg }: ErrorMessageProps) => {
-  console.log(fieldErrorMsg);
   
   return (
     fieldErrorMsg ?

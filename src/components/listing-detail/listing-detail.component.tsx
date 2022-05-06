@@ -48,14 +48,20 @@ const ListingDetail = ({ dataPresets, listing }: ListingDetailProps) => {
   const [listingPictures, setListingPictures] = useState<Picture[]>([]);
 
   useEffect(() => {
+    
     (async function () {
       const estatePictures = await http.get<Picture[]>(
         `/estatepictures/${userId}/${listingid}`
       );
+      console.log(estatePictures.data);
       setListingPictures(estatePictures.data);
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  //useEffect(() => {
+    //console.log(listingPictures);    
+  //})
 
   return !(listing && dataPresets) ? (
     <Spinner />
