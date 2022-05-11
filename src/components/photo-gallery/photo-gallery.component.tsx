@@ -62,7 +62,7 @@ const PhotoGallery = ({ display, listingPictures }: PhotoGalleryProps) => {
     const res = await Promise.all(
       markedPictures.map((pictureId) => {
         const deletedPicture = http.delete<number>(
-          `http://${process.env.REACT_APP_HOST_FOR_MOBILE}:3001/deletepicture/${userId}/${estateId}/${pictureId}`
+          `/deletepicture/${userId}/${estateId}/${pictureId}`
         );
         return deletedPicture;
       })

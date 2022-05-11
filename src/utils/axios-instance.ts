@@ -1,6 +1,6 @@
 import axios from 'axios';
 
 export default axios.create({
-  baseURL: `http://${process.env.REACT_APP_HOST_FOR_MOBILE}:3001/`,
+  baseURL: 'https://inmobitas-api.herokuapp.com/',
   headers: {"Content-type": "application/json"}
 });
