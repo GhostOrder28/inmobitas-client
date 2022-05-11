@@ -24,7 +24,8 @@ const Signup = () => {
   const dispatch = useDispatch();
 
   const onSubmit = async (signUpData: SignUpData) => {
-    dispatch(signUpStart(signUpData))
+    console.log('submitting data: ', signUpData);    
+    dispatch(signUpStart(signUpData));
   };
 
   return (

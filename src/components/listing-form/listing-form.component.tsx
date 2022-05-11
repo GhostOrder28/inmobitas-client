@@ -678,7 +678,7 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                   {({ values }) =>
                     values.estateTypeId === 1 ? (
                       <Field
-                        name="floors"
+                        name="numberOfFloors"
                         component="input"
                         parse={(value) => parseInt(value) || null}
                       >
@@ -695,7 +695,7 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                             <ErrorMessage
                               fieldErrorMsg={selectValidationErrMsg(
                                 errors,
-                                "floors"
+                                "numberOfFloors"
                               )}
                             />
                           </>

@@ -2,21 +2,28 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import http from "../../utils/axios-instance";
 import { useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
 import { selectCurrentUserId } from "../../redux/user/user.selectors";
 import { Pane, Spinner, Checkbox } from "evergreen-ui";
 import FilesUploader from "../files-uploader/files-uploader.component";
 import GalleryMenu from "../gallery-menu/gallery-menu.component";
 import DeletionPanel from "../deletion-panel/deletion-panel.component";
 import "./photo-gallery.styles.css";
+import { listingIdSelector } from "../../utils/utility-functions";
 
 import { Picture } from "../listing-detail/listing-detail.types";
 
 const pictureFullviewContainer = document.getElementById(
   "pictureFullviewContainer"
 ) as HTMLElement;
+const uploadUrl = 'https://res.cloudinary.com/ghost-order/image/upload/v1652147466';
 
 const PhotoGallery = ({ display, listingPictures }: PhotoGalleryProps) => {
   const userId = useSelector(selectCurrentUserId);
+  const pathname = useLocation().pathname;
+  const estateId = pathname.substring(pathname.lastIndexOf('/')+1);
+  const cloudinaryPicturesPath = `/inmobitas/u_${userId}/l_${estateId}/pictures`;
+
   const [fullscreenPicture, setFullscreenPicture] = useState<Picture | null>(
     null
   );
@@ -44,22 +51,34 @@ const PhotoGallery = ({ display, listingPictures }: PhotoGalleryProps) => {
     setMarkedPictures([...markedPictures, pictureIdToDelete]);
   };
 
+  useEffect(() => {
+    console.log('markedPictures: ', markedPictures);
+    console.log('files: ', files);
+     
+  })
+
   const submitDeletion = async (): Promise<void> => {
+    setIsLoading(true);
     const res = await Promise.all(
       markedPictures.map((pictureId) => {
         const deletedPicture = http.delete<number>(
-          `http://${process.env.REACT_APP_HOST_FOR_MOBILE}:3001/deletepicture/${userId}/${pictureId}`
+          `http://${process.env.REACT_APP_HOST_FOR_MOBILE}:3001/deletepicture/${userId}/${estateId}/${pictureId}`
         );
         return deletedPicture;
       })
     );
     const deletedPictures = res.map((deletedPicture) => deletedPicture.data);
+    console.log('deletedPictures: ', deletedPictures);
+    
     const remaningPictures = files.filter(
       (pic) => !deletedPictures.some((dPic) => dPic === pic.pictureId)
     );
+    console.log('remaningPictures: ', remaningPictures);
+    
     setFiles(remaningPictures);
     setShowDeletionMenu(false);
     setMarkedPictures([]);
+    setIsLoading(false);
   };
 
   return (
@@ -106,7 +125,6 @@ const PhotoGallery = ({ display, listingPictures }: PhotoGalleryProps) => {
         >
           {files.length
             ? files.map((file, idx) => {
-                console.log(file);
                 return (
                   <Pane
                     key={`image-${idx}`}
@@ -145,7 +163,7 @@ const PhotoGallery = ({ display, listingPictures }: PhotoGalleryProps) => {
                       <img
                         className="gallery-img"
                         alt=""
-                        src={`http://${process.env.REACT_APP_HOST_FOR_MOBILE}:3001/users/${userId}/pictures/s/${file.filename}_s.${file.suffix}`}
+                        src={file.smallSizeUrl}
                       />
                     </Pane>
                   </Pane>
@@ -159,6 +177,7 @@ const PhotoGallery = ({ display, listingPictures }: PhotoGalleryProps) => {
           userId={userId}
           fullscreenPicture={fullscreenPicture}
           setFullscreenPicture={setFullscreenPicture}
+          cloudinaryPicturesPath={cloudinaryPicturesPath} 
         />
       ) : (
         ""
@@ -171,6 +190,7 @@ const FullScreen = ({
   userId,
   fullscreenPicture,
   setFullscreenPicture,
+  cloudinaryPicturesPath,
 }: FullScreenProps) =>
   ReactDOM.createPortal(
     <Pane
@@ -187,7 +207,7 @@ const FullScreen = ({
       <Pane position={"absolute"} zIndex={99}>
         <img
           alt=""
-          src={`http://${process.env.REACT_APP_HOST_FOR_MOBILE}:3001/users/${userId}/pictures/l/${fullscreenPicture.filename}_l.${fullscreenPicture.suffix}`}
+          src={fullscreenPicture.largeSizeUrl}
         />
       </Pane>
       <Pane
@@ -212,6 +232,7 @@ type FullScreenProps = {
   userId: number | undefined; // actually this would never be undefined, but i don't know how to enforce a type in a selector and it returns an optional undefined per default.
   fullscreenPicture: Picture;
   setFullscreenPicture: Dispatch<SetStateAction<Picture | null>>;
+  cloudinaryPicturesPath: string;
 };
 
 export default PhotoGallery;

@@ -33,6 +33,7 @@ const FilesUploader = ({
           return http.post(`/upload/${userId}/${params.listingid}`, formData);
         })
       );
+      console.log(uploadedFiles);      
       setFiles([...files, ...uploadedFiles.map((file) => file.data)]);
       setIsLoading(false);
     } catch (err) {

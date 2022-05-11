@@ -10,11 +10,11 @@ import { SignInData } from "../user-auth.types";
 
 const Signin = () => {
   const emailErrMsg = useSelector(
-  selectErrorMessage("validationErrors", "email")
+    selectErrorMessage("validationErrors", "email")
   );
 
   const passwordErrMsg = useSelector(
-  selectErrorMessage("validationErrors", "password")
+    selectErrorMessage("validationErrors", "password")
   );
   const authErrMsg = useSelector(selectErrorMessage("authErrors"));
   const navigate = useNavigate();

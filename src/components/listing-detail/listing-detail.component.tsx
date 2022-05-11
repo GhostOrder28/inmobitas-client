@@ -137,7 +137,7 @@ const ListingDetail = ({ dataPresets, listing }: ListingDetailProps) => {
                 </StyledTr>
                 <StyledTr>
                   <StyledTdWrapped>
-                    {listing.contractType === 1
+                    {listing.contractTypeId === 1
                       ? contractLabels.ESTATE_PRICE
                       : contractLabels.RENT}
                   </StyledTdWrapped>
@@ -196,7 +196,7 @@ const ListingDetail = ({ dataPresets, listing }: ListingDetailProps) => {
               </>
             )}
           </StyledTbody>
-          {listing.contractType === 2 && (
+          {listing.contractTypeId === 2 && (
             <StyledTbody>
               <StyledTr
                 onClick={() => {
@@ -301,7 +301,7 @@ const ListingDetail = ({ dataPresets, listing }: ListingDetailProps) => {
                     )}
                   </StyledTdWrapped>
                 </StyledTr>
-                {listing.estateType !== 1 && (
+                {listing.estateTypeId !== 1 && (
                   <StyledTr>
                     <StyledTdUnwrapped>
                       {estateLabels.FLOOR_LOCATION}
@@ -311,7 +311,7 @@ const ListingDetail = ({ dataPresets, listing }: ListingDetailProps) => {
                     </StyledTdWrapped>
                   </StyledTr>
                 )}
-                {listing.estateType === 1 && (
+                {listing.estateTypeId === 1 && (
                   <StyledTr>
                     <StyledTdUnwrapped>
                       {estateLabels.NUMBER_OF_FLOORS}

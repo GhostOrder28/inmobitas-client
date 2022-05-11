@@ -1,5 +1,6 @@
 export type Picture = {
   filename: string;
   pictureId: number;
-  suffix: string;
+  smallSizeUrl: string;
+  largeSizeUrl: string;
 }

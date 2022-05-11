@@ -30,16 +30,6 @@ const Navigation = () => {
         >
           <Menu>
             <nav className="flex flex-column">
-              {!currentUser && (
-                <>
-                  <Link to={"/signin"} onClick={() => setIsShown(false)}>
-                    Sign In
-                  </Link>
-                  <Link to={"/signup"} onClick={() => setIsShown(false)}>
-                    Sign Up
-                  </Link>
-                </>
-              )}
               <Link to={"/listings"} onClick={() => setIsShown(false)}>
                 Listings
               </Link>

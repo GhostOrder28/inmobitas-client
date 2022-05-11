@@ -5,7 +5,14 @@ export const fetchUserInfo = async (email: string, password: string): Promise<Ax
   try {
     return await http.post('/signin', { email, password })
   } catch (err) {
-    //throw err as AxiosError
+    return err as AxiosError
+  }
+}
+
+export const fetchNewUser = async (names: string, email: string, password: string, confirmPassword: string): Promise<AxiosResponse | AxiosError> => {
+  try {
+    return await http.post('/signup', { names, email, password, confirmPassword })
+  } catch (err) {
     return err as AxiosError
   }
 }

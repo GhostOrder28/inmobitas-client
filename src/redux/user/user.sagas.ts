@@ -15,24 +15,32 @@ import {
   SignUpStart,
   SignInStart,
 } from './user.actions';
-import { fetchUserInfo } from '../requests';
+import { fetchUserInfo, fetchNewUser } from '../requests';
+
+function isResponse(res: AxiosResponse | Error): res is AxiosResponse {
+  return (res as AxiosResponse).data !== undefined;
+}
 
 function* signUp ({ payload: { names, email, password, confirmPassword } }: SignUpStart) {
   try {
-    yield* call(http.post, `/signup`, { names, email, password, confirmPassword }) as SagaGenerator<AxiosResponse<UserInfo>>;
-    yield* put(signUpSuccess({ email, password }));
+    const res = yield* call(fetchNewUser, names, email, password, confirmPassword);
+    console.log('user was signed up...');
+    
+    if (isResponse(res)) {
+      console.log('response is AxiosResponse...');
+      
+      yield* put(signUpSuccess({ email, password }));
+    } else {
+      yield* put(signUpFailure(res));
+    }
   } catch (err) {
     yield* put(signUpFailure(err as AxiosError<AxiosResponse<SignUpFailureError>>));
   }
 }
-function* signIn ({ payload: { email, password } }: SignInStart) {
-  
+
+function* signIn ({ payload: { email, password } }: SignInStart) {  
   try {   
-    const res = yield* call(fetchUserInfo, email, password)
-    
-    function isResponse(res: AxiosResponse | Error): res is AxiosResponse {
-      return (res as AxiosResponse).data !== undefined;
-    }
+    const res = yield* call(fetchUserInfo, email, password);
     if (isResponse(res)) {
       yield* put(signInSuccess(res.data));
     } else {

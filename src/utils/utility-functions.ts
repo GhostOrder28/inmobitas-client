@@ -33,6 +33,10 @@ export const presetSelector = (presetSlice: PresetSlice, target: number, entity:
   return selection[`${entity}Name`] as string;
 }
 
+export const listingIdSelector = (pathname: string) => {
+  return pathname.substring(pathname.lastIndexOf('/')+1); 
+}
+
 export const apiCall = async (route: string, method: 'get' | 'post', body: {}): Promise<AxiosResponse | AxiosError> => {
   try {
     return await http[method](route, body)
