@@ -11,7 +11,6 @@ app.listen(port, () => {
 });
 
 app.get('/', (req, res) => {
-  res.contentType('application/javascript')
   res.sendFile(path.resolve(__dirname, 'build', 'index.html'));
 })
 
