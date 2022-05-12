@@ -10,7 +10,7 @@ app.listen(port, () => {
   console.log(`Server is up on port ${port}`);
 });
 
-app.get('/*', (req, res) => {
+app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 })
 
