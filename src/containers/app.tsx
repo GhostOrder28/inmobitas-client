@@ -4,7 +4,6 @@ import { Routes, Route, Navigate, useLocation, useNavigate } from "react-router-
 import { selectCurrentUser } from '../redux/user/user.selectors';
 import { clearErrors } from '../redux/user/user.actions';
 import { Spinner } from 'evergreen-ui';
-import AuthPage from '../pages/auth-page/auth-page.component';
 import ErrorBoundary from '../components/error-boundary/error-boundary.component';
 import './app.css';
 
@@ -14,15 +13,13 @@ const OwnerPage = lazy(() => import('../pages/owner-page/owner-page.component'))
 const OwnersPage = lazy(() => import('../pages/owners-page/owners-page.component'));
 const DashboardPage = lazy(() => import('../pages/dashboard-page/dashboard-page.component'));
 const Navigation = lazy(() => import('../components/navigation/navigation.component'));
-const Signin = lazy(() => import('../components/user-auth/signin/signin.component'));
-const Signup = lazy(() => import('../components/user-auth/signup/signup.component'));
+const AuthPage = lazy(() => import('../pages/auth-page/auth-page.component'));
 
 const App = () => {
 
   const currentUser = useSelector(selectCurrentUser);
   const dispatch = useDispatch();
   const location = useLocation();
-  const navigate = useNavigate();
 
   const userProtectedRoute = useCallback((ProtectedRoute: React.ElementType): React.ReactNode => {
     return currentUser ? <ProtectedRoute /> : <Navigate to='/signin' />;
