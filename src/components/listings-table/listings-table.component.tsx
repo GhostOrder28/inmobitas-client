@@ -2,10 +2,6 @@ import React from "react";
 import { ListingItem } from "../../pages/listings-page/listings-page.types";
 import { useTranslation } from "react-i18next";
 import {
-  locationLabels,
-  contractLabels,
-} from "../../constants/language/english/english-labels.constants";
-import {
   StyledTable,
   StyledThead,
   StyledTbody,
@@ -23,7 +19,7 @@ type ListingsTableProps = {
 const ListingsTable = ({ listings }: ListingsTableProps) => {
   console.log(listings);
   const navigate = useNavigate();
-  const { t } = useTranslation(['listing'])
+  const { t } = useTranslation(['listing']);
 
   return (
     <StyledTable>
