@@ -1,0 +1,14 @@
+{
+  "owner": "Propietario",
+  "ownerInfo": "Información del Propietario",
+  "name": "Nombre",
+  "ownerName": "Nombre del cliente",
+  "phone": "Teléfono",
+  "ownerContactPhone": "Teléfono de contacto del propietario",
+  "clientType": "Tipo de cliente",
+  "contactPhone": "Teléfono de contacto",
+  "age": "Edad",
+  "clientDetails": "Detalles del cliente",
+  "estates": "Propiedades"
+}
+

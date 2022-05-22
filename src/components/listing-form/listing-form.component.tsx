@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import http from "../../utils/axios-instance";
+import { useTranslation } from "react-i18next";
 import { AxiosError } from "axios";
 import { useSelector } from "react-redux";
 import { selectCurrentUserId } from "../../redux/user/user.selectors";
@@ -12,15 +13,6 @@ import {
 } from "../../utils/utility-functions";
 import ErrorMessage from "../error-messages/error-messages.component";
 import DayPickerInput from "react-day-picker/DayPickerInput";
-import {
-  estateLabels,
-  ownerLabels,
-  contractLabels,
-  locationLabels,
-  featuresLabels,
-  listingLabels,
-  ownerPreferencesLabels,
-} from "../../constants/language/english/english-labels.constants";
 import {
   Button,
   Pane,
@@ -57,6 +49,7 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
   const location = useLocation();
   const navigate = useNavigate();
   const formRef = useRef<FormApi>();
+  const { t } = useTranslation(['listing', 'client', 'ui']);
   const [errors, setErrors] = useState<AxiosError<{ validationErrors: ValidationError[] }>>();
   const [selectedMode, setSelectedMode] = useState<number>(0);
 
@@ -101,7 +94,7 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
         return (
           <>
             <Tablist width={"100%"} marginBottom={'.5rem'} display={"flex"} className="tablist">
-              {["Basic", "Detailed"].map((tab, index) => (
+              {[t('basic', { ns: 'listing' }), t('detailed', { ns: 'listing' })].map((tab, index) => (
                 <Tab
                   key={tab}
                   id={tab}
@@ -128,15 +121,15 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                 padding={20}
                 className="form-category"
               >
-                <Text size={600} className="form-category-header">{ownerLabels.OWNER}</Text>
+                <Text size={600} className="form-category-header">{ t('owner', { ns: 'client' }) }</Text>
                 <Field name="clientName" component="input">
                   {(props) => (
                     <>
                       <div className="flex items-center form-field">
-                        <Text width={"9rem"}>{ownerLabels.NAME}</Text>
+                        <Text width={"9rem"}>{ t('name', { ns: 'client' }) }</Text>
                         <TextInput
                           {...props.input}
-                          placeholder={ownerLabels.OWNER_NAME}
+                          placeholder={ t('ownerName', { ns: 'client' }) }
                           width={"100%"}
                           className="form-field"
                         />
@@ -154,10 +147,10 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                   {(props) => (
                     <>
                       <div className="flex items-center form-field">
-                        <Text width={"9rem"}>{ownerLabels.PHONE}</Text>
+                        <Text width={"9rem"}>{ t('phone', { ns: 'client' }) }</Text>
                         <TextInput
                           {...props.input}
-                          placeholder={ownerLabels.OWNER_CONTACT_PHONE}
+                          placeholder={ t('ownerContactPhone', { ns: 'client' }) }
                           width={"100%"}
                           className="form-field"
                         />
@@ -179,14 +172,14 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                 className="form-category"
               >
                 <Text size={600} className="form-category-header">
-                  {locationLabels.LOCATION}
+                  { t('location', { ns: 'listing' }) } 
                 </Text>
                 <Field name="district" component="input">
                   {(props) => (
                     <>
                       <div className="flex items-center form-field">
-                        <Text width={"9rem"}>{locationLabels.DISTRICT}</Text>
-                        <TextInput {...props.input} placeholder={locationLabels.DISTRICT} width={"100%"} className="form-field" />
+                        <Text width={"9rem"}>{ t('district', { ns: 'listing' }) }</Text>
+                        <TextInput {...props.input} placeholder={ t('district', { ns: 'listing' }) } width={"100%"} className="form-field" />
                       </div>
                       <ErrorMessage fieldErrorMsg={selectValidationErrMsg(errors, "district")} />
                     </>
@@ -198,10 +191,10 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                     {(props) => (
                       <>
                         <div className="flex items-center form-field">
-                        <Text width={"9rem"}>{locationLabels.NEIGHBORHOOD}</Text>
+                        <Text width={"9rem"}>{ t('neighborhood', { ns: 'listing' }) }</Text>
                         <TextInput
                           {...props.input}
-                          placeholder={locationLabels.NEIGHBORHOOD}
+                          placeholder={ t('neighborhood', { ns: 'listing' }) }
                           width={"100%"}
                           className="form-field"
                         />
@@ -215,10 +208,10 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                   {(props) => (
                     <>
                       <div className="flex items-center form-field">
-                      <Text width={"9rem"}>{locationLabels.DETAILS}</Text>
+                      <Text width={"9rem"}>{ t('details', { ns: 'listing' }) }</Text>
                       <TextInput
                         {...props.input}
-                        placeholder={locationLabels.ADDRESS_DETAILS}
+                        placeholder={ t('addressDetails', { ns: 'listing' }) }
                         width={"100%"}
                         className="form-field"
                       />
@@ -242,10 +235,10 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                 className="form-category"
               >
                 <Text size={600} className="form-category-header">
-                  {contractLabels.CONTRACT}
+                  { t('contract', { ns: 'listing' }) }
                 </Text>
                 <div className="flex items-center form-field">
-                  <Text width={"9rem"}>{contractLabels.CONTRACT_TYPE}</Text>
+                  <Text width={"9rem"}>{ t('contractType', { ns: 'listing' }) }</Text>
                   <div className="flex w-100">
                     <Field
                       name="contractTypeId"
@@ -277,7 +270,7 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                           marginLeft={"1rem"}
                           display={"flex"}
                           alignItems={"center"}
-                          label="Exclusive"
+                          label={t('exclusive', { ns: 'listing' })}
                           checked={props.input.checked}
                           onChange={(e) => props.input.onChange(e.target.checked)}
                         />
@@ -296,7 +289,7 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                 >
                   {(props) => (
                     <div className="flex items-center form-field">
-                      <Text width={"9rem"}>{contractLabels.CURRENCY}</Text>
+                      <Text width={"9rem"}>{ t('currency', { ns: 'listing' }) }</Text>
                       <Select
                         value={props.input.value}
                         onChange={(e) => props.input.onChange(e.target.value)}
@@ -326,8 +319,8 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                             <>
                               <Text width={"9rem"}>
                                 {values.contractTypeId === 1
-                                  ? contractLabels.ESTATE_PRICE
-                                  : contractLabels.RENT}
+                                  ? t('estatePrice', { ns: 'listing' }) 
+                                  : t('rent', { ns: 'listing' })}
                               </Text>
                               <div className="flex items-center w-100">
                                 <Text
@@ -346,8 +339,8 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                                   {...props.input}
                                   placeholder={
                                     values.contractTypeId === 1
-                                      ? contractLabels.ESTATE_PRICE
-                                      : contractLabels.RENT_COST
+                                      ? t('estatePrice', { ns: 'listing' }) 
+                                      : t('rentCost', { ns: 'listing' }) 
                                   }
                                   width={"100%"}
                                   flex={9}
@@ -377,7 +370,7 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                       >
                         {(props) => (
                           <div className="flex items-center form-field">
-                            <Text width={"9rem"}>{contractLabels.UTILITIES}</Text>
+                            <Text width={"9rem"}>{ t('utilities', { ns: 'listing' }) }</Text>
                             <Select
                               value={props.input.value}
                               onChange={(e) =>
@@ -388,14 +381,14 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                             >
                               <option value={"null"}>
                                 {
-                                  ownerPreferencesLabels.DONT_HAVE_THAT_INFORMATION_YET
+                                  t('noInfo', { ns: 'listing' }) 
                                 }
                               </option>
                               <option value={"true"}>
-                                {ownerPreferencesLabels.YES}
+                                { t('yes', { ns: 'listing' }) }
                               </option>
                               <option value={"false"}>
-                                {ownerPreferencesLabels.NO}
+                                { t('no', { ns: 'listing' }) }
                               </option>
                             </Select>
                           </div>
@@ -405,7 +398,7 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                   }
                 </FormSpy>
                 <div className="flex items-center form-field">
-                  <Text width={"9rem"}>{contractLabels.FEE}</Text>
+                  <Text width={"9rem"}>{ t('fee', { ns: 'listing' }) }</Text>
                   <div className="flex items-center w-100">
                     <FormSpy subscription={{ values: true }}>
                       {({ values }) => (
@@ -432,7 +425,7 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                               </Text>
                               <TextInput
                                 {...props.input}
-                                placeholder={contractLabels.FEE}
+                                placeholder={ t('fee', { ns: 'listing' }) }
                                 flex={4}
                                 width={"100%"}
                               />
@@ -452,7 +445,7 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                           display={"flex"}
                           justifyContent={"end"}
                           alignItems={"center"}
-                          label="Percentage"
+                          label={t('percentage', { ns: 'listing' })}
                           checked={props.input.checked}
                           onChange={(e) => props.input.onChange(e.target.checked)}
                         />
@@ -470,7 +463,7 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                       <div className="flex items-center form-field">
                       <Text
                         width={"9rem"}
-                      >{`${contractLabels.SIGNED_DATE}:`}</Text>
+                      >{`${t('signedDate', { ns: 'listing' })}:`}</Text>
                       <DayPickerInput
                         value={props.input.value}
                         onDayChange={(newDate) => props.input.onChange(newDate)}
@@ -486,7 +479,7 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                       <div className="flex items-center form-field">
                       <Text
                         width={"9rem"}
-                      >{`${contractLabels.START_DATE}:`}</Text>
+                      >{`${t('startDate', { ns: 'listing' })}:`}</Text>
                       <DayPickerInput
                         value={props.input.value}
                         onDayChange={(newDate) => props.input.onChange(newDate)}
@@ -500,7 +493,7 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                     <Field name="endDate" component="input">
                     {(props) => (
                       <div className="flex items-center form-field">
-                      <Text width={"9rem"}>{`${contractLabels.END_DATE}:`}</Text>
+                      <Text width={"9rem"}>{`${t('endDate', { ns: 'listing' })}:`}</Text>
                       <DayPickerInput
                         value={props.input.value}
                         onDayChange={(newDate) => props.input.onChange(newDate)}
@@ -524,7 +517,7 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                       className="form-category"
                     >
                       <Text size={600} className="form-category-header">
-                        {ownerPreferencesLabels.OWNER_PREFERENCES}
+                        { t('preferenceDetails', { ns: 'listing' }) }
                       </Text>
                       <Field
                         name="petsAllowed"
@@ -536,7 +529,7 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                         {(props) => (
                           <div className="flex items-center form-field">
                             <Text width={"9rem"}>
-                              {ownerPreferencesLabels.PETS_ALLOWED}
+                              { t('petsAllowed', { ns: 'listing' }) }
                             </Text>
                             <Select
                               value={props.input.value}
@@ -547,15 +540,13 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                               flex={"initial"}
                             >
                               <option value={"null"}>
-                                {
-                                  ownerPreferencesLabels.DONT_HAVE_THAT_INFORMATION_YET
-                                }
+                                { t('noInfo', { ns: 'listing' }) }
                               </option>
                               <option value={"true"}>
-                                {ownerPreferencesLabels.YES}
+                                { t('yes', { ns: 'listing' }) }
                               </option>
                               <option value={"false"}>
-                                {ownerPreferencesLabels.NO}
+                                { t('no', { ns: 'listing' }) }
                               </option>
                             </Select>
                             <ErrorMessage
@@ -577,7 +568,7 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                         {(props) => (
                           <div className="flex items-center form-field">
                             <Text width={"9rem"}>
-                              {ownerPreferencesLabels.CHILDREN_ALLOWED}
+                              { t('childrenAllowed', { ns: 'listing' }) }
                             </Text>
                             <Select
                               value={props.input.value}
@@ -588,15 +579,13 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                               flex={"initial"}
                             >
                               <option value={"null"}>
-                                {
-                                  ownerPreferencesLabels.DONT_HAVE_THAT_INFORMATION_YET
-                                }
+                                { t('noInfo', { ns: 'listing' }) }
                               </option>
                               <option value={"true"}>
-                                {ownerPreferencesLabels.YES}
+                                { t('yes', { ns: 'listing' }) }
                               </option>
                               <option value={"false"}>
-                                {ownerPreferencesLabels.NO}
+                                { t('no', { ns: 'listing' }) }
                               </option>
                             </Select>
                             <ErrorMessage
@@ -613,9 +602,7 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                           <>
                             <Textarea
                               {...props.input}
-                              placeholder={
-                                ownerPreferencesLabels.PREFERENCE_DETAILS
-                              }
+                              placeholder={ t('preferenceDetails', { ns: 'listing' }) }
                               width={"100%"}
                               className="form-field"
                             />
@@ -639,7 +626,7 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                 className="form-category"
               >
                 <Text size={600} className="form-category-header">
-                  {estateLabels.ESTATE}
+                  { t('estate', { ns: 'listing' }) }
                 </Text>
                 <Field
                   name="estateTypeId"
@@ -649,7 +636,7 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                   {(props) => (
                     <>
                       <div className="flex items-center form-field">
-                        <Text width={"9rem"}>{estateLabels.ESTATE_TYPE}</Text>
+                        <Text width={"9rem"}>{ t('estateType', { ns: 'listing' }) }</Text>
                         <Select
                           {...props.input}
                           value={props.input.value}
@@ -685,11 +672,11 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                         {(props) => (
                           <>
                             <div className="flex items-center form-field">
-                              <Text width={"9rem"}>{estateLabels.FLOORS}</Text>
+                              <Text width={"9rem"}>{ t('floors', { ns: 'listing' }) }</Text>
                               <TextInput
                                 {...props.input}
                                 width={"100%"}
-                                placeholder={estateLabels.NUMBER_OF_FLOORS}
+                                placeholder={ t('numberOfFloors', { ns: 'listing' }) }
                               />
                             </div>
                             <ErrorMessage
@@ -710,11 +697,11 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                         {(props) => (
                           <>
                             <div className="flex items-center form-field">
-                              <Text width={"9rem"}>{estateLabels.FLOOR}</Text>
+                              <Text width={"9rem"}>{ t('floor', { ns: 'listing' }) }</Text>
                               <TextInput
                                 {...props.input}
                                 width={"100%"}
-                                placeholder={estateLabels.FLOOR_LOCATION}
+                                placeholder={ t('floorLocation', { ns: 'listing' }) }
                               />
                             </div>
                             <ErrorMessage
@@ -739,7 +726,7 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                       {(props) => (
                         <>
                           <div className="flex items-center form-field">
-                            <Text width={"9rem"}>{estateLabels.TOTAL_AREA}</Text>
+                            <Text width={"9rem"}>{ t('totalArea', { ns: 'listing' }) }</Text>
                             <TextInput
                               {...props.input}
                               width={"100%"}
@@ -763,7 +750,7 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                         {(props) => (
                           <>
                             <div className="flex items-center form-field">
-                              <Text width={"9rem"}>{estateLabels.BUILT_AREA}</Text>
+                              <Text width={"9rem"}>{ t('builtArea', { ns: 'listing' }) }</Text>
                               <TextInput
                                 {...props.input}
                                 width={"100%"}
@@ -787,11 +774,11 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                     {(props) => (
                       <>
                         <div className="flex items-center form-field">
-                          <Text width={"9rem"}>{featuresLabels.BEDROOMS}</Text>
+                          <Text width={"9rem"}>{ t('bedrooms', { ns: 'listing' }) }</Text>
                           <TextInput
                             {...props.input}
                             width={"100%"}
-                            placeholder={featuresLabels.NUMBER_OF_BEDROOMS}
+                            placeholder={ t('numberOfBedrooms', { ns: 'listing' }) }
                           />
                         </div>
                         <ErrorMessage
@@ -811,11 +798,11 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                     {(props) => (
                       <>
                         <div className="flex items-center form-field">
-                          <Text width={"9rem"}>{featuresLabels.BATHROOMS}</Text>
+                          <Text width={"9rem"}>{ t('bathrooms', { ns: 'listing' }) }</Text>
                           <TextInput
                             {...props.input}
                             width={"100%"}
-                            placeholder={featuresLabels.NUMBER_OF_BATHROOMS}
+                            placeholder={ t('numberOfBathrooms', { ns: 'listing' }) }
                           />
                         </div>
                         <ErrorMessage
@@ -835,11 +822,11 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                     {(props) => (
                       <>
                         <div className="flex items-center form-field">
-                          <Text width={"9rem"}>{featuresLabels.GARAGES}</Text>
+                          <Text width={"9rem"}>{ t('garages', { ns: 'listing' }) }</Text>
                           <TextInput
                             {...props.input}
                             width={"100%"}
-                            placeholder={featuresLabels.NUMBER_OF_GARAGES}
+                            placeholder={ t('numberOfGarages', { ns: 'listing' }) }
                           />
                         </div>
                         <ErrorMessage
@@ -859,11 +846,11 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                     {(props) => (
                       <>
                         <div className="flex items-center form-field">
-                          <Text width={"9rem"}>{featuresLabels.KITCHENS}</Text>
+                          <Text width={"9rem"}>{ t('kitchens', { ns: 'listing' }) }</Text>
                           <TextInput
                             {...props.input}
                             width={"100%"}
-                            placeholder={featuresLabels.NUMBER_OF_KITCHENS}
+                            placeholder={ t('numberOfKitchens', { ns: 'listing' }) }
                           />
                         </div>
                         <ErrorMessage
@@ -883,24 +870,16 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                     {(props) => (
                       <>
                         <div className="flex items-center form-field radio-group">
-                          <Text width={"9rem"}>{featuresLabels.NATURAL_GAS}</Text>
+                          <Text width={"9rem"}>{ t('naturalGas', { ns: 'listing' }) }</Text>
                           <Select
                             value={props.input.value}
                             onChange={(e) => props.input.onChange(e.target.value)}
                             width={"100%"}
                             flex={"initial"}
                           >
-                            <option value={"null"}>
-                            {
-                              ownerPreferencesLabels.DONT_HAVE_THAT_INFORMATION_YET
-                              }
-                            </option>
-                            <option value={"true"}>
-                              {ownerPreferencesLabels.YES}
-                            </option>
-                              <option value={"false"}>
-                                {ownerPreferencesLabels.NO}
-                              </option>
+                            <option value={"null"}>{ t('noInfo', { ns: 'listing' }) }</option>
+                            <option value={"true"}>{ t('yes', { ns: 'listing' }) }</option>
+                            <option value={"false"}>{ t('no', { ns: 'listing' }) }</option>
                           </Select>
                         </div>
                               <ErrorMessage
@@ -916,7 +895,7 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                     {(props) => (
                       <>
                         <Textarea
-                          placeholder={estateLabels.ESTATE_DETAILS}
+                          placeholder={ t('estateDetails', { ns: 'listing' }) }
                           value={props.input.value}
                           onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
                             props.input.onChange(e.target.value)
@@ -941,7 +920,7 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                 appearance="primary"
                 id="submit-btn"
               >
-                {listingLabels.ADD_NEW_LISTING}
+                { listing ? t('commitChanges', { ns: 'listing' }) : t('addNewListing', { ns: 'listing' }) }
               </Button>
             </form>
           </>

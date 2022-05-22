@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { strParseOut } from '../../utils/utility-functions';
 import { selectCurrentUserId } from '../../redux/user/user.selectors';
-import { ownerLabels } from '../../constants/language/english/english-labels.constants';
+import { useTranslation } from "react-i18next";
 import {
   StyledTable,
   StyledThead,
@@ -21,6 +21,7 @@ const OwnersPage = () => {
   const [clients, setClients] = useState<ClientItem[]>([]);
   const navigate = useNavigate();
   const userId = useSelector(selectCurrentUserId);
+  const { t } = useTranslation(['client'])
 
   useEffect(() => {
 
@@ -41,9 +42,9 @@ const OwnersPage = () => {
       <StyledTable>
         <StyledThead>
           <StyledTr>
-            <StyledTh>{ownerLabels.NAME}</StyledTh>
-            <StyledTh>{ownerLabels.OWNER_CONTACT_PHONE}</StyledTh>
-            <StyledTh>{ownerLabels.CLIENT_TYPE}</StyledTh>
+            <StyledTh>{ t('name') }</StyledTh>
+            <StyledTh>{ t('phone') }</StyledTh>
+            <StyledTh>{ t('clientType') }</StyledTh>
           </StyledTr>
         </StyledThead>
         <StyledTbody>

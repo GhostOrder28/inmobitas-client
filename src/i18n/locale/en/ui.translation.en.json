@@ -1,0 +1,13 @@
+{
+  "signin": "Sign In",
+  "signup": "Sign Up",
+  "signout": "Sign Out",
+  "names": "names",
+  "email": "email",
+  "password": "password",
+  "confirmPassword": "confirm password",
+  "alreadyRegistered": "Already Registered?",
+  "signInHere": "Sign in here",
+  "listings": "Listings",
+  "clients": "Clients"
+}

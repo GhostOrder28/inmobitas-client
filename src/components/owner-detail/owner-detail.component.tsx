@@ -3,6 +3,7 @@ import http from "../../utils/axios-instance";
 import { ListingItem } from "../../pages/listings-page/listings-page.types";
 import { Client } from "./owner-detail.types";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { selectCurrentUserId } from "../../redux/user/user.selectors";
 import { strParseOut } from "../../utils/utility-functions";
@@ -30,6 +31,7 @@ const OwnerDetail = ({ clientData }: OwnerDetailProps) => {
 
   const userId = useSelector(selectCurrentUserId);
   const params = useParams();
+  const { t } = useTranslation(['client', 'listing']);
 
   useEffect(() => {
     (async function () {
@@ -57,25 +59,25 @@ const OwnerDetail = ({ clientData }: OwnerDetailProps) => {
               <StyledTbody>
                 <StyledTr>
                   <StyledTdUnwrapped>
-                    {ownerLabels.CLIENT_TYPE}
+                    { t('clientType', { ns: 'client' }) }
                   </StyledTdUnwrapped>
                   <StyledTdWrapped>{clientData.clientType}</StyledTdWrapped>
                 </StyledTr>
                 <StyledTr>
                   <StyledTdUnwrapped>
-                    {ownerLabels.OWNER_CONTACT_PHONE}
+                    { t('phone', { ns: 'client' }) }
                   </StyledTdUnwrapped>
                   <StyledTdWrapped>
                     {clientData.clientContactPhone}
                   </StyledTdWrapped>
                 </StyledTr>
                 <StyledTr>
-                  <StyledTdUnwrapped>{ownerLabels.AGE}</StyledTdUnwrapped>
+                  <StyledTdUnwrapped>{ t('age', { ns: 'client' }) }</StyledTdUnwrapped>
                   <StyledTdWrapped>{clientData.clientAge}</StyledTdWrapped>
                 </StyledTr>
                 <StyledTr>
                   <StyledTdUnwrapped>
-                    {ownerLabels.CLIENT_DETAILS}
+                    { t('clientDetails', { ns: 'client' }) }
                   </StyledTdUnwrapped>
                   <StyledTdWrapped>{clientData.clientDetails}</StyledTdWrapped>
                 </StyledTr>
@@ -86,7 +88,7 @@ const OwnerDetail = ({ clientData }: OwnerDetailProps) => {
       </Pane>
       <Pane margin={10} overflow={"scroll"} borderColor={"black"}>
         <Heading is={"h2"} size={600} fontWeight={500} marginBottom={20}>
-          {estateLabels.ESTATES}
+          { t('estates', { ns: 'listing' }) }
         </Heading>
         {listings && <ListingsTable listings={listings} />}
       </Pane>

@@ -1,0 +1,14 @@
+{
+  "owner": "Owner",
+  "ownerInfo": "Owner Info",
+  "name": "Name",
+  "ownerName": "Owner Name",
+  "phone": "Phone",
+  "ownerContactPhone": "Owner Contact Phone",
+  "clientType": "Client Type",
+  "contactPhone": "Contact Phone",
+  "age": "Age",
+  "clientDetails": "Client Details",
+  "estates": "Estates"
+}
+

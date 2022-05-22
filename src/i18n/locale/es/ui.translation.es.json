@@ -1,0 +1,13 @@
+{
+  "signin": "Ingresar",
+  "signup": "Registrarse",
+  "signout": "Salir",
+  "names": "nombres",
+  "email": "email",
+  "password": "contraseña",
+  "confirmPassword": "confirmar contraseña",
+  "alreadyRegistered": "¿Ya estas registrado?",
+  "signInHere": "Ingresa aquí",
+  "listings": "Propiedades",
+  "clients": "Clientes"
+}

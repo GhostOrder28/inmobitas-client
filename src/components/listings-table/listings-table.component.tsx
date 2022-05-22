@@ -1,5 +1,6 @@
 import React from "react";
 import { ListingItem } from "../../pages/listings-page/listings-page.types";
+import { useTranslation } from "react-i18next";
 import {
   locationLabels,
   contractLabels,
@@ -22,14 +23,15 @@ type ListingsTableProps = {
 const ListingsTable = ({ listings }: ListingsTableProps) => {
   console.log(listings);
   const navigate = useNavigate();
+  const { t } = useTranslation(['listing'])
 
   return (
     <StyledTable>
       <StyledThead>
         <StyledTr>
-          <StyledTh>{locationLabels.DISTRICT}</StyledTh>
-          <StyledTh>{locationLabels.NEIGHBORHOOD}</StyledTh>
-          <StyledTh>{contractLabels.PRICE}</StyledTh>
+          <StyledTh>{ t('district') }</StyledTh>
+          <StyledTh>{ t('neighborhood') }</StyledTh>
+          <StyledTh>{ t('price') }</StyledTh>
           <StyledTh>{""}</StyledTh>
         </StyledTr>
       </StyledThead>

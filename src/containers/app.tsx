@@ -5,6 +5,7 @@ import { selectCurrentUser } from '../redux/user/user.selectors';
 import { clearErrors } from '../redux/user/user.actions';
 import { Spinner } from 'evergreen-ui';
 import ErrorBoundary from '../components/error-boundary/error-boundary.component';
+import '../i18n/i18n.js';
 import './app.css';
 
 const ListingPage = lazy(() => import('../pages/listing-page/listing-page.component'));

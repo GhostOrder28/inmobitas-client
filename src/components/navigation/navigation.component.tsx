@@ -5,6 +5,7 @@ import { signOutStart } from "../../redux/user/user.actions";
 import { selectCurrentUser } from "../../redux/user/user.selectors";
 import { SideSheet, Button, MenuIcon, Position, Menu } from "evergreen-ui";
 import LogoIcon from "../../icons/logo-icon/logo-icon.component";
+import { useTranslation } from "react-i18next";
 import "./navigation.styles.css";
 
 const Navigation = () => {
@@ -12,6 +13,7 @@ const Navigation = () => {
   const currentUser = useSelector(selectCurrentUser);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { t } = useTranslation(['ui', 'listing']);
 
   const signOut = () => {
     dispatch(signOutStart());
@@ -31,13 +33,13 @@ const Navigation = () => {
           <Menu>
             <nav className="flex flex-column">
               <Link to={"/listings"} onClick={() => setIsShown(false)}>
-                Listings
+                { t('listings') }
               </Link>
               <Link to={"/owners"} onClick={() => setIsShown(false)}>
-                Owners
+                { t('clients') }
               </Link>
               <Link to={"/newlisting"} onClick={() => setIsShown(false)}>
-                Add new listing
+                { t('addNewListing', { ns: 'listing' }) } 
               </Link>
               {currentUser && (
                 <Button
@@ -51,7 +53,7 @@ const Navigation = () => {
                   size="large"
                   onClick={signOut}
                 >
-                  Sign Out
+                  { t('signout') } 
                 </Button>
               )}
             </nav>

@@ -3,6 +3,7 @@ import http from "../../utils/axios-instance";
 import { useSelector } from "react-redux";
 import { selectCurrentUserId } from "../../redux/user/user.selectors";
 import { useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import {
   StyledTable,
   StyledTbody,
@@ -12,14 +13,6 @@ import {
   StyledThWithSpan,
 } from "../../global-styles/table.styles";
 import { Pane, Spinner } from "evergreen-ui";
-import {
-  ownerLabels,
-  contractLabels,
-  estateLabels,
-  locationLabels,
-  featuresLabels,
-  ownerPreferencesLabels,
-} from "../../constants/language/english/english-labels.constants";
 import { presetSelector } from "../../utils/utility-functions";
 import { Tablist, Tab } from "evergreen-ui";
 import PhotoGallery from "../photo-gallery/photo-gallery.component";
@@ -45,6 +38,7 @@ const ListingDetail = ({ dataPresets, listing }: ListingDetailProps) => {
   });
   const [selectedTab, setSelectedTab] = useState(0);
   const [listingPictures, setListingPictures] = useState<Picture[]>([]);
+  const { t } = useTranslation(['client', 'listing', 'ui'])
 
   useEffect(() => {
     
@@ -67,7 +61,7 @@ const ListingDetail = ({ dataPresets, listing }: ListingDetailProps) => {
   ) : (
     <>
       <Tablist width={"100%"} display={"flex"} className="tablist">
-        {["Information", "Gallery"].map((tab, index) => (
+        {[t('information', { ns: 'listing' }), t('gallery', { ns: 'listing' })].map((tab, index) => (
           <Tab
             key={tab}
             id={tab}
@@ -90,19 +84,17 @@ const ListingDetail = ({ dataPresets, listing }: ListingDetailProps) => {
                 setIsHidden({ ...isHidden, owner: !isHidden.owner })
               }}
             >
-              <StyledThWithSpan spanValue="2">
-                {ownerLabels.OWNER_INFO}
-              </StyledThWithSpan>
+              <StyledThWithSpan spanValue="2">{ t('owner', { ns: 'client' }) }</StyledThWithSpan>
             </StyledTr>
             {!isHidden.owner && (
               <>
                 <StyledTr>
-                  <StyledTdUnwrapped>{ownerLabels.OWNER}</StyledTdUnwrapped>
-                  <StyledTdWrapped>{listing.clientName}</StyledTdWrapped>
+                  <StyledTdUnwrapped>{ t('name', { ns: 'client' }) }</StyledTdUnwrapped>
+                  <StyledTdWrapped>{ listing.clientName }</StyledTdWrapped>
                 </StyledTr>
                 <StyledTr>
                   <StyledTdUnwrapped>
-                    {ownerLabels.OWNER_CONTACT_PHONE}
+                    { t('phone', { ns: 'client' }) }
                   </StyledTdUnwrapped>
                   <StyledTdWrapped>
                     {listing.clientContactPhone}
@@ -118,14 +110,14 @@ const ListingDetail = ({ dataPresets, listing }: ListingDetailProps) => {
               }}
             >
               <StyledThWithSpan spanValue="2">
-                {contractLabels.CONTRACT}
+                { t('contract', { ns: 'listing' }) }
               </StyledThWithSpan>
             </StyledTr>
             {!isHidden.contract && (
               <>
                 <StyledTr>
                   <StyledTdUnwrapped>
-                    {contractLabels.CONTRACT_TYPE}
+                    { t('contractType', { ns: 'listing' }) }
                   </StyledTdUnwrapped>
                   <StyledTdWrapped>
                     {presetSelector(
@@ -138,8 +130,8 @@ const ListingDetail = ({ dataPresets, listing }: ListingDetailProps) => {
                 <StyledTr>
                   <StyledTdWrapped>
                     {listing.contractTypeId === 1
-                      ? contractLabels.ESTATE_PRICE
-                      : contractLabels.RENT}
+                      ? t('estatePrice', { ns: 'listing' }) 
+                      : t('rent', { ns: 'listing' })}
                   </StyledTdWrapped>
                   <StyledTdWrapped>
                     {listing.estatePrice &&
@@ -153,15 +145,15 @@ const ListingDetail = ({ dataPresets, listing }: ListingDetailProps) => {
                 {listing.utilitiesIncluded !== null && (
                   <StyledTr>
                     <StyledTdUnwrapped>
-                      {contractLabels.UTILITIES}
+                      { t('utilities', { ns: 'listing' }) }
                     </StyledTdUnwrapped>
                     <StyledTdWrapped>
-                      {listing.utilitiesIncluded ? "Yes" : "No"}
+                      {listing.utilitiesIncluded ? t('yes', { ns: 'listing' }) : t('no', { ns: 'listing' })}
                     </StyledTdWrapped>
                   </StyledTr>
                 )}
                 <StyledTr>
-                  <StyledTdWrapped>{contractLabels.FEE}</StyledTdWrapped>
+                  <StyledTdWrapped>{ t('fee', { ns: 'listing' }) }</StyledTdWrapped>
                   <StyledTdWrapped>
                     {listing.fee &&
                       `
@@ -181,16 +173,16 @@ const ListingDetail = ({ dataPresets, listing }: ListingDetailProps) => {
                 </StyledTr>
                 <StyledTr>
                   <StyledTdWrapped>
-                    {contractLabels.SIGNED_DATE}
+                    { t('signedDate', { ns: 'listing' }) }
                   </StyledTdWrapped>
                   <StyledTdWrapped>{listing.signedDate}</StyledTdWrapped>
                 </StyledTr>
                 <StyledTr>
-                  <StyledTdWrapped>{contractLabels.START_DATE}</StyledTdWrapped>
+                  <StyledTdWrapped>{ t('startDate', { ns: 'listing' }) }</StyledTdWrapped>
                   <StyledTdWrapped>{listing.startDate}</StyledTdWrapped>
                 </StyledTr>
                 <StyledTr>
-                  <StyledTdWrapped>{contractLabels.END_DATE}</StyledTdWrapped>
+                  <StyledTdWrapped>{ t('endDate', { ns: 'listing' }) }</StyledTdWrapped>
                   <StyledTdWrapped>{listing.endDate}</StyledTdWrapped>
                 </StyledTr>
               </>
@@ -207,32 +199,32 @@ const ListingDetail = ({ dataPresets, listing }: ListingDetailProps) => {
                 }}
               >
                 <StyledThWithSpan spanValue="2">
-                  {ownerPreferencesLabels.OWNER_PREFERENCES}
+                  { t('ownerPreferences', { ns: 'listing' }) }
                 </StyledThWithSpan>
               </StyledTr>
               {!isHidden.ownerPreferences && (
                 <>
                   <StyledTr>
                     <StyledTdUnwrapped>
-                      {ownerPreferencesLabels.PETS_ALLOWED}
+                      { t('petsAllowed', { ns: 'listing' }) }
                     </StyledTdUnwrapped>
                     <StyledTdWrapped>
                       {listing.petsAllowed !== null &&
-                        (listing.petsAllowed ? "Yes" : "No")}
+                        (listing.petsAllowed ? t('yes', { ns: 'listing' }) : t('no', { ns: 'listing' }))}
                     </StyledTdWrapped>
                   </StyledTr>
                   <StyledTr>
                     <StyledTdUnwrapped>
-                      {ownerPreferencesLabels.CHILDREN_ALLOWED}
+                      { t('childrenAllowed', { ns: 'listing' }) }
                     </StyledTdUnwrapped>
                     <StyledTdWrapped>
                       {listing.childrenAllowed !== null &&
-                        (listing.childrenAllowed ? "Yes" : "No")}
+                        (listing.childrenAllowed ? t('yes', { ns: 'listing' }) : t('no', { ns: 'listing' }))}
                     </StyledTdWrapped>
                   </StyledTr>
                   <StyledTr>
                     <StyledTdUnwrapped>
-                      {ownerPreferencesLabels.PREFERENCE_DETAILS}
+                      { t('preferenceDetails', { ns: 'listing' }) }
                     </StyledTdUnwrapped>
                     <StyledTdWrapped>
                       {listing.ownerPreferencesDetails || ""}
@@ -249,26 +241,26 @@ const ListingDetail = ({ dataPresets, listing }: ListingDetailProps) => {
               }}
             >
               <StyledThWithSpan spanValue="2">
-                {locationLabels.LOCATION}
+                { t('location', { ns: 'listing' }) }
               </StyledThWithSpan>
             </StyledTr>
             {!isHidden.location && (
               <>
                 <StyledTr>
                   <StyledTdUnwrapped>
-                    {locationLabels.DISTRICT}
+                    { t('district', { ns: 'listing' }) }
                   </StyledTdUnwrapped>
                   <StyledTdWrapped>{listing.district}</StyledTdWrapped>
                 </StyledTr>
                 <StyledTr>
                   <StyledTdUnwrapped>
-                    {locationLabels.NEIGHBORHOOD}
+                    { t('neighborhood', { ns: 'listing' }) }
                   </StyledTdUnwrapped>
                   <StyledTdWrapped>{listing.neighborhood}</StyledTdWrapped>
                 </StyledTr>
                 <StyledTr>
                   <StyledTdUnwrapped>
-                    {locationLabels.ADDRESS_DETAILS}
+                    { t('addressDetails', { ns: 'listing' }) }
                   </StyledTdUnwrapped>
                   <StyledTdWrapped>
                     {listing.addressDetails || ""}
@@ -284,14 +276,14 @@ const ListingDetail = ({ dataPresets, listing }: ListingDetailProps) => {
               }}
             >
               <StyledThWithSpan spanValue="2">
-                {estateLabels.ESTATE}
+                { t('estate', { ns: 'listing' }) }
               </StyledThWithSpan>
             </StyledTr>
             {!isHidden.estate && (
               <>
                 <StyledTr>
                   <StyledTdUnwrapped>
-                    {estateLabels.ESTATE_TYPE}
+                    { t('estateType', { ns: 'listing' }) }
                   </StyledTdUnwrapped>
                   <StyledTdWrapped>
                     {presetSelector(
@@ -304,7 +296,7 @@ const ListingDetail = ({ dataPresets, listing }: ListingDetailProps) => {
                 {listing.estateTypeId !== 1 && (
                   <StyledTr>
                     <StyledTdUnwrapped>
-                      {estateLabels.FLOOR_LOCATION}
+                      { t('floorLocation', { ns: 'listing' }) }
                     </StyledTdUnwrapped>
                     <StyledTdWrapped>
                       {listing.floorLocation || "-"}
@@ -314,7 +306,7 @@ const ListingDetail = ({ dataPresets, listing }: ListingDetailProps) => {
                 {listing.estateTypeId === 1 && (
                   <StyledTr>
                     <StyledTdUnwrapped>
-                      {estateLabels.NUMBER_OF_FLOORS}
+                      { t('numberOfFloors', { ns: 'listing' }) }
                     </StyledTdUnwrapped>
                     <StyledTdWrapped>
                       {listing.numberOfFloors || "-"}
@@ -323,7 +315,7 @@ const ListingDetail = ({ dataPresets, listing }: ListingDetailProps) => {
                 )}
                 <StyledTr>
                   <StyledTdUnwrapped>
-                    {estateLabels.TOTAL_AREA}
+                    { t('totalArea', { ns: 'listing' }) }
                   </StyledTdUnwrapped>
                   <StyledTdWrapped>
                     {listing.totalArea && `${listing.totalArea} m²`}
@@ -331,7 +323,7 @@ const ListingDetail = ({ dataPresets, listing }: ListingDetailProps) => {
                 </StyledTr>
                 <StyledTr>
                   <StyledTdUnwrapped>
-                    {estateLabels.BUILT_AREA}
+                    { t('builtArea', { ns: 'listing' }) }
                   </StyledTdUnwrapped>
                   <StyledTdWrapped>
                     {listing.builtArea && `${listing.builtArea} m²`}
@@ -339,7 +331,7 @@ const ListingDetail = ({ dataPresets, listing }: ListingDetailProps) => {
                 </StyledTr>
                 <StyledTr>
                   <StyledTdUnwrapped>
-                    {featuresLabels.BEDROOMS}
+                    { t('bedrooms', { ns: 'listing' }) }
                   </StyledTdUnwrapped>
                   <StyledTdWrapped>
                     {listing.numberOfBedrooms || ""}
@@ -347,7 +339,7 @@ const ListingDetail = ({ dataPresets, listing }: ListingDetailProps) => {
                 </StyledTr>
                 <StyledTr>
                   <StyledTdUnwrapped>
-                    {featuresLabels.BATHROOMS}
+                    { t('bathrooms', { ns: 'listing' }) }
                   </StyledTdUnwrapped>
                   <StyledTdWrapped>
                     {listing.numberOfBathrooms || ""}
@@ -355,7 +347,7 @@ const ListingDetail = ({ dataPresets, listing }: ListingDetailProps) => {
                 </StyledTr>
                 <StyledTr>
                   <StyledTdUnwrapped>
-                    {featuresLabels.GARAGES}
+                    { t('garages', { ns: 'listing' }) }
                   </StyledTdUnwrapped>
                   <StyledTdWrapped>
                     {listing.numberOfGarages || ""}
@@ -363,22 +355,22 @@ const ListingDetail = ({ dataPresets, listing }: ListingDetailProps) => {
                 </StyledTr>
                 <StyledTr>
                   <StyledTdUnwrapped>
-                    {featuresLabels.KITCHENS}
+                    { t('kitchens', { ns: 'listing' }) }
                   </StyledTdUnwrapped>
                   <StyledTdWrapped>{listing.numberOfKitchens}</StyledTdWrapped>
                 </StyledTr>
                 <StyledTr>
                   <StyledTdUnwrapped>
-                    {featuresLabels.NATURAL_GAS}
+                    { t('naturalGas', { ns: 'listing' }) }
                   </StyledTdUnwrapped>
                   <StyledTdWrapped>
                     {listing.haveNaturalGas !== null &&
-                      (listing.haveNaturalGas ? "Yes" : "No")}
+                      (listing.haveNaturalGas ? t('yes', { ns: 'listing' }) : t('no', { ns: 'listing' }))}
                   </StyledTdWrapped>
                 </StyledTr>
                 <StyledTr>
                   <StyledTdUnwrapped spanValue="2">
-                    {estateLabels.ESTATE_DETAILS}
+                    { t('estateDetails', { ns: 'listing' }) }
                   </StyledTdUnwrapped>
                 </StyledTr>
                 <StyledTr>
