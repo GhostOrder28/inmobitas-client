@@ -1,8 +1,6 @@
 import { takeLatest, put, all, call, SagaGenerator } from 'typed-redux-saga/macro';
 import userActionTypes from './user.types';
 import { AxiosError, AxiosResponse } from 'axios';
-import http from '../../utils/axios-instance'; 
-import { UserInfo } from '../../components/user-auth/user-auth.types';
 import { SignInFailureError, SignUpFailureError } from './user.actions';
 import {
   signInStart,
@@ -24,11 +22,7 @@ function isResponse(res: AxiosResponse | Error): res is AxiosResponse {
 function* signUp ({ payload: { names, email, password, confirmPassword } }: SignUpStart) {
   try {
     const res = yield* call(fetchNewUser, names, email, password, confirmPassword);
-    console.log('user was signed up...');
-    
     if (isResponse(res)) {
-      console.log('response is AxiosResponse...');
-      
       yield* put(signUpSuccess({ email, password }));
     } else {
       yield* put(signUpFailure(res));

@@ -7,7 +7,6 @@ import uiTranslationEN from './locale/en/ui.translation.en.json';
 import listingTranslationES from './locale/es/listing.translation.es.json';
 import clientTranslationES from './locale/es/client.translation.es.json';
 import uiTranslationES from './locale/es/ui.translation.es.json';
-import Backend from 'i18next-http-backend';
 
 const resources = {
   en: {
