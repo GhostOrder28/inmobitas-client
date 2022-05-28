@@ -1,16 +1,18 @@
 import React, { useState } from "react";
-import { Pane, TrashIcon, MoreIcon, CrossIcon } from "evergreen-ui";
+import { Pane, TrashIcon, MoreIcon, CrossIcon, DocumentIcon } from "evergreen-ui";
 
 type GalleryMenuProps = {
   children: React.ReactNode[];
   setShowDeletionMenu: React.Dispatch<React.SetStateAction<boolean>>;
   showDeletionMenu: boolean;
+  generatePdf: () => Promise<void>;
 };
 
 const GalleryMenu = ({
   children,
   setShowDeletionMenu,
   showDeletionMenu,
+  generatePdf,
 }: GalleryMenuProps) => {
   const [activeMenu, setActiveMenu] = useState(false);
 
@@ -26,7 +28,7 @@ const GalleryMenu = ({
         bottom={".8rem"}
         right={!showDeletionMenu ? ".8rem" : "-4rem"}
         width={60}
-        height={activeMenu ? 180 : 60}
+        height={activeMenu ? 240 : 60}
         zIndex={97}
         borderRadius={"50px"}
         backgroundColor={"#F9FAFC"}
@@ -42,6 +44,17 @@ const GalleryMenu = ({
           alignItems={"center"}
           width="100%"
         >
+          <Pane
+            padding={"1.15rem"}
+            onClick={generatePdf}
+            width={"100%"}
+            display={"flex"}
+            justifyContent={"center"}
+            alignItems={"center"}
+            cursor={"pointer"}
+          >
+            <DocumentIcon size={"100%" as any as number} color={"#3A3E58"} />
+          </Pane>
           <Pane
             padding={"1.15rem"}
             onClick={() => setShowDeletionMenu(!showDeletionMenu)}

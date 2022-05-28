@@ -37,6 +37,19 @@ const formInitialState = {
   isExclusive: false,
 };
 
+const basicModeProps = [  ]
+const inputs = document.getElementsByTagName('input');
+
+{/*const names = inputs.reduce((accumulator, current) => {
+  
+}, [])*/}
+for (const prop in inputs) {
+  console.log(inputs[prop].name);
+  
+}
+//console.log(Object.values(inputs));
+
+
 type ListingFormProps = {
   dataPresets: Presets | undefined;
   listing?: Listing | undefined;

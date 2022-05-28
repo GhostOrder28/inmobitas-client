@@ -1,16 +1,16 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import ReactDOM from "react-dom";
+import { AxiosResponse } from 'axios';
 import http from "../../utils/axios-instance";
 import { useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { selectCurrentUserId } from "../../redux/user/user.selectors";
 import { Pane, Spinner, Checkbox } from "evergreen-ui";
 import FilesUploader from "../files-uploader/files-uploader.component";
 import GalleryMenu from "../gallery-menu/gallery-menu.component";
 import DeletionPanel from "../deletion-panel/deletion-panel.component";
 import "./photo-gallery.styles.css";
-import { listingIdSelector } from "../../utils/utility-functions";
-
+import fileDownloader from 'js-file-download';
 import { Picture } from "../listing-detail/listing-detail.types";
 
 const pictureFullviewContainer = document.getElementById(
@@ -20,6 +20,7 @@ const uploadUrl = 'https://res.cloudinary.com/ghost-order/image/upload/v16521474
 
 const PhotoGallery = ({ display, listingPictures }: PhotoGalleryProps) => {
   const userId = useSelector(selectCurrentUserId);
+  const { listingid } = useParams();  
   const pathname = useLocation().pathname;
   const estateId = pathname.substring(pathname.lastIndexOf('/')+1);
   const cloudinaryPicturesPath = `/inmobitas/u_${userId}/l_${estateId}/pictures`;
@@ -51,12 +52,6 @@ const PhotoGallery = ({ display, listingPictures }: PhotoGalleryProps) => {
     setMarkedPictures([...markedPictures, pictureIdToDelete]);
   };
 
-  useEffect(() => {
-    console.log('markedPictures: ', markedPictures);
-    console.log('files: ', files);
-     
-  })
-
   const submitDeletion = async (): Promise<void> => {
     setIsLoading(true);
     const res = await Promise.all(
@@ -67,13 +62,10 @@ const PhotoGallery = ({ display, listingPictures }: PhotoGalleryProps) => {
         return deletedPicture;
       })
     );
-    const deletedPictures = res.map((deletedPicture) => deletedPicture.data);
-    console.log('deletedPictures: ', deletedPictures);
-    
+    const deletedPictures = res.map((deletedPicture) => deletedPicture.data);    
     const remaningPictures = files.filter(
       (pic) => !deletedPictures.some((dPic) => dPic === pic.pictureId)
     );
-    console.log('remaningPictures: ', remaningPictures);
     
     setFiles(remaningPictures);
     setShowDeletionMenu(false);
@@ -81,11 +73,21 @@ const PhotoGallery = ({ display, listingPictures }: PhotoGalleryProps) => {
     setIsLoading(false);
   };
 
+  const generatePdf = async () => {
+    setIsLoading(true);
+    const buffer = await http.get(`/genpdf/${userId}/${listingid}`, {
+      responseType: 'arraybuffer' 
+    });
+    fileDownloader(buffer.data, 'listing-presentation.pdf')
+    setIsLoading(false);
+  }
+
   return (
     <Pane display={display} position={"relative"}>
       <GalleryMenu
         setShowDeletionMenu={setShowDeletionMenu}
         showDeletionMenu={showDeletionMenu}
+        generatePdf={generatePdf}
       >
         <FilesUploader
           files={files}
@@ -97,7 +99,7 @@ const PhotoGallery = ({ display, listingPictures }: PhotoGalleryProps) => {
           setShowDeletionMenu={setShowDeletionMenu}
           setMarkedPictures={setMarkedPictures}
           submitDeletion={submitDeletion}
-        />
+        />        
       </GalleryMenu>
       <Pane position="relative">
         {isLoading && (

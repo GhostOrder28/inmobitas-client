@@ -52,9 +52,6 @@ const ListingDetail = ({ dataPresets, listing }: ListingDetailProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  //useEffect(() => {
-    //console.log(listingPictures);    
-  //})
 
   return !(listing && dataPresets) ? (
     <Spinner />
