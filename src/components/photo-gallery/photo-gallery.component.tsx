@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState, useRef } from "react";
 import ReactDOM from "react-dom";
 import { AxiosResponse } from 'axios';
 import http from "../../utils/axios-instance";
@@ -24,6 +24,8 @@ const PhotoGallery = ({ display, listingPictures }: PhotoGalleryProps) => {
   const pathname = useLocation().pathname;
   const estateId = pathname.substring(pathname.lastIndexOf('/')+1);
   const cloudinaryPicturesPath = `/inmobitas/u_${userId}/l_${estateId}/pictures`;
+  const cloudRef = useRef(document.createElement('a'));
+
 
   const [fullscreenPicture, setFullscreenPicture] = useState<Picture | null>(
     null
@@ -75,10 +77,14 @@ const PhotoGallery = ({ display, listingPictures }: PhotoGalleryProps) => {
 
   const generatePdf = async () => {
     setIsLoading(true);
-    const buffer = await http.get(`/genpdf/${userId}/${listingid}`, {
-      responseType: 'arraybuffer' 
-    });
-    fileDownloader(buffer.data, 'listing-presentation.pdf')
+    const res = await http.get(`/genpdf/${userId}/${listingid}`);
+    console.log(res);
+    cloudRef.current.setAttribute('href', res.data);
+    console.log(cloudRef.current);
+    
+    cloudRef.current.click()
+    
+    fileDownloader(res.data, 'listing-presentation.pdf')
     setIsLoading(false);
   }
 
