@@ -71,6 +71,7 @@ const PhotoGallery = ({ display, listingPictures }: PhotoGalleryProps) => {
     setFiles(remaningPictures);
     setShowDeletionMenu(false);
     setMarkedPictures([]);
+    await http.delete(`/deletedocument/${userId}/${listingid}`)
     setIsLoading(false);
   };
 
