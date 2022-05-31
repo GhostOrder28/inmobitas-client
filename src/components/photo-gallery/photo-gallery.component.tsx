@@ -10,7 +10,6 @@ import FilesUploader from "../files-uploader/files-uploader.component";
 import GalleryMenu from "../gallery-menu/gallery-menu.component";
 import DeletionPanel from "../deletion-panel/deletion-panel.component";
 import "./photo-gallery.styles.css";
-import fileDownloader from 'js-file-download';
 import { Picture } from "../listing-detail/listing-detail.types";
 
 const pictureFullviewContainer = document.getElementById(
@@ -78,13 +77,12 @@ const PhotoGallery = ({ display, listingPictures }: PhotoGalleryProps) => {
   const generatePdf = async () => {
     setIsLoading(true);
     const res = await http.get(`/genpdf/${userId}/${listingid}`);
-    console.log(res);
+    console.log(res.data);
     cloudRef.current.setAttribute('href', res.data);
     console.log(cloudRef.current);
     
     cloudRef.current.click()
     
-    fileDownloader(res.data, 'listing-presentation.pdf')
     setIsLoading(false);
   }
 
