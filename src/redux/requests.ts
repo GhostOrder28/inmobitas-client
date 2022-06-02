@@ -9,9 +9,9 @@ export const fetchUserInfo = async (email: string, password: string): Promise<Ax
   }
 }
 
-export const fetchNewUser = async (names: string, email: string, password: string, confirmPassword: string): Promise<AxiosResponse | AxiosError> => {
+export const fetchNewUser = async (names: string, email: string, contactPhone: number, password: string, confirmPassword: string): Promise<AxiosResponse | AxiosError> => {
   try {
-    return await http.post('/signup', { names, email, password, confirmPassword })
+    return await http.post('/signup', { names, email, contactPhone, password, confirmPassword })
   } catch (err) {
     return err as AxiosError
   }

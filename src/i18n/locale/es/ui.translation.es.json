@@ -3,6 +3,7 @@
   "signup": "Registrarse",
   "signout": "Salir",
   "names": "nombres",
+  "contactPhone": "teléfono de contacto",
   "email": "email",
   "password": "contraseña",
   "confirmPassword": "confirmar contraseña",

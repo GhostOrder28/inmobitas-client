@@ -19,6 +19,7 @@ const Signup = () => {
 
   const namesErrMsg = useSelector(selectErrorMessage('validationErrors', 'names'));
   const emailErrMsg = useSelector(selectErrorMessage('validationErrors', 'email'));
+  const contactPhoneErrMsg = useSelector(selectErrorMessage('validationErrors', 'email'));
   const passwordErrMsg = useSelector(selectErrorMessage('validationErrors', 'password'));
   const confirmPasswordErrMsg = useSelector(selectErrorMessage('validationErrors', 'confirmPassword'));
   const signupErrMsg = useSelector(selectErrorMessage('duplicateEntityError', 'email'));
@@ -57,6 +58,14 @@ const Signup = () => {
                 )}
               </Field>
               <ErrorMessage fieldErrorMsg={emailErrMsg}/>
+            </div>
+            <div>
+              <Field name="contactPhone" component="input" parse={ (value) => parseInt(value) || null }>
+                {props => (
+                  <TextInput {...props.input} type='number' placeholder={ t('contactPhone') } width={'100%'} />
+                )}
+              </Field>
+              <ErrorMessage fieldErrorMsg={contactPhoneErrMsg}/>
             </div>
             <div>
               <Field name="password" component="input">

@@ -12,12 +12,12 @@ const resources = {
   en: {
     listing: listingTranslationEN,
     client: clientTranslationEN,
-    ui: uiTranslationEN
+    ui: uiTranslationEN,
   },
   es: {
     listing: listingTranslationES,
     client: clientTranslationES,
-    ui: uiTranslationES
+    ui: uiTranslationES,
   }
 }
 

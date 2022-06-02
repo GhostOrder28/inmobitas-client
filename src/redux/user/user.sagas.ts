@@ -19,9 +19,9 @@ function isResponse(res: AxiosResponse | Error): res is AxiosResponse {
   return (res as AxiosResponse).data !== undefined;
 }
 
-function* signUp ({ payload: { names, email, password, confirmPassword } }: SignUpStart) {
+function* signUp ({ payload: { names, email, contactPhone, password, confirmPassword } }: SignUpStart) {
   try {
-    const res = yield* call(fetchNewUser, names, email, password, confirmPassword);
+    const res = yield* call(fetchNewUser, names, email, contactPhone, password, confirmPassword);
     if (isResponse(res)) {
       yield* put(signUpSuccess({ email, password }));
     } else {

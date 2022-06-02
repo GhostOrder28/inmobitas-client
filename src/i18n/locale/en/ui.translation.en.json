@@ -3,6 +3,7 @@
   "signup": "Sign Up",
   "signout": "Sign Out",
   "names": "names",
+  "contactPhone": "contact phone",
   "email": "email",
   "password": "password",
   "confirmPassword": "confirm password",

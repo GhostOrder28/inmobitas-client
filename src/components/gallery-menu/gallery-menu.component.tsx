@@ -5,14 +5,14 @@ type GalleryMenuProps = {
   children: React.ReactNode[];
   setShowDeletionMenu: React.Dispatch<React.SetStateAction<boolean>>;
   showDeletionMenu: boolean;
-  generatePdf: () => Promise<void>;
+  generatePresentation: () => Promise<void>;
 };
 
 const GalleryMenu = ({
   children,
   setShowDeletionMenu,
   showDeletionMenu,
-  generatePdf,
+  generatePresentation,
 }: GalleryMenuProps) => {
   const [activeMenu, setActiveMenu] = useState(false);
 
@@ -46,7 +46,7 @@ const GalleryMenu = ({
         >
           <Pane
             padding={"1.15rem"}
-            onClick={generatePdf}
+            onClick={() => generatePresentation()}
             width={"100%"}
             display={"flex"}
             justifyContent={"center"}

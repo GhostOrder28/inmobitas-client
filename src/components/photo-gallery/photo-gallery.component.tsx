@@ -12,23 +12,18 @@ import DeletionPanel from "../deletion-panel/deletion-panel.component";
 import "./photo-gallery.styles.css";
 import { Picture } from "../listing-detail/listing-detail.types";
 
-const pictureFullviewContainer = document.getElementById(
-  "pictureFullviewContainer"
+const globalContainer = document.getElementById(
+  "globalContainer"
 ) as HTMLElement;
 const uploadUrl = 'https://res.cloudinary.com/ghost-order/image/upload/v1652147466';
 
 const PhotoGallery = ({ display, listingPictures }: PhotoGalleryProps) => {
   const userId = useSelector(selectCurrentUserId);
   const { listingid } = useParams();  
-  const pathname = useLocation().pathname;
-  const estateId = pathname.substring(pathname.lastIndexOf('/')+1);
-  const cloudinaryPicturesPath = `/inmobitas/u_${userId}/l_${estateId}/pictures`;
+  const cloudinaryPicturesPath = `/inmobitas/u_${userId}/l_${listingid}/pictures`;
   const cloudRef = useRef(document.createElement('a'));
 
-
-  const [fullscreenPicture, setFullscreenPicture] = useState<Picture | null>(
-    null
-  );
+  const [fullscreenPicture, setFullscreenPicture] = useState<Picture | null>(null);
   const [files, setFiles] = useState<Picture[]>([]);
   const [showDeletionMenu, setShowDeletionMenu] = useState(false);
   const [markedPictures, setMarkedPictures] = useState<number[]>([]);
@@ -58,7 +53,7 @@ const PhotoGallery = ({ display, listingPictures }: PhotoGalleryProps) => {
     const res = await Promise.all(
       markedPictures.map((pictureId) => {
         const deletedPicture = http.delete<number>(
-          `/deletepicture/${userId}/${estateId}/${pictureId}`
+          `/deletepicture/${userId}/${listingid}/${pictureId}`
         );
         return deletedPicture;
       })
@@ -75,15 +70,15 @@ const PhotoGallery = ({ display, listingPictures }: PhotoGalleryProps) => {
     setIsLoading(false);
   };
 
-  const generatePdf = async () => {
+  const generatePresentation = async () => {
     setIsLoading(true);
     const res = await http.get(`/genpdf/${userId}/${listingid}`);
     console.log(res.data);
     cloudRef.current.setAttribute('href', res.data);
     console.log(cloudRef.current);
-    
+
     cloudRef.current.click()
-    
+
     setIsLoading(false);
   }
 
@@ -92,7 +87,7 @@ const PhotoGallery = ({ display, listingPictures }: PhotoGalleryProps) => {
       <GalleryMenu
         setShowDeletionMenu={setShowDeletionMenu}
         showDeletionMenu={showDeletionMenu}
-        generatePdf={generatePdf}
+        generatePresentation={generatePresentation}
       >
         <FilesUploader
           files={files}
@@ -140,12 +135,9 @@ const PhotoGallery = ({ display, listingPictures }: PhotoGalleryProps) => {
                     border={showDeletionMenu ? "3px solid white" : ""}
                   >
                     <Pane
-                      //position="absolute"
                       top="0"
                       left="0"
                       zIndex={90}
-                      //width={"100%"}
-                      //height={"100%"}
                       cursor={"pointer"}
                       onClick={
                         showDeletionMenu
@@ -179,7 +171,7 @@ const PhotoGallery = ({ display, listingPictures }: PhotoGalleryProps) => {
             : ""}
         </Pane>
       </Pane>
-      {fullscreenPicture && pictureFullviewContainer ? (
+      {fullscreenPicture && globalContainer ? (
         <FullScreen
           userId={userId}
           fullscreenPicture={fullscreenPicture}
@@ -227,7 +219,7 @@ const FullScreen = ({
         onClick={() => setFullscreenPicture(null)}
       ></Pane>
     </Pane>,
-    pictureFullviewContainer
+    globalContainer
   );
 
 type PhotoGalleryProps = {

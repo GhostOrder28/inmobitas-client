@@ -5,6 +5,7 @@ export type SignInData = {
 
 export type SignUpData = SignInData & {
   names: string;
+  contactPhone: number;
   confirmPassword: string;
 }
 
