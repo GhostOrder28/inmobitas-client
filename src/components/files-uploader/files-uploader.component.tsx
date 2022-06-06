@@ -1,6 +1,6 @@
 import React, { ChangeEventHandler } from "react";
 import { useParams } from "react-router-dom";
-import { ArrowUpIcon } from "evergreen-ui";
+import { ArrowUpIcon, Pane } from "evergreen-ui";
 import { useSelector } from "react-redux";
 import { selectCurrentUserId } from "../../redux/user/user.selectors";
 import "./files-uploader.styles.css";

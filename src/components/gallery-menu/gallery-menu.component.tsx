@@ -1,11 +1,14 @@
 import React, { useState } from "react";
-import { Pane, TrashIcon, MoreIcon, CrossIcon, DocumentIcon } from "evergreen-ui";
+import { WarningSignIcon, Text, Pane, TrashIcon, DocumentIcon } from "evergreen-ui";
+import { Picture } from '../listing-detail/listing-detail.types';
 
 type GalleryMenuProps = {
   children: React.ReactNode[];
   setShowDeletionMenu: React.Dispatch<React.SetStateAction<boolean>>;
   showDeletionMenu: boolean;
   generatePresentation: () => Promise<void>;
+  files: Picture[];
+
 };
 
 const GalleryMenu = ({
@@ -13,8 +16,8 @@ const GalleryMenu = ({
   setShowDeletionMenu,
   showDeletionMenu,
   generatePresentation,
+  files
 }: GalleryMenuProps) => {
-  const [activeMenu, setActiveMenu] = useState(false);
 
   return (
     <>
@@ -22,66 +25,44 @@ const GalleryMenu = ({
       <Pane
         position={"fixed"}
         display={"flex"}
-        flexDirection={"column"}
-        justifyContent={"flex-end"}
-        alignItems={"center"}
-        bottom={".8rem"}
-        right={!showDeletionMenu ? ".8rem" : "-4rem"}
-        width={60}
-        height={activeMenu ? 240 : 60}
+        bottom={!showDeletionMenu ? 0 : -50}
+        width={'100%'}
+        height={50}
         zIndex={97}
-        borderRadius={"50px"}
         backgroundColor={"#F9FAFC"}
-        boxShadow={"5px 5px 7px rgba(0, 0, 0, 0.2)"}
-        overflow={"hidden"}
         transition={"all .5s"}
       >
         <Pane
-          position={"absolute"}
           display={"flex"}
-          flexDirection={"column"}
-          justifyContent={"flex-end"}
-          alignItems={"center"}
           width="100%"
         >
           <Pane
-            padding={"1.15rem"}
+            padding={"1rem"}
             onClick={() => generatePresentation()}
             width={"100%"}
             display={"flex"}
             justifyContent={"center"}
             alignItems={"center"}
             cursor={"pointer"}
+            borderRight={'1px solid #E9E9ED'}
           >
             <DocumentIcon size={"100%" as any as number} color={"#3A3E58"} />
           </Pane>
           <Pane
-            padding={"1.15rem"}
+            padding={"1rem"}
             onClick={() => setShowDeletionMenu(!showDeletionMenu)}
             width={"100%"}
             display={"flex"}
             justifyContent={"center"}
             alignItems={"center"}
             cursor={"pointer"}
+            borderRight={'1px solid #E9E9ED'}
           >
             <TrashIcon size={"100%" as any as number} color={"#3A3E58"} />
           </Pane>
-          {children[0]}
-          <Pane
-            padding={"1.15rem"}
-            width={"100%"}
-            display={"flex"}
-            justifyContent={"center"}
-            alignItems={"center"}
-            onClick={() => setActiveMenu(!activeMenu)}
-            cursor={"pointer"}
-          >
-            {!activeMenu ? (
-              <MoreIcon size={"100%" as any as number} color={"#3A3E58"} />
-            ) : (
-              <CrossIcon size={"100%" as any as number} color={"#3A3E58"} />
-            )}
-          </Pane>
+          {
+            children[0] // upload button
+          }
         </Pane>
       </Pane>
     </>

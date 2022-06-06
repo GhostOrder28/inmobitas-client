@@ -5,12 +5,13 @@ import http from "../../utils/axios-instance";
 import { useSelector } from "react-redux";
 import { useLocation, useParams } from "react-router-dom";
 import { selectCurrentUserId } from "../../redux/user/user.selectors";
-import { Pane, Spinner, Checkbox } from "evergreen-ui";
+import { Pane, Spinner, Checkbox, ArrowUpIcon, Text, WarningSignIcon } from "evergreen-ui";
 import FilesUploader from "../files-uploader/files-uploader.component";
 import GalleryMenu from "../gallery-menu/gallery-menu.component";
 import DeletionPanel from "../deletion-panel/deletion-panel.component";
 import "./photo-gallery.styles.css";
 import { Picture } from "../listing-detail/listing-detail.types";
+import { useTranslation } from "react-i18next";
 
 const globalContainer = document.getElementById(
   "globalContainer"
@@ -28,6 +29,8 @@ const PhotoGallery = ({ display, listingPictures }: PhotoGalleryProps) => {
   const [showDeletionMenu, setShowDeletionMenu] = useState(false);
   const [markedPictures, setMarkedPictures] = useState<number[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { t } = useTranslation(['ui']);
+  const [noImages, setNoImages] = useState(false);
 
   useEffect(() => {
     setFiles([...listingPictures]);
@@ -71,23 +74,44 @@ const PhotoGallery = ({ display, listingPictures }: PhotoGalleryProps) => {
   };
 
   const generatePresentation = async () => {
-    setIsLoading(true);
-    const res = await http.get(`/genpdf/${userId}/${listingid}`);
-    console.log(res.data);
-    cloudRef.current.setAttribute('href', res.data);
-    console.log(cloudRef.current);
+    if (files.length) {
+      setIsLoading(true);
+      const res = await http.get(`/genpdf/${userId}/${listingid}`);
+      console.log(res.data);
+      cloudRef.current.setAttribute('href', res.data);
+      console.log(cloudRef.current);
 
-    cloudRef.current.click()
+      cloudRef.current.click()
 
-    setIsLoading(false);
+      setIsLoading(false);      
+    } else {
+      setNoImages(true);
+    }
   }
 
   return (
     <Pane display={display} position={"relative"}>
+      { noImages && !files.length &&
+        <Pane 
+          position={'fixed'}
+          left={20}
+          bottom={70}
+          padding={15}
+          elevation={2}
+          borderRadius={5}
+          display={'flex'}
+          transition={"all .5s"}
+          alignItems={'center'}
+        >
+          <WarningSignIcon color="warning" marginRight={16} />
+          <Text>{t('noImages')}</Text>
+        </Pane>
+      }
       <GalleryMenu
         setShowDeletionMenu={setShowDeletionMenu}
         showDeletionMenu={showDeletionMenu}
         generatePresentation={generatePresentation}
+        files={files}
       >
         <FilesUploader
           files={files}
@@ -117,16 +141,17 @@ const PhotoGallery = ({ display, listingPictures }: PhotoGalleryProps) => {
             <Spinner />
           </Pane>
         )}
-        <Pane
-          display="grid"
-          gridTemplateColumns={"repeat(3, 1fr)"}
-          position={"relative"}
-          width={"100%"}
-          padding={showDeletionMenu ? "1.5px" : ""}
-          transition={"all .3s"}
-        >
-          {files.length
-            ? files.map((file, idx) => {
+        { files.length ?
+          <Pane
+            display="grid"
+            gridTemplateColumns={"repeat(3, 1fr)"}
+            position={"relative"}
+            width={"100%"}
+            padding={showDeletionMenu ? "1.5px" : ""}
+            transition={"all .3s"}
+          >
+            {
+              files.map((file, idx) => {
                 return (
                   <Pane
                     key={`image-${idx}`}
@@ -167,9 +192,10 @@ const PhotoGallery = ({ display, listingPictures }: PhotoGalleryProps) => {
                     </Pane>
                   </Pane>
                 );
-              })
-            : ""}
-        </Pane>
+              })            
+            }
+          </Pane> : ""
+        }
       </Pane>
       {fullscreenPicture && globalContainer ? (
         <FullScreen
