@@ -4,6 +4,7 @@
   align-items: center;
   cursor: pointer;
   padding: 1rem;
+  width: 100%;
 }
 
 .upload-btn {
