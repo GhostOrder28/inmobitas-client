@@ -1,22 +1,24 @@
 import React, { Dispatch, SetStateAction, useEffect, useState, useRef } from "react";
 import ReactDOM from "react-dom";
-import { AxiosResponse } from 'axios';
 import http from "../../utils/axios-instance";
 import { useSelector } from "react-redux";
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { selectCurrentUserId } from "../../redux/user/user.selectors";
-import { Pane, Spinner, Checkbox, ArrowUpIcon, Text, WarningSignIcon } from "evergreen-ui";
+import { Pane, Checkbox, DocumentIcon, TrashIcon } from "evergreen-ui";
 import FilesUploader from "../files-uploader/files-uploader.component";
 import GalleryMenu from "../gallery-menu/gallery-menu.component";
 import DeletionPanel from "../deletion-panel/deletion-panel.component";
 import "./photo-gallery.styles.css";
 import { Picture } from "../listing-detail/listing-detail.types";
 import { useTranslation } from "react-i18next";
+import PopupMessage from "../popup-message/popup-message.component";
+import ContentSpinner from "../content-spinner/content-spinner.component";
+import PicturesContainer from '../pictures-container/pictures-container.component';
+import GalleryMenuButton from "../gallery-menu-button/gallery-menu-button.component";
 
 const globalContainer = document.getElementById(
   "globalContainer"
 ) as HTMLElement;
-const uploadUrl = 'https://res.cloudinary.com/ghost-order/image/upload/v1652147466';
 
 const PhotoGallery = ({ display, listingPictures }: PhotoGalleryProps) => {
   const userId = useSelector(selectCurrentUserId);
@@ -86,70 +88,37 @@ const PhotoGallery = ({ display, listingPictures }: PhotoGalleryProps) => {
       setIsLoading(false);      
     } else {
       setNoImages(true);
+      setTimeout(() => {
+        setNoImages(false);
+      }, 2000);
     }
   }
 
   return (
     <Pane display={display} position={"relative"}>
-      { noImages && !files.length &&
-        <Pane 
-          position={'fixed'}
-          left={20}
-          bottom={70}
-          padding={15}
-          elevation={2}
-          borderRadius={5}
-          display={'flex'}
-          transition={"all .5s"}
-          alignItems={'center'}
-        >
-          <WarningSignIcon color="warning" marginRight={16} />
-          <Text>{t('noImages')}</Text>
-        </Pane>
-      }
+      <PopupMessage message={ t('noImages') } displayCondition={noImages}/>
       <GalleryMenu
-        setShowDeletionMenu={setShowDeletionMenu}
         showDeletionMenu={showDeletionMenu}
-        generatePresentation={generatePresentation}
-        files={files}
       >
-        <FilesUploader
-          files={files}
-          setFiles={setFiles}
-          setIsLoading={setIsLoading}
-        />
         <DeletionPanel
           showDeletionMenu={showDeletionMenu}
           setShowDeletionMenu={setShowDeletionMenu}
           setMarkedPictures={setMarkedPictures}
           submitDeletion={submitDeletion}
         />        
+        <GalleryMenuButton Icon={DocumentIcon} fn={generatePresentation}/>
+        <GalleryMenuButton Icon={TrashIcon} fn={() => setShowDeletionMenu(!showDeletionMenu)}/>
+        <FilesUploader
+          files={files}
+          setFiles={setFiles}
+          setIsLoading={setIsLoading}
+          setNoImages={setNoImages}
+        />
       </GalleryMenu>
       <Pane position="relative">
-        {isLoading && (
-          <Pane
-            display="flex"
-            justifyContent="center"
-            paddingTop="3rem"
-            backgroundColor="white"
-            opacity=".7"
-            position="absolute"
-            zIndex={60}
-            width="100vw"
-            height="100%"
-          >
-            <Spinner />
-          </Pane>
-        )}
+        { isLoading && <ContentSpinner /> }
         { files.length ?
-          <Pane
-            display="grid"
-            gridTemplateColumns={"repeat(3, 1fr)"}
-            position={"relative"}
-            width={"100%"}
-            padding={showDeletionMenu ? "1.5px" : ""}
-            transition={"all .3s"}
-          >
+          <PicturesContainer showDeletionMenu={showDeletionMenu}>
             {
               files.map((file, idx) => {
                 return (
@@ -194,7 +163,7 @@ const PhotoGallery = ({ display, listingPictures }: PhotoGalleryProps) => {
                 );
               })            
             }
-          </Pane> : ""
+          </PicturesContainer> : ""
         }
       </Pane>
       {fullscreenPicture && globalContainer ? (

@@ -12,12 +12,14 @@ type FilesUploaderProps = {
   files: Picture[];
   setFiles: React.Dispatch<React.SetStateAction<Picture[]>>;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setNoImages: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const FilesUploader = ({
   files,
   setFiles,
   setIsLoading,
+  setNoImages,
 }: FilesUploaderProps) => {
   const userId = useSelector(selectCurrentUserId);
   const params = useParams();
@@ -35,6 +37,7 @@ const FilesUploader = ({
       );
       console.log(uploadedFiles);      
       setFiles([...files, ...uploadedFiles.map((file) => file.data)]);
+      setNoImages(false)
       setIsLoading(false);
     } catch (err) {
       console.log(err);
