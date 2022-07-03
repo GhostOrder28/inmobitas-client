@@ -1,0 +1,19 @@
+{
+  "newEvent": "New Event",
+  "eventTitle": "Event title",
+  "agenda": "Agenda",
+  "describeEvent": "Describe the event",
+  "date": "Date",
+  "time": "Time",
+  "event": "Event",
+  "addEndTime": "Add End Time",
+  "removeEndTime": "Remove End Time",
+  "addNewEvent": "Add New Event",
+  "startTime": "Start Time",
+  "endTime": "End Time",
+  "day": "Day",
+  "today": "Today",
+  "month": "Month",
+  "year": "Year",
+  "showPast": "Show Past"
+}

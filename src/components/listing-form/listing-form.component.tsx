@@ -12,7 +12,7 @@ import {
   presetSelector,
 } from "../../utils/utility-functions";
 import ErrorMessage from "../error-messages/error-messages.component";
-import DayPickerInput from "react-day-picker/DayPickerInput";
+import DatePicker from '../date-picker/date-picker.component';
 import {
   Button,
   Pane,
@@ -24,7 +24,7 @@ import {
   Tablist,
   Tab,
 } from "evergreen-ui";
-import "react-day-picker/lib/style.css";
+//import "react-day-picker/lib/style.css";
 import "./listing-form.styles.css";
 import { Presets, Listing } from "../../pages/listing-page/listing-page.types";
 import { ValidationError } from "../../redux/redux.types";
@@ -345,8 +345,7 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                                     presetSelector(
                                       dataPresets.currencyTypes,
                                       values.currencyTypeId as number,
-                                      "currency"
-                                  )}
+                                  )?.currencySymbol}
                                 </Text>
                                 <TextInput
                                   {...props.input}
@@ -433,8 +432,7 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                                     presetSelector(
                                       dataPresets.currencyTypes,
                                       values.currencyTypeId as number,
-                                      "currency"
-                                    )}
+                                    )?.currencySymbol}
                               </Text>
                               <TextInput
                                 {...props.input}
@@ -477,9 +475,9 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                       <Text
                         width={"9rem"}
                       >{`${t('signedDate', { ns: 'listing' })}:`}</Text>
-                      <DayPickerInput
-                        value={props.input.value}
-                        onDayChange={(newDate) => props.input.onChange(newDate)}
+                      <DatePicker
+                        value={props.input.value || null}
+                        onChange={props.input.onChange}
                       />
                       </div>
                     )}
@@ -493,9 +491,9 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                       <Text
                         width={"9rem"}
                       >{`${t('startDate', { ns: 'listing' })}:`}</Text>
-                      <DayPickerInput
+                      <DatePicker
                         value={props.input.value}
-                        onDayChange={(newDate) => props.input.onChange(newDate)}
+                        onChange={props.input.onChange}
                       />
                       </div>
                     )}
@@ -507,9 +505,9 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                     {(props) => (
                       <div className="flex items-center form-field">
                       <Text width={"9rem"}>{`${t('endDate', { ns: 'listing' })}:`}</Text>
-                      <DayPickerInput
+                      <DatePicker
                         value={props.input.value}
-                        onDayChange={(newDate) => props.input.onChange(newDate)}
+                        onChange={props.input.onChange}
                       />
                       </div>
                     )}

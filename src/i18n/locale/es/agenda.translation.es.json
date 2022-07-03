@@ -1,0 +1,21 @@
+{
+  "newEvent": "Nuevo Evento",
+  "eventTitle": "Título del Evento",
+  "agenda": "Agenda",
+  "describeEvent": "Describe el evento",
+  "date": "Fecha",
+  "time": "Hora",
+  "event": "Evento",
+  "addEndTime": "Añadir hora de finalización",
+  "removeEndTime": "Eliminar hora de finalización",
+  "addNewEvent": "Añadir Nuevo Evento",
+  "startTime": "Hora Inicial",
+  "endTime": "Hora Final",
+  "day": "Día",
+  "today": "Hoy",
+  "week": "Semana",
+  "month": "Mes",
+  "year": "Año",
+  "showPast": "Mostrar Pasados"
+}
+

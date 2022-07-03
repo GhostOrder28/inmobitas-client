@@ -79,12 +79,8 @@ const PhotoGallery = ({ display, listingPictures }: PhotoGalleryProps) => {
     if (files.length) {
       setIsLoading(true);
       const res = await http.get(`/genpdf/${userId}/${listingid}`);
-      console.log(res.data);
       cloudRef.current.setAttribute('href', res.data);
-      console.log(cloudRef.current);
-
       cloudRef.current.click()
-
       setIsLoading(false);      
     } else {
       setNoImages(true);

@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate, Outlet } from "react-router-dom";
 import { signOutStart } from "../../redux/user/user.actions";
 import { selectCurrentUser } from "../../redux/user/user.selectors";
-import { SideSheet, Button, MenuIcon, Position, Menu } from "evergreen-ui";
+import { SideSheet, Position, Menu } from "evergreen-ui";
 import LogoIcon from "../../icons/logo-icon/logo-icon.component";
 import { useTranslation } from "react-i18next";
 import SignoutButton from '../signout-btn/signout-btn.component';
@@ -15,7 +15,7 @@ const Navigation = () => {
   const currentUser = useSelector(selectCurrentUser);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { t } = useTranslation(['ui', 'listing']);
+  const { t } = useTranslation(['ui', 'listing', 'agenda']);
 
   const signOut = () => {
     dispatch(signOutStart());
@@ -42,6 +42,9 @@ const Navigation = () => {
               </Link>
               <Link to={"/newlisting"} onClick={() => setIsShown(false)}>
                 { t('addNewListing', { ns: 'listing' }) } 
+              </Link>
+              <Link to={"/agenda"} onClick={() => setIsShown(false)}>
+                { t('agenda', { ns: 'agenda' }) } 
               </Link>
               {currentUser && <SignoutButton onClick={signOut}/>}
             </nav>

@@ -38,7 +38,7 @@ const ListingDetail = ({ dataPresets, listing }: ListingDetailProps) => {
   });
   const [selectedTab, setSelectedTab] = useState(0);
   const [listingPictures, setListingPictures] = useState<Picture[]>([]);
-  const { t } = useTranslation(['client', 'listing', 'ui'])
+  const { t } = useTranslation(['client', 'listing', 'ui']) 
 
   useEffect(() => {
     
@@ -90,12 +90,8 @@ const ListingDetail = ({ dataPresets, listing }: ListingDetailProps) => {
                   <StyledTdWrapped>{ listing.clientName }</StyledTdWrapped>
                 </StyledTr>
                 <StyledTr>
-                  <StyledTdUnwrapped>
-                    { t('phone', { ns: 'client' }) }
-                  </StyledTdUnwrapped>
-                  <StyledTdWrapped>
-                    {listing.clientContactPhone}
-                  </StyledTdWrapped>
+                  <StyledTdUnwrapped>{ t('phone', { ns: 'client' }) }</StyledTdUnwrapped>
+                  <StyledTdWrapped>{listing.clientContactPhone}</StyledTdWrapped>
                 </StyledTr>
               </>
             )}
@@ -117,26 +113,23 @@ const ListingDetail = ({ dataPresets, listing }: ListingDetailProps) => {
                     { t('contractType', { ns: 'listing' }) }
                   </StyledTdUnwrapped>
                   <StyledTdWrapped>
-                    {presetSelector(
-                      dataPresets.contractTypes,
-                      listing.contractTypeId,
-                      "contract"
-                    )}
+                    { 
+                      presetSelector(dataPresets.contractTypes, listing.contractTypeId)?.contractName 
+                    }
                   </StyledTdWrapped>
                 </StyledTr>
                 <StyledTr>
                   <StyledTdWrapped>
-                    {listing.contractTypeId === 1
+                    { listing.contractTypeId === 1
                       ? t('estatePrice', { ns: 'listing' }) 
-                      : t('rent', { ns: 'listing' })}
+                      : t('rent', { ns: 'listing' })
+                    }
                   </StyledTdWrapped>
                   <StyledTdWrapped>
-                    {listing.estatePrice &&
-                      `${presetSelector(
-                        dataPresets.currencyTypes,
-                        listing.currencyTypeId,
-                        "currency"
-                      )} ${listing.estatePrice}`}
+                    { 
+                      listing.estatePrice &&
+                      `${presetSelector(dataPresets.currencyTypes, listing.currencyTypeId)?.currencySymbol} ${listing.estatePrice}`
+                    }
                   </StyledTdWrapped>
                 </StyledTr>
                 {listing.utilitiesIncluded !== null && (
@@ -152,20 +145,14 @@ const ListingDetail = ({ dataPresets, listing }: ListingDetailProps) => {
                 <StyledTr>
                   <StyledTdWrapped>{ t('fee', { ns: 'listing' }) }</StyledTdWrapped>
                   <StyledTdWrapped>
-                    {listing.fee &&
+                    {
+                      listing.fee &&
                       `
-                      ${
-                        !listing.isPercentage
-                          ? presetSelector(
-                              dataPresets.currencyTypes,
-                              listing.currencyTypeId,
-                              "currency"
-                            )
-                          : ""
-                      } 
-                      ${listing.fee} 
-                      ${listing.isPercentage ? "%" : ""}
-                    `}
+                        ${ !listing.isPercentage ? presetSelector(dataPresets.currencyTypes, listing.currencyTypeId)?.currencySymbol : "" } 
+                        ${listing.fee} 
+                        ${listing.isPercentage ? "%" : ""}
+                      `
+                    }
                   </StyledTdWrapped>
                 </StyledTr>
                 <StyledTr>
@@ -283,11 +270,12 @@ const ListingDetail = ({ dataPresets, listing }: ListingDetailProps) => {
                     { t('estateType', { ns: 'listing' }) }
                   </StyledTdUnwrapped>
                   <StyledTdWrapped>
-                    {presetSelector(
-                      dataPresets.estateTypes,
-                      listing.estateTypeId,
-                      "estate"
-                    )}
+                    {
+                      presetSelector(
+                        dataPresets.estateTypes,
+                        listing.estateTypeId,
+                      )?.estateName
+                    }
                   </StyledTdWrapped>
                 </StyledTr>
                 {listing.estateTypeId !== 1 && (

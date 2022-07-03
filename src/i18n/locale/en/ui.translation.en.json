@@ -11,5 +11,9 @@
   "signInHere": "Sign in here",
   "listings": "Listings",
   "clients": "Clients",
-  "noImages": "First upload some images"
+  "noImages": "First upload some images",
+  "scheduler": "Scheduler",
+  "yes": "Yes",
+  "no": "No",
+  "includeContactInfoMessage": "Would you like to include your contact info at the last page of the document?"
 }
