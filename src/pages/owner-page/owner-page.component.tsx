@@ -10,7 +10,6 @@ const OwnerPage = () => {
 
   const [client, setClient] = useState<Client>();
   const params = useParams();
-  console.log(params);
   const userId = useSelector(selectCurrentUserId);
 
   useEffect(() => {
@@ -18,8 +17,6 @@ const OwnerPage = () => {
     (async function () {
       try {
         const clientData = await http.get<Client>(`/client/${userId}/${params.clientid}`)
-        console.log('clientData: ', clientData);
-        
         setClient(clientData.data)
       } catch (err) {
         console.log(err);

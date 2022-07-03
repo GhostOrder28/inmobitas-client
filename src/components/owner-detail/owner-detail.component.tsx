@@ -15,10 +15,6 @@ import {
   StyledTdUnwrapped,
 } from "../../global-styles/table.styles";
 import { Pane, Heading } from "evergreen-ui";
-import {
-  estateLabels,
-  ownerLabels,
-} from "../../constants/language/english/english-labels.constants";
 import ListingsTable from "../listings-table/listings-table.component";
 
 type OwnerDetailProps = {
@@ -27,7 +23,6 @@ type OwnerDetailProps = {
 
 const OwnerDetail = ({ clientData }: OwnerDetailProps) => {
   const [listings, setListings] = useState<ListingItem[]>([]);
-  console.log(listings);
 
   const userId = useSelector(selectCurrentUserId);
   const params = useParams();

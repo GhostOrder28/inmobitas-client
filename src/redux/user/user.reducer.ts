@@ -28,10 +28,6 @@ const INITIAL_STATE: UserState = {
 const userReducer = (state = INITIAL_STATE, action = {} as AnyAction) => {
 
   if (signUpFailure.match(action) || signInFailure.match(action) || signOutFailure.match(action)) {
-    console.log({
-      ...state,
-      errors: action.payload
-    });
     
     return {
       ...state,

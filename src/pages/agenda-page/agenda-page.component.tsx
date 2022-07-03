@@ -57,9 +57,7 @@ const AgendaPage = () => {
 
 
   useEffect(() => {
-    console.log('runs!')
     if (prevDate && getMonth(currentDate) !== getMonth(prevDate)) { // month is 0 indexed but here I just want to check if month has changed.
-      console.log('rans!')
       requestEventsData();
     }
   }, [currentDate, prevDate, requestEventsData]);

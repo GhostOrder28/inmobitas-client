@@ -34,7 +34,6 @@ export const presetSelector = (presetSlice: PresetSlice, target: number): Contra
 
   const selection = presetSlice.find(item => {
     const id = Object.keys(item).find(key => key.includes('Id'));    
-    console.log(id);    
     return id ? item[id] === target : new Error(`object doesn't have an id property`);
   });
 

@@ -10,7 +10,6 @@ type DatePickerProps = {
 }
 
 const locale = getLocale();
-console.log(locale)
 
 const DatePicker: FC<DatePickerProps> = ({ value, onChange }) => { 
   const [display, setDisplay] = useState(false);

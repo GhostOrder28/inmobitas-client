@@ -17,7 +17,6 @@ type ListingsTableProps = {
 };
 
 const ListingsTable = ({ listings }: ListingsTableProps) => {
-  console.log(listings);
   const navigate = useNavigate();
   const { t } = useTranslation(['listing']);
 

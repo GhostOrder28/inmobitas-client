@@ -28,7 +28,6 @@ const OwnersPage = () => {
     (async function () {
       try {
         const res = await http.get<ClientItem[]>(`/clients/${userId}`)
-        console.log(res);
         setClients(res.data)
       } catch (err) {
         console.log(err);
