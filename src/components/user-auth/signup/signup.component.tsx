@@ -27,7 +27,6 @@ const Signup = () => {
   const { t } = useTranslation(['ui']);
 
   const onSubmit = async (signUpData: SignUpData) => {
-    console.log('submitting data: ', signUpData);    
     dispatch(signUpStart(signUpData));
   };
 
@@ -37,7 +36,6 @@ const Signup = () => {
         onSubmit={onSubmit}
         // validate={validate}
         render={({ handleSubmit, values }) => {
-          console.log(values);
           return (
           <form onSubmit={handleSubmit}>
             <Heading size={800}>
