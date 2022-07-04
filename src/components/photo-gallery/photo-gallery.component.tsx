@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useEffect, useState, useRef } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState, useRef, MouseEvent } from "react";
 import ReactDOM from "react-dom";
 import http from "../../utils/axios-instance";
 import { useSelector } from "react-redux";
@@ -25,6 +25,7 @@ const PhotoGallery = ({ display, listingPictures }: PhotoGalleryProps) => {
   const { listingid } = useParams();  
   const cloudinaryPicturesPath = `/inmobitas/u_${userId}/l_${listingid}/pictures`;
   const cloudRef = useRef(document.createElement('a'));
+  const timeout = useRef<NodeJS.Timeout>();
 
   const [fullscreenPicture, setFullscreenPicture] = useState<Picture | null>(null);
   const [files, setFiles] = useState<Picture[]>([]);
@@ -103,7 +104,7 @@ const PhotoGallery = ({ display, listingPictures }: PhotoGalleryProps) => {
           submitDeletion={submitDeletion}
         />        
         <GalleryMenuButton Icon={DocumentIcon} fn={generatePresentation}/>
-        <GalleryMenuButton Icon={TrashIcon} fn={() => setShowDeletionMenu(!showDeletionMenu)}/>
+        {/*<GalleryMenuButton Icon={TrashIcon} fn={() => setShowDeletionMenu(!showDeletionMenu)}/>*/}
         <FilesUploader
           files={files}
           setFiles={setFiles}
@@ -134,6 +135,9 @@ const PhotoGallery = ({ display, listingPictures }: PhotoGalleryProps) => {
                           ? () => toggleMark(file.pictureId)
                           : () => setFullscreenPicture(file)
                       }
+                      onContextMenu={(e: MouseEvent) => e.preventDefault()}
+                      onTouchStart={() => {timeout.current = setTimeout(() => setShowDeletionMenu(true), 500)}}
+                      onTouchEnd={ () => clearTimeout(timeout.current) }
                     >
                       {showDeletionMenu && (
                         <Checkbox

@@ -32,6 +32,7 @@ const ModalContainer: React.FC<Props> = ({ displayFn, children, ...otherProps })
         zIndex={102}
         elevation={4}
         backgroundColor={'white'}
+        marginTop={-100}
         {...otherProps}
       >
         { children }

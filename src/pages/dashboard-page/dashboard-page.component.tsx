@@ -6,6 +6,7 @@ import { selectCurrentUser, selectCurrentUserId } from "../../redux/user/user.se
 import { AgendaEvent } from '../agenda-page/agenda-page.types';
 import { format } from 'date-fns';
 import { useTranslation } from 'react-i18next';
+import ContentSpinner from '../../components/content-spinner/content-spinner.component';
 
 const DashboardPage = () => {
   const userId = useSelector(selectCurrentUserId);
@@ -31,22 +32,22 @@ const DashboardPage = () => {
     >
       <Pane>
         <Heading
-        color={'#3A3E58'}
+          color={'#3A3E58'}
           is={'h1'}
           size={800}
         >
           { userInfo && `${t('hello')} ${userInfo.names}!` }
         </Heading>
         <Heading 
-        color={'#3A3E58'}
+          color={'#3A3E58'}
           id={'h2'}
           size={500}
         >
-          { todayEvents ? t('eventsForTodayMessage') : t('noEventsForTodayMessage') }
+          { todayEvents?.length ? t('eventsForTodayMessage') : t('noEventsForTodayMessage') }
         </Heading>
       </Pane>
       <Pane>
-        { todayEvents &&
+        { todayEvents ?
           todayEvents.map((event, idx) => {
             const { startDate, endDate } = event;
             const haveEndDate = endDate && !(format(startDate, 'HH:mm') === format(endDate, 'HH:mm'));
@@ -61,7 +62,7 @@ const DashboardPage = () => {
                 <Strong size={600}>{ event.title }</Strong>
               </Card>
             )
-          })
+          }) : <ContentSpinner />
         }
       </Pane>
     </Pane>

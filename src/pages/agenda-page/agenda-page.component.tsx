@@ -153,10 +153,11 @@ const AgendaPage = () => {
           label={t('showPast')} 
           onChange={() => setShowPastEvents(!showPastEvents)}
           checked={showPastEvents}
+          userSelect={'none'}
         />
       </Pane>
       <Table>
-        <TableHead display={'flex'}>
+        <TableHead display={'flex'} userSelect={'none'}>
           <TableHeaderCell flex={1.2}>{ t('date') }</TableHeaderCell>
           <TableHeaderCell flex={1.7}>{ t('time') }</TableHeaderCell>
           <TableHeaderCell flex={4.6}>{ t('event') }</TableHeaderCell>
@@ -167,7 +168,8 @@ const AgendaPage = () => {
               const { startDate, endDate, title } = event;
               const haveEndDate = endDate && !(format(event.startDate, 'HH:mm') === format(endDate, 'HH:mm'));
               return (
-                <TableRow 
+                <TableRow
+                  isSelectable
                   key={idx} 
                   color={'#3a3e58'} 
                   position={'relative'}

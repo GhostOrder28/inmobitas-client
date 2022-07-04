@@ -12,12 +12,13 @@ type TimePickerProps = {
 const TimePicker: FC<TimePickerProps> = ({ value, onChange }) => {
   const [display, setDisplay] = useState(false);
   const clockRef = useRef<HTMLDivElement>(null);
+  console.log(clockRef)
  
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <Pane display={'flex'}>
         <TextInput 
-          readOnly
+          disabled
           width={'100%'}
           marginRight={10}
           value={value && format(value, 'p')}
@@ -34,7 +35,7 @@ const TimePicker: FC<TimePickerProps> = ({ value, onChange }) => {
           position={'absolute'}
           zIndex={6}
           backgroundColor={'white'}
-          elevation={2}
+          elevation={3}
         >
           <ClockPicker
             ref={clockRef}

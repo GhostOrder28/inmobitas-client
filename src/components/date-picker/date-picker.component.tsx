@@ -17,7 +17,7 @@ const DatePicker: FC<DatePickerProps> = ({ value, onChange }) => {
     <Pane position={'relative'} width={'100%'}>
       <Pane display={'flex'}>
         <TextInput
-          readOnly
+          disabled
           width={'100%'}
           marginRight={10}
           value={value && format(value, 'yyyy-MM-dd')}
@@ -48,7 +48,7 @@ const DatePicker: FC<DatePickerProps> = ({ value, onChange }) => {
               date.setMinutes(value.getMinutes());
             }
             onChange(date)
-            //setDisplay(false); this is causing the whole EventForm component to hide
+            setDisplay(false); 
           }}
         />
       </Pane>

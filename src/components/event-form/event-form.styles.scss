@@ -1,6 +1,11 @@
-.MuiClockPicker-root button {
+.MuiClockPicker-root div:nth-child(2) > button {
   bottom: 0;
   margin: 0 0 20px 0;
+}
+
+.MuiPickersArrowSwitcher-root {
+  display: flex;
+  z-index: 50;
 }
 
 .MuiClockPicker-arrowSwitcher .MuiPickersArrowSwitcher-spacer {
