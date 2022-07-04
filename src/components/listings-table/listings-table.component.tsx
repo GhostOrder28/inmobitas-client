@@ -26,7 +26,6 @@ const ListingsTable = ({ listings }: ListingsTableProps) => {
         <StyledTr>
           <StyledTh>{ t('district') }</StyledTh>
           <StyledTh>{ t('neighborhood') }</StyledTh>
-          <StyledTh>{ t('price') }</StyledTh>
           <StyledTh>{""}</StyledTh>
         </StyledTr>
       </StyledThead>
@@ -40,10 +39,6 @@ const ListingsTable = ({ listings }: ListingsTableProps) => {
           >
             <StyledTdWrapped>{listing.district}</StyledTdWrapped>
             <StyledTdWrapped>{listing.neighborhood}</StyledTdWrapped>
-            <StyledTdWrapped>
-              {listing.estatePrice &&
-                `${listing.currencySymbol} ${listing.estatePrice}`}
-            </StyledTdWrapped>
             <StyledTdWrapped>
               <IconButton
                 icon={EditIcon}

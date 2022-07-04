@@ -1,5 +1,6 @@
 {
   "newEvent": "Nuevo Evento",
+  "editEvent": "Editar Evento",
   "eventTitle": "Título del Evento",
   "agenda": "Agenda",
   "describeEvent": "Describe el evento",

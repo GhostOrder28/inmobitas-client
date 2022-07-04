@@ -15,5 +15,9 @@
   "scheduler": "Scheduler",
   "yes": "Yes",
   "no": "No",
-  "includeContactInfoMessage": "Would you like to include your contact info at the last page of the document?"
+  "includeContactInfoMessage": "Would you like to include your contact info at the last page of the document?",
+  "requiredField": "(Required Field)",
+  "hello": "Hello",
+  "eventsForTodayMessage": "These are the events for today",
+  "noEventsForTodayMessage": "There are no events for today"
 }

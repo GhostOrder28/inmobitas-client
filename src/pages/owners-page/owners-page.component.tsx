@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import http from '../../utils/axios-instance';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -34,7 +34,7 @@ const OwnersPage = () => {
       }
     })()
 
-  }, [])
+  }, [userId])
 
   return (
     <Pane overflow={'scroll'} borderColor={'black'} elevation={0}>

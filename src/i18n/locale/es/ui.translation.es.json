@@ -14,5 +14,9 @@
   "noImages": "Primero sube algunas imágenes",
   "yes": "Sí",
   "no": "No",
-  "includeContactInfoMessage": "¿Te gustaría incluir tu información de contacto en la última página del documento?"
+  "includeContactInfoMessage": "¿Te gustaría incluir tu información de contacto en la última página del documento?",
+  "requiredField": "(Campo Requerido)",
+  "hello": "Hola",
+  "eventsForTodayMessage": "Estos son los eventos de hoy",
+  "noEventsForTodayMessage": "No hay eventos para hoy"
 }

@@ -1,10 +1,9 @@
-import { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError } from 'axios';
 import { UserInfo } from '../../components/user-auth/user-auth.types';
 import { ValidationError } from '../redux.types';
 import { UserError } from './user.types';
-import {AnyAction, Reducer} from 'redux';
+import { AnyAction } from 'redux';
 import { 
-  signUpSuccess,
   signUpFailure,
   signInSuccess,
   signInFailure,

@@ -37,19 +37,6 @@ const formInitialState = {
   isExclusive: false,
 };
 
-const basicModeProps = [  ]
-const inputs = document.getElementsByTagName('input');
-
-{/*const names = inputs.reduce((accumulator, current) => {
-  
-}, [])*/}
-for (const prop in inputs) {
-  console.log(inputs[prop].name);
-  
-}
-//console.log(Object.values(inputs));
-
-
 type ListingFormProps = {
   dataPresets: Presets | undefined;
   listing?: Listing | undefined;
@@ -139,7 +126,7 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                   {(props) => (
                     <>
                       <div className="flex items-center form-field">
-                        <Text width={"9rem"}>{ t('name', { ns: 'client' }) }</Text>
+                        <Text width={"9rem"}>{ t('name', { ns: 'client' }) + ' *' }</Text>
                         <TextInput
                           {...props.input}
                           placeholder={ t('ownerName', { ns: 'client' }) }
@@ -160,7 +147,7 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                   {(props) => (
                     <>
                       <div className="flex items-center form-field">
-                        <Text width={"9rem"}>{ t('phone', { ns: 'client' }) }</Text>
+                        <Text width={"9rem"}>{ t('phone', { ns: 'client' }) + ' *' }</Text>
                         <TextInput
                           {...props.input}
                           placeholder={ t('ownerContactPhone', { ns: 'client' }) }
@@ -191,7 +178,7 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                   {(props) => (
                     <>
                       <div className="flex items-center form-field">
-                        <Text width={"9rem"}>{ t('district', { ns: 'listing' }) }</Text>
+                        <Text width={"9rem"}>{ t('district', { ns: 'listing' }) + ' *' }</Text>
                         <TextInput {...props.input} placeholder={ t('district', { ns: 'listing' }) } width={"100%"} className="form-field" />
                       </div>
                       <ErrorMessage fieldErrorMsg={selectValidationErrMsg(errors, "district")} />
@@ -476,7 +463,7 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                         width={"9rem"}
                       >{`${t('signedDate', { ns: 'listing' })}:`}</Text>
                       <DatePicker
-                        value={props.input.value || null}
+                        value={props.input.value}
                         onChange={props.input.onChange}
                       />
                       </div>

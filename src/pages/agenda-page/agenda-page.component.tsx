@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { 
   Pane, 
   Table, 
@@ -10,6 +10,9 @@ import {
   IconButton,
   PlusIcon,
   Checkbox,
+  Text,
+  CrossIcon,
+  EditIcon,
 } from 'evergreen-ui';
 import http from '../../utils/axios-instance';
 import { format, getDate, getWeekOfMonth, getMonth, getYear } from 'date-fns';
@@ -20,6 +23,7 @@ import { AgendaEvent } from './agenda-page.types';
 import { useSelector } from 'react-redux';
 import { selectCurrentUserId } from '../../redux/user/user.selectors';
 import { capFirst } from '../../utils/utility-functions';
+import useClickOutside from '../../hooks/use-click-outside/use-click-outside';
 import usePrevious from '../../hooks/use-previous/use-previous';
 import AgendaViewOptions from './agenda-subcomponents/agenda-view-options.component';
 import AgendaHeader from './agenda-subcomponents/agenda-header.component';
@@ -37,11 +41,17 @@ const AgendaPage = () => {
   const prevDate = usePrevious(currentDate);
   const [currentView, setCurrentView] = useState<string>('month');
   const [events, setEvents] = useState<AgendaEvent[]>([]);
+  const [selectedEvent, setSelectedEvent] = useState<AgendaEvent | null>(null);
   const [filteredEvents, setFilteredEvents] = useState<AgendaEvent[]>();
   const [displayEventForm, setDisplayEventForm] = useState<boolean>(false);
+  const [displayEventOptions, setDisplayEventOptions] = useState<boolean>(false);
   const [showPastEvents, setShowPastEvents] = useState<boolean>(false);
+  const buttonsRef = useRef(null);
+  const timeout = useRef<NodeJS.Timeout>();
   const { t, i18n } = useTranslation(['agenda']);
   const locale = i18n.language.includes('en') ? enUS : es;
+
+  useClickOutside(buttonsRef, () => setDisplayEventOptions(false));
 
   const requestEventsData = useCallback(async () => {
     const currentCalendarYear = getYear(currentDate);
@@ -50,11 +60,28 @@ const AgendaPage = () => {
     const eventData = res.data.map((event: AgendaEvent) => ({
       ...event,
       startDate: new Date (event.startDate),
-      endDate: new Date (event.endDate || event.startDate),
+      ...event.endDate ? { endDate: new Date (event.endDate) } : {},
     }))
     setEvents(eventData);
-  }, [currentDate, userId])
+  }, [currentDate, userId]);
 
+  const deleteEvent = async (eventId: number) => {
+    // Desktop 
+    //const res = await http.delete(`deleteevent/${userId}/${eventId}`);
+    //const remainingEvents = events.filter(event => event.eventId !== eventId);
+    //setEvents(remainingEvents);
+
+    // Mobile
+    console.log('deleting...')
+    await http.delete(`deleteevent/${userId}/${eventId}`);
+    const remainingEvents = events.filter(event => event.eventId !== eventId);
+    setEvents(remainingEvents);
+    setDisplayEventOptions(false);
+  }
+
+  useEffect(() => {
+    console.log(events)
+  }, [events])
 
   useEffect(() => {
     if (prevDate && getMonth(currentDate) !== getMonth(prevDate)) { // month is 0 indexed but here I just want to check if month has changed.
@@ -108,12 +135,20 @@ const AgendaPage = () => {
             setCurrentView={setCurrentView}
             setCurrentDate={setCurrentDate}
           />
-          <IconButton 
-            icon={PlusIcon} 
-            onClick={() => setDisplayEventForm(true)}
-          />
+          <Pane>
+            {/*<IconButton
+              icon={TrashIcon}
+              onClick={() => setDisplayEventOptions(!displayEventOptions)}
+            />*/}
+            <IconButton
+              marginLeft={5}
+              icon={PlusIcon} 
+              onClick={() => setDisplayEventForm(true)}
+            />
+          </Pane>
         </Pane>
         <Checkbox
+          width={135}
           marginTop={15}
           label={t('showPast')} 
           onChange={() => setShowPastEvents(!showPastEvents)}
@@ -122,9 +157,9 @@ const AgendaPage = () => {
       </Pane>
       <Table>
         <TableHead display={'flex'}>
-          <TableHeaderCell flex={1.6}>{ t('date') }</TableHeaderCell>
-          <TableHeaderCell flex={2.5}>{ t('time') }</TableHeaderCell>
-          <TableHeaderCell flex={5}>{ t('event') }</TableHeaderCell>
+          <TableHeaderCell flex={1.2}>{ t('date') }</TableHeaderCell>
+          <TableHeaderCell flex={1.7}>{ t('time') }</TableHeaderCell>
+          <TableHeaderCell flex={4.6}>{ t('event') }</TableHeaderCell>
         </TableHead>
         <TableBody>
           { events ? 
@@ -132,10 +167,46 @@ const AgendaPage = () => {
               const { startDate, endDate, title } = event;
               const haveEndDate = endDate && !(format(event.startDate, 'HH:mm') === format(endDate, 'HH:mm'));
               return (
-                <TableRow key={idx} color={'#3a3e58'}>
-                  <TableCell flex={1.6} fontSize={'medium'}>{ `${capFirst(format(startDate, 'EEE', { locale }))} ${startDate.getDate()}` }</TableCell>
-                  <TableCell flex={2.5}>{ format(event.startDate, 'h:mm a') + (haveEndDate ? ' - ' + format(endDate, 'h:mm a') : '') }</TableCell>
-                  <TableCell flex={5}>{ title }</TableCell>
+                <TableRow 
+                  key={idx} 
+                  color={'#3a3e58'} 
+                  position={'relative'}
+                  onTouchStart={() =>{ timeout.current = setTimeout(() => setDisplayEventOptions(true), 500) }}
+                  onTouchEnd={() => clearTimeout(timeout.current)}
+                >
+                  <TableCell flex={1.2}><Text userSelect={'none'}>{ `${capFirst(format(startDate, 'EEE', { locale }))} ${startDate.getDate()}` }</Text></TableCell>
+                  <TableCell flex={1.7}><Text userSelect={'none'}>{ format(event.startDate, 'h:mm a') + (haveEndDate ? ' - ' + format(endDate, 'h:mm a') : '') }</Text></TableCell>
+                  <TableCell flex={4.6}><Text userSelect={'none'}>{ title }</Text></TableCell>
+                  { displayEventOptions &&
+                    <Pane
+                      ref={buttonsRef}
+                      position={'absolute'}
+                      display={'flex'}
+                      right={0}
+                      width={120}
+                      marginTop={15}
+                      backgroundColor={'white'}
+                      paddingLeft={10}
+                    >
+                      <TableCell>
+                        <IconButton
+                          icon={EditIcon}
+                          onClick={() => {
+                            setSelectedEvent(event);
+                            setDisplayEventForm(true);
+                            setDisplayEventOptions(false);
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <IconButton
+                          icon={CrossIcon}
+                          intent={'danger'}
+                          onClick={() => deleteEvent(event.eventId)}
+                        />
+                      </TableCell>
+                    </Pane>
+                  }
                 </TableRow>
               )
             }) :
@@ -149,6 +220,8 @@ const AgendaPage = () => {
             date={currentDate}
             setEvents={setEvents}
             setDisplayEventForm={setDisplayEventForm}
+            selectedEvent={selectedEvent}
+            setSelectedEvent={setSelectedEvent}
           />
         </ModalContainer>
       }

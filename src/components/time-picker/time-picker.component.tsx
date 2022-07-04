@@ -17,10 +17,11 @@ const TimePicker: FC<TimePickerProps> = ({ value, onChange }) => {
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <Pane display={'flex'}>
         <TextInput 
-          disabled
+          readOnly
           width={'100%'}
           marginRight={10}
           value={value && format(value, 'p')}
+          onClick={() => setDisplay(true)}
         />
         <IconButton 
           type="button"
