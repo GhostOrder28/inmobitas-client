@@ -14,7 +14,8 @@
   "endTime": "End Time",
   "day": "Day",
   "today": "Today",
+  "week": "Week",
   "month": "Month",
   "year": "Year",
-  "showPast": "Show Past"
+  "showPast": "Show Past Events"
 }

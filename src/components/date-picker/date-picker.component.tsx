@@ -3,6 +3,7 @@ import { Pane, TextInput, IconButton, CalendarIcon } from 'evergreen-ui';
 import { format } from 'date-fns';
 import { DayPicker } from "react-day-picker";
 import { getLocale } from '../../utils/utility-functions';
+import 'react-day-picker/dist/style.css';
 
 type DatePickerProps = {
   value: Date | undefined;
@@ -30,28 +31,29 @@ const DatePicker: FC<DatePickerProps> = ({ value, onChange }) => {
         />
       </Pane>
       { display &&
-      <Pane
-        position={'absolute'}
-        zIndex={5}
-        elevation={2}
-        backgroundColor={'white'}
-      >
-        <DayPicker
-          mode="single"
-          locale={locale}
-          selected={ value } 
-          onSelect={(newDate) => {
-            if (!newDate) return;
-            const date = new Date(newDate);
-            if (value) {
-              date.setHours(value.getHours());
-              date.setMinutes(value.getMinutes());
-            }
-            onChange(date)
-            setDisplay(false); 
-          }}
-        />
-      </Pane>
+        <Pane
+          position={'absolute'}
+          zIndex={5}
+          right={0}
+          elevation={2}
+          backgroundColor={'white'}
+        >
+          <DayPicker
+            mode="single"
+            locale={locale}
+            selected={ value } 
+            onSelect={(newDate) => {
+              if (!newDate) return;
+              const date = new Date(newDate);
+              if (value) {
+                date.setHours(value.getHours());
+                date.setMinutes(value.getMinutes());
+              }
+              onChange(date)
+              setDisplay(false); 
+            }}
+          />
+        </Pane>
       }
     </Pane>
   )

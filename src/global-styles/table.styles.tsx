@@ -35,10 +35,6 @@ export const StyledTbody = styled.tbody`
   color: #474d66;
 `;
 
-type ClickFn = {
-  clickFn: () => void;
-};
-
 export const StyledTr = styled.tr`
   ${borderStyle}
   ${rowStyle}

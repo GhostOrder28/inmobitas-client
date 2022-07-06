@@ -7,6 +7,7 @@ import { AgendaEvent } from '../agenda-page/agenda-page.types';
 import { format } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import ContentSpinner from '../../components/content-spinner/content-spinner.component';
+import useWindowDimensions from '../../hooks/use-window-dimensions/use-window-dimensions';
 
 const DashboardPage = () => {
   const userId = useSelector(selectCurrentUserId);
