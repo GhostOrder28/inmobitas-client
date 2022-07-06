@@ -16,10 +16,11 @@ const DashboardPage = () => {
   const { t } = useTranslation(['ui']);
   const todayEventsRef = useRef<HTMLDivElement | null>(null);
   const todayEventsHeight = useRelativeHeight(todayEventsRef, 60);
+  const now = new Date();
 
   useEffect(() => {
     const getTodayEvents = async () => {
-      const res = await http.get<AgendaEvent[]>(`/todayevents/${userId}`);
+      const res = await http.get<AgendaEvent[]>(`/todayevents/${userId}/${now}`);
       const eventData = res.data.map((event: AgendaEvent) => ({
         ...event,
         startDate: new Date (event.startDate),
