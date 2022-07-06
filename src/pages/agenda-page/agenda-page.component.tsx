@@ -140,7 +140,6 @@ const AgendaPage = () => {
           />
           <Pane>
             <IconButton
-              paddingLeft={5}
               icon={PlusIcon} 
               onClick={() => setDisplayEventForm(true)}
             />
