@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import {Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Form, Field } from 'react-final-form';
-import ErrorMessage from '../../error-messages/error-messages.component';
+import ErrorMessage from '../../error-message/error-message.component';
 import { selectErrorMessage } from '../../../redux/user/user.selectors';
 import {
   Button,

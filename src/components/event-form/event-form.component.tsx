@@ -19,7 +19,7 @@ import TimePicker from '../time-picker/time-picker.component';
 import DatePicker from '../date-picker/date-picker.component';
 import { css } from 'glamor';
 import { compareAsc } from 'date-fns';
-import ErrorMessage from '../error-messages/error-messages.component';
+import ErrorMessage from '../error-message/error-message.component';
 import { selectValidationErrMsg } from '../../utils/utility-functions';
 import useClickOutside from '../../hooks/use-click-outside/use-click-outside';
 import './event-form.styles.scss';

@@ -6,7 +6,7 @@ import { Form, Field } from "react-final-form";
 import { useNavigate } from "react-router-dom";
 import { Button, Pane, TextInput, Heading } from "evergreen-ui";
 import { selectErrorMessage } from "../../../redux/user/user.selectors";
-import ErrorMessage from "../../error-messages/error-messages.component";
+import ErrorMessage from "../../error-message/error-message.component";
 import { SignInData } from "../user-auth.types";
 
 const Signin = () => {

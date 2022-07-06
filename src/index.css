@@ -6,6 +6,12 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-tap-highlight-color: transparent;
+  /*this is for preventing a random text selection on long press in touchscreen devices but it also prevent the user to selecting anything*/
+  -webkit-touch-callout: none; /* Safari */
+        -webkit-user-select: none; /* Chrome */
+           -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* Internet Explorer/Edge */
+                user-select: none;
 }
 
 code {

@@ -1,12 +1,12 @@
 import React, { ChangeEventHandler } from "react";
 import { useParams } from "react-router-dom";
-import { ArrowUpIcon, Pane } from "evergreen-ui";
+import { ArrowUpIcon, toaster } from "evergreen-ui";
 import { useSelector } from "react-redux";
 import { selectCurrentUserId } from "../../redux/user/user.selectors";
 import "./files-uploader.styles.css";
 import http from "../../utils/axios-instance";
-
 import { Picture } from "../listing-detail/listing-detail.types";
+import {AxiosError} from "axios";
 
 type FilesUploaderProps = {
   files: Picture[];
@@ -28,6 +28,7 @@ const FilesUploader = ({
     setIsLoading(true);
     const filesToUpload = e.target.files ? [...e.target.files] : [];
     try {
+      await http.get(`/checkverified/${userId}/${params.listingid}/${filesToUpload.length}`);
       const uploadedFiles = await Promise.all(
         filesToUpload.map((file: File) => {
           let formData = new FormData();
@@ -40,7 +41,20 @@ const FilesUploader = ({
       setNoImages(false)
       setIsLoading(false);
     } catch (err) {
-      console.log(err);
+      setIsLoading(false);
+      if (err instanceof Error) {
+        function isAxiosError (err: Error | AxiosError): err is AxiosError {
+          return (err as AxiosError).isAxiosError !== undefined;
+        }
+        if (isAxiosError(err) && err.response) {
+          toaster.warning(err.response.data.notVerifiedMessage1, {
+            description: err.response.data.notVerifiedMessage2,
+            duration: 7
+          });
+        }
+      } else {
+        console.error(err);
+      }
     }
   };
 

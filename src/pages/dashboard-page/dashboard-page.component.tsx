@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Card, Pane, Text, Heading, Strong } from 'evergreen-ui';
 import http from '../../utils/axios-instance';
 import { useSelector } from "react-redux";
@@ -7,12 +7,16 @@ import { AgendaEvent } from '../agenda-page/agenda-page.types';
 import { format } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import ContentSpinner from '../../components/content-spinner/content-spinner.component';
+import useRelativeHeight from '../../hooks/use-relative-height/use-relative-height';
 
 const DashboardPage = () => {
   const userId = useSelector(selectCurrentUserId);
   const userInfo = useSelector(selectCurrentUser);
   const [todayEvents, setTodayEvents] = useState<AgendaEvent[]>();
-  const { t } = useTranslation(['ui'])
+  const { t } = useTranslation(['ui']);
+  const todayEventsRef = useRef<HTMLDivElement | null>(null);
+  const todayEventsHeight = useRelativeHeight(todayEventsRef, 60);
+
   useEffect(() => {
     const getTodayEvents = async () => {
       const res = await http.get<AgendaEvent[]>(`/todayevents/${userId}`);
@@ -46,7 +50,14 @@ const DashboardPage = () => {
           { todayEvents?.length ? t('eventsForTodayMessage') : t('noEventsForTodayMessage') }
         </Heading>
       </Pane>
-      <Pane>
+      <Pane 
+        flexDirection={'column'}
+        justifyItems={'flex-end'}
+        alignItems={'center'}
+        ref={todayEventsRef} 
+        height={todayEventsHeight}
+        overflow={'scroll'}
+      >
         { todayEvents ?
           todayEvents.map((event, idx) => {
             const { startDate, endDate } = event;
@@ -54,8 +65,9 @@ const DashboardPage = () => {
             return (
               <Card
                 elevation={3}
+                marginTop={20}
                 padding={15}
-                marginTop={30}
+                marginX={5}
                 key={`today-event-${idx}`}
               >
                 <Pane><Text size={500}>{ format(startDate, 'h:mm a') + (haveEndDate ? ' - ' + format(endDate, 'h:mm a') : '') }</Text></Pane>
