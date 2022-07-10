@@ -8,7 +8,7 @@ import http from "../../utils/axios-instance";
 import { Picture } from "../listing-detail/listing-detail.types";
 import {AxiosError} from "axios";
 
-type FilesUploaderProps = {
+export type FilesUploaderProps = {
   files: Picture[];
   setFiles: React.Dispatch<React.SetStateAction<Picture[]>>;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
@@ -68,7 +68,7 @@ const FilesUploader = ({
         accept="image/*"
       />
       <label htmlFor="upload-btn" className="upload-btn-label">
-        <ArrowUpIcon size={"100%" as any as number} color={"#3A3E58"} />
+        <ArrowUpIcon size={20} color={"#3A3E58"} />
       </label>
     </>
   );

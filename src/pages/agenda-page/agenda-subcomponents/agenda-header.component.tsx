@@ -14,7 +14,7 @@ import { useTranslation } from "react-i18next";
 import { format, startOfWeek, endOfWeek,} from 'date-fns';
 import enUS from 'date-fns/locale/en-US';
 import es from 'date-fns/locale/es';
-import { capFirst } from '../../../utils/utility-functions';
+import { strParseOut } from '../../../utils/utility-functions';
 
 type AgendaHeaderProps = {
   currentDate: Date;
@@ -24,7 +24,7 @@ type AgendaHeaderProps = {
 
 const AgendaHeader: FC<AgendaHeaderProps> = ({ currentDate, currentView, setCurrentDate }) => {
   const { t, i18n } = useTranslation(['agenda']);
-  const locale = i18n.language.includes('en') ? enUS : es;
+  const locale = i18n.language.includes('es') ? es : enUS;
   const [outOfRange, setOutOfRange] = useState<boolean>();
   const firstDayOfTheWeek = startOfWeek(currentDate);
   const lastDayOfTheWeek = endOfWeek(currentDate);
@@ -72,11 +72,11 @@ const AgendaHeader: FC<AgendaHeaderProps> = ({ currentDate, currentView, setCurr
           color={'#3a3e58'}
         >
           { currentView === 'month' ?
-            capFirst(format(currentDate, 'MMMM', { locale })) :
+            strParseOut(format(currentDate, 'MMMM', { locale })) :
             currentView === 'week' ?
-            `${capFirst(format(startOfWeek(currentDate), 'EEEE', { locale }))} ${format(startOfWeek(currentDate), 'd')} - ${capFirst(format(endOfWeek(currentDate), 'EEEE', { locale }))} ${format(endOfWeek(currentDate), 'd')}`:
+            `${strParseOut(format(startOfWeek(currentDate), 'EEEE', { locale }))} ${format(startOfWeek(currentDate), 'd')} - ${strParseOut(format(endOfWeek(currentDate), 'EEEE', { locale }))} ${format(endOfWeek(currentDate), 'd')}`:
             currentView === 'day' ?
-            `${capFirst(format(currentDate, 'EEEE', { locale }))} ${format(currentDate, 'd', { locale })}` : null
+            `${strParseOut(format(currentDate, 'EEEE', { locale }))} ${format(currentDate, 'd', { locale })}` : null
           }
         </Heading>
         <Heading
@@ -92,7 +92,7 @@ const AgendaHeader: FC<AgendaHeaderProps> = ({ currentDate, currentView, setCurr
                   format(currentDate, 'MMMM', { locale }) + ' / '
                 ) :
               currentView === 'day' ?
-                capFirst(format(currentDate, 'MMMM', { locale })) + ' / ':
+                strParseOut(format(currentDate, 'MMMM', { locale })) + ' / ':
                 ''
             }${getYear(currentDate)})`}
         </Heading>

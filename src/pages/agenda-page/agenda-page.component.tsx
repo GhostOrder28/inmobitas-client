@@ -23,7 +23,7 @@ import es from 'date-fns/locale/es';
 import { AgendaEvent } from './agenda-page.types';
 import { useSelector } from 'react-redux';
 import { selectCurrentUserId } from '../../redux/user/user.selectors';
-import { capFirst } from '../../utils/utility-functions';
+import { strParseOut } from '../../utils/utility-functions';
 import useClickOutside from '../../hooks/use-click-outside/use-click-outside';
 import useRelativeHeight from '../../hooks/use-relative-height/use-relative-height';
 import usePrevious from '../../hooks/use-previous/use-previous';
@@ -53,7 +53,7 @@ const AgendaPage = () => {
   const buttonsRef = useRef(null);
   const timeout = useRef<NodeJS.Timeout>();
   const { t, i18n } = useTranslation(['agenda']);
-  const locale = i18n.language.includes('en') ? enUS : es;
+  const locale = i18n.language.includes('es') ? es : enUS;
   const eventListHeight = useRelativeHeight(eventListRef);
   useClickOutside(buttonsRef, () => setSelectedEvent(null));
 
@@ -176,7 +176,7 @@ const AgendaPage = () => {
                   onTouchEnd={() => clearTimeout(timeout.current)}
                   onTouchMove={() => clearTimeout(timeout.current)}
                 >
-                  <TableCell flex={1.2}><Text userSelect={'none'}>{ `${capFirst(format(startDate, 'EEE', { locale }))} ${startDate.getDate()}` }</Text></TableCell>
+                  <TableCell flex={1.2}><Text userSelect={'none'}>{ `${strParseOut(format(startDate, 'EEE', { locale }))} ${startDate.getDate()}` }</Text></TableCell>
                   <TableCell flex={1.7}><Text userSelect={'none'}>{ format(event.startDate, 'h:mm a') + (haveEndDate ? ' - ' + format(endDate, 'h:mm a') : '') }</Text></TableCell>
                   <TableCell flex={4.6}><Text userSelect={'none'}>{ title }</Text></TableCell>
                   { idx === selectedEvent &&

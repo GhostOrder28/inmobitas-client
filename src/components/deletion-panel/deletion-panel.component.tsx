@@ -27,6 +27,7 @@ const DeletionPanel = ({
       zIndex={97}
       overflow={"hidden"}
       transition={"height .2s"}
+      data-testid='deletion-panel-container'
     >
       <Pane
         display={"flex"}

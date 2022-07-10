@@ -13,6 +13,7 @@ const ErrorMessage = ({ fieldErrorMsg }: ErrorMessageProps) => {
       marginTop={'.3rem'}
       display={'flex'}
       alignItems={'center'}
+      data-testid='error-message-container'
     >
       <BanCircleIcon
         color="danger"

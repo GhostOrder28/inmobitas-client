@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should render DatePicker without errors 1`] = `
+<Memo(ForwardRef(Pane))
+  position="relative"
+  width="100%"
+>
+  <Memo(ForwardRef(Pane))
+    display="flex"
+  >
+    <Memo(ForwardRef(TextInput))
+      disabled={true}
+      marginRight={10}
+      onClick={[Function]}
+      value="2022-08-09"
+      width="100%"
+    />
+    <Memo(ForwardRef(IconButton))
+      icon={
+        Object {
+          "$$typeof": Symbol(react.memo),
+          "compare": null,
+          "type": Object {
+            "$$typeof": Symbol(react.forward_ref),
+            "render": [Function],
+          },
+        }
+      }
+      onClick={[Function]}
+      type="button"
+    />
+  </Memo(ForwardRef(Pane))>
+</Memo(ForwardRef(Pane))>
+`;
