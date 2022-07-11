@@ -14,10 +14,4 @@ export enum userActionTypes {
 
 export type UserError = 'validationErrors' | 'authErrors' | 'duplicateEntityError';
 
-//export type User = {
-  //email: string;
-  //names: string;
-  //userId: number;
-//} | null
-
 export default userActionTypes;
