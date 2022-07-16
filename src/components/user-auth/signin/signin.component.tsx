@@ -8,6 +8,7 @@ import { Button, Pane, TextInput, Heading } from "evergreen-ui";
 import { selectErrorMessage } from "../../../redux/user/user.selectors";
 import ErrorMessage from "../../error-message/error-message.component";
 import { SignInData } from "../user-auth.types";
+import http from '../../../utils/axios-instance';
 
 const Signin = () => {
   const emailErrMsg = useSelector(
@@ -23,7 +24,7 @@ const Signin = () => {
   const { t } = useTranslation(['ui']);
 
   const onSubmit = (userData: SignInData) => {
-    dispatch(signInStart(userData));
+    dispatch(signInStart(userData, http));
   };
 
   return (

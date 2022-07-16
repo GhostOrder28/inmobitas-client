@@ -13,64 +13,56 @@ import {
   SignUpStart,
   SignInStart,
 } from './user.actions';
-import { fetchUserInfo, fetchNewUser } from '../requests';
+import createRequest from '../redux-utils/create-request'; 
+import { SignInData, UserInfo } from '../../components/user-auth/user-auth.types';
+//import { fetchUserInfo, fetchNewUser } from '../requests';
 
 function isResponse(res: AxiosResponse | Error): res is AxiosResponse {
   return (res as AxiosResponse).data !== undefined;
 }
 
-function* signUp ({ payload: { names, email, contactPhone, password, confirmPassword } }: SignUpStart) {
+export function* signUp ({ payload, http }: SignUpStart) { 
   try {
-    const res = yield* call(fetchNewUser, names, email, contactPhone, password, confirmPassword);
-    if (isResponse(res)) {
-      yield* put(signUpSuccess({ email, password }));
-    } else {
-      yield* put(signUpFailure(res));
-    }
+    const requestNewUser = createRequest(http);
+    const res: AxiosResponse = yield* call(requestNewUser, '/signup', payload);
+    yield* put(signUpSuccess(res.data));
   } catch (err) {
     yield* put(signUpFailure(err as AxiosError<AxiosResponse<SignUpFailureError>>));
   }
 }
 
-function* signIn ({ payload: { email, password } }: SignInStart) {  
+export function* signIn ({ payload, http }: SignInStart) {  
   try {   
-    const res = yield* call(fetchUserInfo, email, password);
-    if (isResponse(res)) {
-      yield* put(signInSuccess(res.data));
-    } else {
-      yield* put(signInFailure(res));
-    }
-  } catch (err) {
-    yield* put(signInFailure(err as Error));
-  }
-}
-
-function* signOut() {
-  try {
-    yield* put(signOutSuccess());
-  } catch (err) {
-    yield* put(signOutFailure(err as AxiosError<AxiosResponse>));
-  }
-}
-
-function* signInAfterSignUp ({ payload: { email, password } }: SignInStart) {
-  try {
-    yield* put(signInStart({ email, password }));
+    const requestSignIn = createRequest(http);
+    const res: AxiosResponse = yield* call(requestSignIn, '/signin' , payload);
+    yield* put(signInSuccess(res.data));
   } catch (err) {
     yield* put(signInFailure(err as AxiosError<AxiosResponse<SignInFailureError>>));
   }
 }
 
-function* onSignUpStart () {
+export function* signOut() {
+  yield* put(signOutSuccess());
+}
+
+export function* signInAfterSignUp ({ payload, http }: SignInStart) {
+  try {
+    yield* put(signInStart(payload, http));
+  } catch (err) {
+    yield* put(signInFailure(err as AxiosError<AxiosResponse<SignInFailureError>>));
+  }
+}
+
+export function* onSignUpStart () {
   yield* takeLatest(userActionTypes.SIGN_UP_START, signUp)
 }
-function* onSignInStart () {
+export function* onSignInStart () {
   yield* takeLatest(userActionTypes.SIGN_IN_START, signIn)
 }
-function* onSignOutStart () {
+export function* onSignOutStart () {
   yield* takeLatest(userActionTypes.SIGN_OUT_START, signOut)
 }
-function* onSignUpSuccess () {
+export function* onSignUpSuccess () {
   yield* takeLatest(userActionTypes.SIGN_UP_SUCCESS, signInAfterSignUp)
 }
 

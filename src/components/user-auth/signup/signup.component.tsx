@@ -14,6 +14,7 @@ import {
   Heading,
 } from 'evergreen-ui';
 import { SignUpData } from '../user-auth.types';
+import http from '../../../utils/axios-instance';
 
 const Signup = () => {
 
@@ -26,8 +27,8 @@ const Signup = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation(['ui']);
 
-  const onSubmit = async (signUpData: SignUpData) => {
-    dispatch(signUpStart(signUpData));
+  const onSubmit = (signUpData: SignUpData) => {
+    dispatch(signUpStart(signUpData, http));
   };
 
   return (

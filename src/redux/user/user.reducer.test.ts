@@ -8,18 +8,9 @@ import {
   clearErrors,
 } from './user.actions';
 import axios, { AxiosError } from 'axios';
-//jest.mock('axios');
 import userReducer from "./user.reducer";
 import { UserState } from './user.reducer';
 
-//const request = async () => {
-  //try {
-    //return await axios.post('/someapi', { name: 'jhon' });
-  //} catch (error) {
-    //console.log(error.data)
-    //return error as AxiosError;    
-  //}
-//}
 
 describe('user reducer', () => {
 
