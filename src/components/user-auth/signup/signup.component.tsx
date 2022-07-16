@@ -20,7 +20,7 @@ const Signup = () => {
 
   const namesErrMsg = useSelector(selectErrorMessage('validationErrors', 'names'));
   const emailErrMsg = useSelector(selectErrorMessage('validationErrors', 'email'));
-  const contactPhoneErrMsg = useSelector(selectErrorMessage('validationErrors', 'email'));
+  const contactPhoneErrMsg = useSelector(selectErrorMessage('validationErrors', 'contactPhone'));
   const passwordErrMsg = useSelector(selectErrorMessage('validationErrors', 'password'));
   const confirmPasswordErrMsg = useSelector(selectErrorMessage('validationErrors', 'confirmPassword'));
   const signupErrMsg = useSelector(selectErrorMessage('duplicateEntityError', 'email'));
