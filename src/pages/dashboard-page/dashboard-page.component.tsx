@@ -8,6 +8,7 @@ import { format } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import ContentSpinner from '../../components/content-spinner/content-spinner.component';
 import useRelativeHeight from '../../hooks/use-relative-height/use-relative-height';
+import { strParseOut } from '../../utils/utility-functions';
 
 const DashboardPage = () => {
   const userId = useSelector(selectCurrentUserId);
@@ -41,7 +42,7 @@ const DashboardPage = () => {
           is={'h1'}
           size={800}
         >
-          { userInfo && `${t('hello')} ${userInfo.names}!` }
+          { userInfo && `${t('hello')} ${strParseOut(userInfo.names)}!` }
         </Heading>
         <Heading 
           color={'#3A3E58'}
