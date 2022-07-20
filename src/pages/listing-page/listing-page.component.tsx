@@ -4,6 +4,7 @@ import { selectCurrentUserId } from '../../redux/user/user.selectors';
 import { useSelector } from 'react-redux';
 import { useLocation, useParams } from 'react-router-dom';
 import { Pane, Spinner } from 'evergreen-ui'
+import { AxiosError } from 'axios';
 
 import { Presets, Listing } from './listing-page.types';
 
@@ -41,7 +42,7 @@ const ListingPage = () => {
           setPresets(dataPresets.data);
         }
       } catch (err) {
-        setError(err.response.data.error)
+        setError((err as AxiosError).response?.data.error)
       }
     })()
     // eslint-disable-next-line react-hooks/exhaustive-deps
