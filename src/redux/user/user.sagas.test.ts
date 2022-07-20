@@ -81,7 +81,7 @@ describe('Sagas', () => {
     it('should dispatch SIGN_UP_SUCCESS', () => {
       gen.next();
       expect(gen.next(signUpResponseMock).value)
-        .toEqual(put(userActions.signUpSuccess(signUpResponseMock.data)))
+        .toEqual(put(userActions.signUpSuccess(signUpResponseMock.data, mockAxiosInstance)))
     })
 
     it('should dispatch SIGN_UP_FAILURE', () => {

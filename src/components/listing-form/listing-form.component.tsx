@@ -77,8 +77,8 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
 
     try {
       const res = location.pathname === `/newlisting`
-        ? await http.post<Listing>(`/newlisting/${userId}`, remainingProps)
-        : await http.put<Listing>(`editlisting/${userId}/${clientId}/${estateId}/${contractId}`, remainingProps);
+        ? await http.post<Listing>(`/listing/${userId}`, remainingProps)
+        : await http.put<Listing>(`/listing/${userId}/${clientId}/${estateId}/${contractId}`, remainingProps);
       setListing(res.data);
       navigate(`/listingdetail/${res.data.estateId}`);
     } catch (err) {

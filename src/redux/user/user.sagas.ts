@@ -25,7 +25,7 @@ export function* signUp ({ payload, http }: SignUpStart) {
   try {
     const requestNewUser = createRequest(http);
     const res: AxiosResponse = yield* call(requestNewUser, '/signup', payload);
-    yield* put(signUpSuccess(res.data));
+    yield* put(signUpSuccess(res.data, http));
   } catch (err) {
     yield* put(signUpFailure(err as AxiosError<AxiosResponse<SignUpFailureError>>));
   }

@@ -13,7 +13,7 @@ import {
   StyledThWithSpan,
 } from "../../global-styles/table.styles";
 import { Pane, Spinner } from "evergreen-ui";
-import { presetSelector } from "../../utils/utility-functions";
+import { strParseIn, presetSelector } from "../../utils/utility-functions";
 import { Tablist, Tab } from "evergreen-ui";
 import PhotoGallery from "../photo-gallery/photo-gallery.component";
 import "./listing-detail-gallery.styles.css";
@@ -46,12 +46,10 @@ const ListingDetail = ({ dataPresets, listing }: ListingDetailProps) => {
       const estatePictures = await http.get<Picture[]>(
         `/estatepictures/${userId}/${listingid}`
       );
-      console.log(estatePictures.data);
       setListingPictures(estatePictures.data);
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
 
   return !(listing && dataPresets) ? (
     <Spinner />
@@ -371,6 +369,7 @@ const ListingDetail = ({ dataPresets, listing }: ListingDetailProps) => {
       <PhotoGallery
         display={selectedTab === 1 ? "block" : "none"}
         listingPictures={listingPictures}
+        generatedPdfFilename={strParseIn(`${listing.district}_${listing.neighborhood ? listing.neighborhood + '_' : ''}presentation.pdf`)}
       />
     </>
   );

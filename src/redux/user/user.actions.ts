@@ -22,7 +22,7 @@ export type SignUpFailureError = { validationErrors: ValidationError[]; } | { du
 export type SignInFailureError = { validationErrors: ValidationError[]; } | { authErrors: string; }
 
 export type SignUpStart = ActionWithDependency<userActionTypes.SIGN_UP_START, SignUpData>;
-export type SignUpSuccess = ActionWithPayload<userActionTypes.SIGN_UP_SUCCESS, SignInData>;
+export type SignUpSuccess = ActionWithDependency<userActionTypes.SIGN_UP_SUCCESS, SignInData>;
 export type SignUpFailure = ActionWithPayload<userActionTypes.SIGN_UP_FAILURE, AxiosError<AxiosResponse<SignUpFailureError>>>;
 export type SignInStart = ActionWithDependency<userActionTypes.SIGN_IN_START, SignInData>;
 export type SignInSuccess = ActionWithPayload<userActionTypes.SIGN_IN_SUCCESS, UserInfo>;
@@ -35,8 +35,8 @@ export type ClearErrors = Action<userActionTypes.CLEAR_ERRORS>;
 export const signUpStart = withMatcher((signUpData: SignUpData, http: AxiosInstance): SignUpStart =>
   createActionWithDependency(userActionTypes.SIGN_UP_START, signUpData, http));
 
-export const signUpSuccess = withMatcher((signInData: SignInData): SignUpSuccess =>
-  createAction(userActionTypes.SIGN_UP_SUCCESS, signInData));
+export const signUpSuccess = withMatcher((signInData: SignInData, http: AxiosInstance): SignUpSuccess =>
+  createActionWithDependency(userActionTypes.SIGN_UP_SUCCESS, signInData, http));
 
 export const signUpFailure = withMatcher((error: AxiosError<AxiosResponse<SignUpFailureError>>): SignUpFailure =>
   createAction(userActionTypes.SIGN_UP_FAILURE, error));

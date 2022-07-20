@@ -20,7 +20,7 @@ const globalContainer = document.getElementById(
   "globalContainer"
 ) as HTMLElement;
 
-const PhotoGallery = ({ display, listingPictures }: PhotoGalleryProps) => {
+const PhotoGallery = ({ display, listingPictures, generatedPdfFilename }: PhotoGalleryProps) => {
   const userId = useSelector(selectCurrentUserId);
   const { listingid } = useParams();  
   const cloudinaryPicturesPath = `/inmobitas/u_${userId}/l_${listingid}/pictures`;
@@ -79,8 +79,16 @@ const PhotoGallery = ({ display, listingPictures }: PhotoGalleryProps) => {
   const generatePresentation = async () => {
     if (files.length) {
       setIsLoading(true);
-      const res = await http.get(`/genpdf/${userId}/${listingid}`);
-      cloudRef.current.setAttribute('href', res.data);
+      const res = await http.get(`/genpdf/${userId}/${listingid}`, {
+        responseType: 'blob',
+        headers: {
+          'Content-Type': 'application/pdf'
+        }
+      });
+      const blob = new Blob([res.data], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(new Blob([res.data], { type: 'application/pdf' }));
+      cloudRef.current.setAttribute('href', url);
+      cloudRef.current.setAttribute('download', generatedPdfFilename);
       cloudRef.current.click()
       setIsLoading(false);      
     } else {
@@ -218,6 +226,7 @@ const FullScreen = ({
   );
 
 type PhotoGalleryProps = {
+  generatedPdfFilename: string;
   display: string;
   listingPictures: Picture[];
 };

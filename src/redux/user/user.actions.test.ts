@@ -31,8 +31,8 @@ describe('user actions', () => {
     })
 
     it('should return SIGN_UP_SUCCESS action object', () => {
-      const result = userActions.signUpSuccess(signInData);
-      expect(result).toStrictEqual({ type: userActionTypes.SIGN_UP_SUCCESS, payload: signInData });
+      const result = userActions.signUpSuccess(signInData, mockAxiosInstance);
+      expect(result).toStrictEqual({ type: userActionTypes.SIGN_UP_SUCCESS, payload: signInData, http: mockAxiosInstance });
     })
 
     it('should return SIGN_UP_FAILURE action object', () => {

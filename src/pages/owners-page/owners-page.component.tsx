@@ -27,7 +27,7 @@ const OwnersPage = () => {
 
     (async function () {
       try {
-        const res = await http.get<ClientItem[]>(`/clients/${userId}`)
+        const res = await http.get<ClientItem[]>(`/clientslist/${userId}`)
         setClients(res.data)
       } catch (err) {
         console.log(err);

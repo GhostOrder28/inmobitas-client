@@ -32,7 +32,7 @@ const OwnerDetail = ({ clientData }: OwnerDetailProps) => {
     (async function () {
       try {
         const clientListingsData = await http.get<ListingItem[]>(
-          `/listings/${userId}/${params.clientid}`
+          `/listingslist/${userId}/${params.clientid}`
         );
         setListings(clientListingsData.data);
       } catch (err) {

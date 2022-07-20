@@ -3,7 +3,7 @@ import http from '../../utils/axios-instance';
 import { selectCurrentUserId } from '../../redux/user/user.selectors';
 import { useSelector } from 'react-redux';
 import { useLocation, useParams } from 'react-router-dom';
-import { Spinner } from 'evergreen-ui'
+import { Pane, Spinner } from 'evergreen-ui'
 
 import { Presets, Listing } from './listing-page.types';
 
@@ -16,6 +16,7 @@ const ListingPage = () => {
   const params = useParams();
   const [listing, setListing] = useState<Listing>();
   const [presets, setPresets] = useState<Presets>();
+  const [error, setError] = useState<Error | null>(null);
   const userId = useSelector(selectCurrentUserId);
 
    useEffect(() => {
@@ -40,11 +41,17 @@ const ListingPage = () => {
           setPresets(dataPresets.data);
         }
       } catch (err) {
-        console.log(err);
+        setError(err.response.data.error)
       }
     })()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
+
+  useEffect(() => {
+    console.log(error)
+  })
+
+  //if (error) return <Pane>{ error }</Pane>
 
   switch (location.pathname) {
     case '/newlisting':
