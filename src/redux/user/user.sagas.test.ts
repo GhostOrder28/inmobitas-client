@@ -66,7 +66,7 @@ describe('Sagas', () => {
     }
   }
 
-  describe('signUp sagas', () => {
+  describe('signUp', () => {
     let gen: ReturnType<typeof userSagas.signUp>; 
 
     beforeEach(() => {
@@ -92,14 +92,14 @@ describe('Sagas', () => {
 
   })
 
-  describe('signIn sagas', () => {
+  describe('signIn', () => {
     let gen: ReturnType<typeof userSagas.signIn>; 
 
     beforeEach(() => {
       gen = userSagas.signIn({ type: userActionTypes.SIGN_IN_START, payload: signInData, http: mockAxiosInstance });
     })
 
-    it('should call api with signup data', async () => {
+    it('should call api with signin data', async () => {
       expect(JSON.stringify(gen.next().value))
         .toEqual(JSON.stringify(call(apiCall, '/signin', signInData)));
     })
@@ -117,7 +117,7 @@ describe('Sagas', () => {
     })
   })
 
-  describe('signOut sagas', () => {
+  describe('signOut', () => {
     it('should dispatch SIGN_OUT_SUCCESS', () => {
       const gen = userSagas.signOut();
       expect(gen.next().value)
