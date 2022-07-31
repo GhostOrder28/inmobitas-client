@@ -13,11 +13,11 @@ Object {
     </div>
     <div>
       <div
-        class="ub-mt_-3rem ub-dspl_flex ub-algn-itms_center ub-box-szg_border-box"
+        class="ub-mt_4px ub-dspl_flex ub-algn-itms_center ub-box-szg_border-box"
         data-testid="error-message-container"
       >
         <svg
-          class="css-tn1wco ub-mr_5px ub-w_13px ub-h_13px ub-box-szg_border-box"
+          class="css-tn1wco ub-mr_4px ub-w_12px ub-h_12px ub-box-szg_border-box"
           data-icon="ban-circle"
           viewBox="0 0 16 16"
         >
@@ -27,7 +27,7 @@ Object {
           />
         </svg>
         <span
-          class="ub-fnt-sze_-75rem ub-f-wght_400 ub-ln-ht_20px ub-ltr-spc_-0-05px ub-fnt-fam_b77syt ub-color_474d66 ub-w_100prcnt ub-box-szg_border-box"
+          class="ub-fnt-sze_12px ub-f-wght_400 ub-ln-ht_16px ub-ltr-spc_0 ub-fnt-fam_b77syt ub-color_474d66 ub-w_100prcnt ub-box-szg_border-box"
         >
           this is an error
         </span>
@@ -36,11 +36,11 @@ Object {
   </body>,
   "container": <div>
     <div
-      class="ub-mt_-3rem ub-dspl_flex ub-algn-itms_center ub-box-szg_border-box"
+      class="ub-mt_4px ub-dspl_flex ub-algn-itms_center ub-box-szg_border-box"
       data-testid="error-message-container"
     >
       <svg
-        class="css-tn1wco ub-mr_5px ub-w_13px ub-h_13px ub-box-szg_border-box"
+        class="css-tn1wco ub-mr_4px ub-w_12px ub-h_12px ub-box-szg_border-box"
         data-icon="ban-circle"
         viewBox="0 0 16 16"
       >
@@ -50,7 +50,7 @@ Object {
         />
       </svg>
       <span
-        class="ub-fnt-sze_-75rem ub-f-wght_400 ub-ln-ht_20px ub-ltr-spc_-0-05px ub-fnt-fam_b77syt ub-color_474d66 ub-w_100prcnt ub-box-szg_border-box"
+        class="ub-fnt-sze_12px ub-f-wght_400 ub-ln-ht_16px ub-ltr-spc_0 ub-fnt-fam_b77syt ub-color_474d66 ub-w_100prcnt ub-box-szg_border-box"
       >
         this is an error
       </span>

@@ -16,11 +16,24 @@ import ContentSpinner from "../content-spinner/content-spinner.component";
 import PicturesContainer from '../pictures-container/pictures-container.component';
 import GalleryMenuButton from "../gallery-menu-button/gallery-menu-button.component";
 
+type PhotoGalleryProps = {
+  generatePresentationFilename: () => string;
+  display: string;
+  listingPictures: Picture[];
+};
+
+type FullScreenProps = {
+  userId: number | undefined; // actually this would never be undefined, but i don't know how to enforce a type in a selector and it returns an optional undefined per default.
+  fullscreenPicture: Picture;
+  setFullscreenPicture: Dispatch<SetStateAction<Picture | null>>;
+  cloudinaryPicturesPath: string;
+};
+
 const globalContainer = document.getElementById(
   "globalContainer"
 ) as HTMLElement;
 
-const PhotoGallery = ({ display, listingPictures, generatedPdfFilename }: PhotoGalleryProps) => {
+const PhotoGallery = ({ display, listingPictures, generatePresentationFilename }: PhotoGalleryProps) => {
   const userId = useSelector(selectCurrentUserId);
   const { listingid } = useParams();  
   const cloudinaryPicturesPath = `/inmobitas/u_${userId}/l_${listingid}/pictures`;
@@ -59,12 +72,12 @@ const PhotoGallery = ({ display, listingPictures, generatedPdfFilename }: PhotoG
     const res = await Promise.all(
       markedPictures.map((pictureId) => {
         const deletedPicture = http.delete<number>(
-          `/deletepicture/${userId}/${listingid}/${pictureId}`
+          `/pictures/${userId}/${listingid}/${pictureId}`
         );
         return deletedPicture;
       })
     );
-    const deletedPictures = res.map((deletedPicture) => deletedPicture.data);    
+    const deletedPictures = res.map((deletedPicture) => deletedPicture.data);
     const remaningPictures = files.filter(
       (pic) => !deletedPictures.some((dPic) => dPic === pic.pictureId)
     );
@@ -72,23 +85,21 @@ const PhotoGallery = ({ display, listingPictures, generatedPdfFilename }: PhotoG
     setFiles(remaningPictures);
     setShowDeletionMenu(false);
     setMarkedPictures([]);
-    await http.delete(`/deletedocument/${userId}/${listingid}`)
     setIsLoading(false);
   };
 
   const generatePresentation = async () => {
-    if (files.length) {
+    if (files.length || generatePresentationFilename !== undefined) {
       setIsLoading(true);
-      const res = await http.get(`/genpdf/${userId}/${listingid}`, {
+      const res = await http.get(`/presentations/${userId}/${listingid}`, {
         responseType: 'blob',
         headers: {
           'Content-Type': 'application/pdf'
         }
       });
-      const blob = new Blob([res.data], { type: 'application/pdf' });
       const url = window.URL.createObjectURL(new Blob([res.data], { type: 'application/pdf' }));
       cloudRef.current.setAttribute('href', url);
-      cloudRef.current.setAttribute('download', generatedPdfFilename);
+      cloudRef.current.setAttribute('download', generatePresentationFilename());
       cloudRef.current.click()
       setIsLoading(false);      
     } else {
@@ -225,17 +236,5 @@ const FullScreen = ({
     globalContainer
   );
 
-type PhotoGalleryProps = {
-  generatedPdfFilename: string;
-  display: string;
-  listingPictures: Picture[];
-};
-
-type FullScreenProps = {
-  userId: number | undefined; // actually this would never be undefined, but i don't know how to enforce a type in a selector and it returns an optional undefined per default.
-  fullscreenPicture: Picture;
-  setFullscreenPicture: Dispatch<SetStateAction<Picture | null>>;
-  cloudinaryPicturesPath: string;
-};
 
 export default PhotoGallery;

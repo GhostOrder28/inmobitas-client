@@ -15,7 +15,7 @@ const ListingsPage = () => {
   useEffect(() => {
     (async function () {
       try {
-        const res = await http.get<ListingItem[]>(`/listingslist/${userId}`)
+        const res = await http.get<ListingItem[]>(`/listings/${userId}`)
         setListings(res.data)
       } catch (err) {
         console.log(err);

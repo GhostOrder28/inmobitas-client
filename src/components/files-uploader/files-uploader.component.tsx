@@ -33,7 +33,7 @@ const FilesUploader = ({
         filesToUpload.map((file: File) => {
           let formData = new FormData();
           formData.append("file", file);
-          return http.post(`/upload/${userId}/${params.listingid}`, formData);
+          return http.post(`/pictures/${userId}/${params.listingid}`, formData);
         })
       );
       console.log(uploadedFiles);      

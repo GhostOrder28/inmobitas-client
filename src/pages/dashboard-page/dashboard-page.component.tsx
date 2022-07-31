@@ -21,7 +21,7 @@ const DashboardPage = () => {
 
   useEffect(() => {
     const getTodayEvents = async () => {
-      const res = await http.get<AgendaEvent[]>(`/todayevents/${userId}/${now}`);
+      const res = await http.get<AgendaEvent[]>(`/events/${userId}/${now}`);
       const eventData = res.data.map((event: AgendaEvent) => ({
         ...event,
         startDate: new Date (event.startDate),

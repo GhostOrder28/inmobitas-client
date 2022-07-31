@@ -76,7 +76,7 @@ const AgendaPage = () => {
     //setEvents(remainingEvents);
 
     // Mobile
-    await http.delete(`deleteevent/${userId}/${eventId}`);
+    await http.delete(`/events/${userId}/${eventId}`);
     const remainingEvents = events.filter(event => event.eventId !== eventId);
     setEvents(remainingEvents);
     setSelectedEvent(null);

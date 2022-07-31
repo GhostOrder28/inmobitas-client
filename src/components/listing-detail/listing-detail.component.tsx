@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
-import http from "../../utils/axios-instance";
-import { useSelector } from "react-redux";
-import { selectCurrentUserId } from "../../redux/user/user.selectors";
 import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
+import { Pane, Spinner } from "evergreen-ui";
+import { format } from "date-fns";
+
+import http from "../../utils/axios-instance";
+import { selectCurrentUserId } from "../../redux/user/user.selectors";
 import {
   StyledTable,
   StyledTbody,
@@ -12,7 +15,6 @@ import {
   StyledTdUnwrapped,
   StyledThWithSpan,
 } from "../../global-styles/table.styles";
-import { Pane, Spinner } from "evergreen-ui";
 import { strParseIn, presetSelector } from "../../utils/utility-functions";
 import { Tablist, Tab } from "evergreen-ui";
 import PhotoGallery from "../photo-gallery/photo-gallery.component";
@@ -44,12 +46,20 @@ const ListingDetail = ({ dataPresets, listing }: ListingDetailProps) => {
     
     (async function () {
       const estatePictures = await http.get<Picture[]>(
-        `/estatepictures/${userId}/${listingid}`
+        `/pictures/${userId}/${listingid}`
       );
       setListingPictures(estatePictures.data);
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const generatePresentationFilename = () => {
+    const { district, neighborhood } = listing as Listing; // casted because this functione would never return undefined
+    const now = new Date();
+    const date = format(now, 'P').replaceAll('/', '-');
+    const timestamp = format(now, 't');
+    return strParseIn(`${district}_${neighborhood ? neighborhood + '_' : ''}presentation_${date}_${timestamp}.pdf`);
+  }
 
   return !(listing && dataPresets) ? (
     <Spinner />
@@ -369,7 +379,7 @@ const ListingDetail = ({ dataPresets, listing }: ListingDetailProps) => {
       <PhotoGallery
         display={selectedTab === 1 ? "block" : "none"}
         listingPictures={listingPictures}
-        generatedPdfFilename={strParseIn(`${listing.district}_${listing.neighborhood ? listing.neighborhood + '_' : ''}presentation.pdf`)}
+        generatePresentationFilename={generatePresentationFilename}
       />
     </>
   );

@@ -1,5 +1,5 @@
 import React from "react";
-import { Pane, CrossIcon, TickIcon } from "evergreen-ui";
+import { Pane, CrossIcon, TickIcon, majorScale } from "evergreen-ui";
 
 type DeletionPanelProps = {
   showDeletionMenu: boolean;
@@ -39,7 +39,7 @@ const DeletionPanel = ({
         cursor={"pointer"}
         onClick={submitDeletion}
       >
-        <TickIcon size={23} color={"#3A3E58"} />
+        <TickIcon size={majorScale(3)} color={"#3A3E58"} />
       </Pane>
       <Pane
         display={"flex"}

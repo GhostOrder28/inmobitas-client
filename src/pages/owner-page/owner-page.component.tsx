@@ -16,7 +16,7 @@ const OwnerPage = () => {
 
     (async function () {
       try {
-        const clientData = await http.get<Client>(`/client/${userId}/${params.clientid}`)
+        const clientData = await http.get<Client>(`/clients/${userId}/${params.clientid}`)
         setClient(clientData.data)
       } catch (err) {
         console.log(err);

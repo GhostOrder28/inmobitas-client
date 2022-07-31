@@ -30,26 +30,29 @@ const ListingsTable = ({ listings }: ListingsTableProps) => {
         </StyledTr>
       </StyledThead>
       <StyledTbody>
-        {listings.map((listing, idx) => (
-          <StyledTr
-            onClick={() => {
-              navigate(`/listingdetail/${listing.estateId}`);
-            }}
-            key={idx}
-          >
-            <StyledTdWrapped>{listing.district}</StyledTdWrapped>
-            <StyledTdWrapped>{listing.neighborhood}</StyledTdWrapped>
-            <StyledTdWrapped>
-              <IconButton
-                icon={EditIcon}
-                onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-                  e.stopPropagation();
-                  navigate(`/editlisting/${listing.estateId}`);
-                }}
-              />
-            </StyledTdWrapped>
-          </StyledTr>
-        ))}
+        {listings.map((listing, idx) => {
+          const { clientId, estateId } = listing;
+          return (
+            <StyledTr
+              onClick={() => {
+                navigate(`/listingdetail/${clientId}/${estateId}`);
+              }}
+              key={idx}
+            >
+              <StyledTdWrapped>{listing.district}</StyledTdWrapped>
+              <StyledTdWrapped>{listing.neighborhood}</StyledTdWrapped>
+              <StyledTdWrapped>
+                <IconButton
+                  icon={EditIcon}
+                  onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                    e.stopPropagation();
+                    navigate(`/editlisting/${clientId}/${estateId}`);
+                  }}
+                />
+              </StyledTdWrapped>
+            </StyledTr>
+          )
+        })}
       </StyledTbody>
     </StyledTable>
   );

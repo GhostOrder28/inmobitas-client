@@ -77,10 +77,12 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
 
     try {
       const res = location.pathname === `/newlisting`
-        ? await http.post<Listing>(`/listing/${userId}`, remainingProps)
-        : await http.put<Listing>(`/listing/${userId}/${clientId}/${estateId}/${contractId}`, remainingProps);
+        ? await http.post<Listing>(`/listings/${userId}`, remainingProps)
+        : await http.put<Listing>(`/listings/${userId}/${clientId}/${estateId}/${contractId}`, remainingProps);
       setListing(res.data);
-      navigate(`/listingdetail/${res.data.estateId}`);
+      console.log(res.data);
+      
+      navigate(`/listingdetail/${userId}/${res.data.estateId}`);
     } catch (err) {
       setErrors(err as AxiosError<{ validationErrors: ValidationError[] }>);
     }

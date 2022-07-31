@@ -51,8 +51,8 @@ const App = () => {
               <Route path='dashboard' element={userProtectedRoute(DashboardPage)} />
               <Route path='listings' element={userProtectedRoute(ListingsPage)} />
               <Route path='newlisting' element={userProtectedRoute(ListingPage)} />
-              <Route path='listingdetail/:listingid' element={userProtectedRoute(ListingPage)} />
-              <Route path='editlisting/:listingid' element={userProtectedRoute(ListingPage)} />
+              <Route path='listingdetail/:clientid/:listingid' element={userProtectedRoute(ListingPage)} />
+              <Route path='editlisting/:clientid/:listingid' element={userProtectedRoute(ListingPage)} />
               <Route path='owners' element={userProtectedRoute(OwnersPage)} />
               <Route path='clientdetail/:clientid' element={userProtectedRoute(OwnerPage)} />
               <Route path='agenda' element={userProtectedRoute(AgendaPage)} />

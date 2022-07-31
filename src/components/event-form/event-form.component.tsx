@@ -40,7 +40,6 @@ const EventForm: FC<EventFormProps> = ({ currentEvent, setCurrentEvent, date, se
   const formRef = useRef(null);
 
   useClickOutside(formRef, () => {
-    console.log('clicked outside!');
     setDisplayEventForm(false);
     setCurrentEvent(null);
   });
@@ -60,11 +59,16 @@ const EventForm: FC<EventFormProps> = ({ currentEvent, setCurrentEvent, date, se
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const onSubmit = async (values: EventFormData) => {
+  const onSubmit = async (values: Omit<EventFormData, 'eventId'> & { eventId?: number }) => {
+    console.log(values)
+    const { eventId, ...rest } = values;
+    const valuesWithoutId = rest;
     try {
       const { data } = currentEvent ? 
-        await http.put<AgendaEvent>(`/editevent/${userId}/${currentEvent.eventId}`, values) :
-        await http.post<AgendaEvent>(`/event/${userId}`, values);
+        await http.put<AgendaEvent>(`/events/${userId}/${currentEvent.eventId}`, valuesWithoutId) :
+        await http.post<AgendaEvent>(`/events/${userId}`, values);
+
+      console.log(data)
       const eventData = {
         ...data,
         startDate: new Date (data.startDate),
@@ -104,15 +108,15 @@ const EventForm: FC<EventFormProps> = ({ currentEvent, setCurrentEvent, date, se
               { t('eventTitle') + ' *' }
             </Text>
             <Field name="title" component="input">
-            {(props) => (
-              <TextInput
-                {...props.input}
-                placeholder={ t('describeEvent') }
-                width={"100%"}
-                />
-            )}
-              </Field>
-          <ErrorMessage fieldErrorMsg={selectValidationErrMsg(errors, 'title')} />
+              {(props) => (
+                <TextInput
+                  {...props.input}
+                  placeholder={ t('describeEvent') }
+                  width={"100%"}
+                  />
+              )}
+            </Field>
+            <ErrorMessage fieldErrorMsg={selectValidationErrMsg(errors, 'title')} />
             </Pane>
           <Pane>
           <Text display={'block'}>{ t('date') }</Text>

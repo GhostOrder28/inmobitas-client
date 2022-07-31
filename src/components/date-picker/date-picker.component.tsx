@@ -1,5 +1,5 @@
 import React, { useState, FC } from 'react';
-import { Pane, TextInput, IconButton, CalendarIcon } from 'evergreen-ui';
+import { Pane, TextInput, IconButton, CalendarIcon, minorScale } from 'evergreen-ui';
 import { format } from 'date-fns';
 import { DayPicker } from "react-day-picker";
 import { useTranslation } from 'react-i18next';
@@ -16,13 +16,25 @@ const DatePicker: FC<DatePickerProps> = ({ value, onChange }) => {
   const [display, setDisplay] = useState(false);
   const { i18n } = useTranslation()
   const locale = i18n.language?.includes('es') ? es : enUS; // the ? operator here is just for snapshot testing purposes, in the browser language is never undefined
+
+  const handleDateSelection = (newDate: Date | undefined) => {
+    if (!newDate) return;
+    const date = new Date(newDate);
+    if (value) {
+      date.setHours(value.getHours());
+      date.setMinutes(value.getMinutes());
+    }
+    onChange(date)
+    setDisplay(false); 
+  }
+
   return (
     <Pane position={'relative'} width={'100%'}>
       <Pane display={'flex'}>
         <TextInput
           disabled
           width={'100%'}
-          marginRight={10}
+          marginRight={minorScale(3)}
           value={value && format(value, 'yyyy-MM-dd')}
           onClick={() => setDisplay(true)}
         />
@@ -43,17 +55,8 @@ const DatePicker: FC<DatePickerProps> = ({ value, onChange }) => {
           <DayPicker
             mode="single"
             locale={locale}
-            selected={ value } 
-            onSelect={(newDate) => {
-              if (!newDate) return;
-              const date = new Date(newDate);
-              if (value) {
-                date.setHours(value.getHours());
-                date.setMinutes(value.getMinutes());
-              }
-              onChange(date)
-              setDisplay(false); 
-            }}
+            selected={value} 
+            onSelect={(newDate) => handleDateSelection(newDate)}
           />
         </Pane>
       }

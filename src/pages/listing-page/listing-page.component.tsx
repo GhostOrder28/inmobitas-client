@@ -14,7 +14,7 @@ const ListingDetail = lazy(() => import('../../components/listing-detail/listing
 const ListingPage = () => {
 
   const location = useLocation();
-  const params = useParams();
+  const { clientid, listingid } = useParams();
   const [listing, setListing] = useState<Listing>();
   const [presets, setPresets] = useState<Presets>();
   const [error, setError] = useState<Error | null>(null);
@@ -33,12 +33,12 @@ const ListingPage = () => {
       try {
         
         if (location.pathname !== '/newlisting') {
-          const listingData = await http.get<Listing>(`/listing/${userId}/${params.listingid}`);
-          const dataPresets = await http.get<Presets>(`/listingformdata`);
+          const listingData = await http.get<Listing>(`/listings/${userId}/${clientid}/${listingid}`);
+          const dataPresets = await http.get<Presets>(`/listingpresets`);
           setListing(listingData.data);
           setPresets(dataPresets.data);
         } else {
-          const dataPresets = await http.get<Presets>(`/listingformdata`);
+          const dataPresets = await http.get<Presets>(`/listingpresets`);
           setPresets(dataPresets.data);
         }
       } catch (err) {
@@ -61,13 +61,13 @@ const ListingPage = () => {
           <ListingForm dataPresets={presets} setListing={setListing} />
         </Suspense>
       )
-    case `/editlisting/${params.listingid}`:
+    case `/editlisting/${clientid}/${listingid}`:
       return (
         <Suspense fallback={<Spinner />}>
           <ListingForm dataPresets={presets} listing={listing} setListing={setListing} />
         </Suspense>
       )
-    case `/listingdetail/${params.listingid}`:
+    case `/listingdetail/${clientid}/${listingid}`:
       return (
         <Suspense fallback={<Spinner />}>
           <ListingDetail dataPresets={presets} listing={listing} />
