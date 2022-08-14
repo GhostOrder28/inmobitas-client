@@ -49,5 +49,6 @@
   "addNewListing": "Add New Listing",
   "commitChanges": "Commit changes",
   "information": "Information",
-  "gallery": "Gallery"
+  "gallery": "Gallery",
+  "errorGenericMessage": "There are some errors, please check the fields and try again."
 }

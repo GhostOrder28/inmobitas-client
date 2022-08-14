@@ -3,7 +3,6 @@ export type Client = {
   clientId: number;
   clientName: string;
   clientContactPhone: number;
-  clientType?: string;
   clientAge?: number | null;
   clientDetails?: string | null;
 }
@@ -15,4 +14,3 @@ export type ClientListing = {
   estatePrice: number;
   currencyTypeId: number;
 }
-

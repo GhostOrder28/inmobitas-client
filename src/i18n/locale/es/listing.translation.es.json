@@ -49,5 +49,6 @@
   "addNewListing": "Añadir nueva propiedad",
   "commitChanges": "Confirmar cambios",
   "information": "Información",
-  "gallery": "Galería"
+  "gallery": "Galería",
+  "errorGenericMessage": "Encontramos algunos errores, porfavor revisa los campos e intenta de nuevo."
 }

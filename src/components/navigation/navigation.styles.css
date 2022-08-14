@@ -4,10 +4,6 @@ nav a {
   padding: 1rem 1rem 1rem 1.5rem;
 }
 
-nav a:hover {
-  background-color: #F9FAFC;
-}
-
 .navigation {
   background-color: #F9FAFC;
 }
@@ -15,5 +11,4 @@ nav a:hover {
 a.logo-icon {
   display: flex;
   align-items: center;
-  /* text-decoration: none;  */
 }

@@ -1,4 +1,4 @@
-import { Client } from "../../components/owner-detail/owner-detail.types";
+import { Client } from '../client-page/client-page.types';
 import { Nullable } from "../../utils/utility-types";
 
 export type Presets = {
@@ -28,7 +28,7 @@ export type EstatePreset = {
 
 export type Listing = {
   [prop: string]: string | number | null | boolean;
-} & Client & Contract & Estate & Features & House & Apartment & OwnerPreferences;
+} & Client & Contract & Estate & Features & House & Apartment & ClientPreferences;
 
 export type Contract = {
   [index: string]: number | boolean;
@@ -72,10 +72,10 @@ export type Apartment = {
   floorLocation: number;
 }
 
-export type OwnerPreferences = {
+export type ClientPreferences = {
   childrenAllowed: boolean;
   petsAllowed: boolean;
   preferenceDetails: string;
-  ownerPreferencesDetails: string;
+  clientPreferencesDetails: string;
 }
 

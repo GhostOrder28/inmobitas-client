@@ -1,40 +1,35 @@
 import React, { useState } from "react";
-import { WarningSignIcon, Text, Pane, TrashIcon, DocumentIcon } from "evergreen-ui";
-import { Picture } from '../listing-detail/listing-detail.types';
-import GalleryMenuButton from "../gallery-menu-button/gallery-menu-button.component";
+import { Pane } from "evergreen-ui";
 
 type GalleryMenuProps = {
   children: React.ReactNode[];
   showDeletionMenu: boolean;
+  width?: number;
 };
 
 const GalleryMenu = ({
   children,
   showDeletionMenu,
+  width,
 }: GalleryMenuProps) => {
   return (
-    <>
-      {children[0]}
+    <Pane
+      position={"fixed"}
+      display={"flex"}
+      bottom={!showDeletionMenu ? 0 : -50}
+      width={width || '100%'}
+      height={50}
+      zIndex={97}
+      backgroundColor={"#F9FAFC"}
+      transition={"all .5s"}
+    >
       <Pane
-        position={"fixed"}
         display={"flex"}
-        bottom={!showDeletionMenu ? 0 : -50}
-        width={'100%'}
-        height={50}
-        zIndex={97}
-        backgroundColor={"#F9FAFC"}
-        transition={"all .5s"}
+        width="100%"
       >
-        <Pane
-          display={"flex"}
-          width="100%"
-        >
-          {
-            children.slice(1)
-          }
-        </Pane>
+        { children }
       </Pane>
-    </>
+    </Pane>
   );
 };
 

@@ -1,18 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
-import http from "../../utils/axios-instance";
 import { useTranslation } from "react-i18next";
 import { AxiosError } from "axios";
 import { useSelector } from "react-redux";
-import { selectCurrentUserId } from "../../redux/user/user.selectors";
 import { Form, Field, FormSpy } from "react-final-form";
 import { FormApi } from "final-form";
-import { useLocation, useNavigate } from "react-router-dom";
-import {
-  selectValidationErrMsg,
-  //presetSelector,
-} from "../../utils/utility-functions";
-import ErrorMessage from "../error-message/error-message.component";
-//import DatePicker from '../date-picker/date-picker.component';
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   Button,
   Pane,
@@ -24,10 +16,19 @@ import {
   Tablist,
   Tab,
 } from "evergreen-ui";
+
+import useRelativeHeight from '../../hooks/use-relative-height/use-relative-height';
+import useWindowWidth from '../../hooks/use-window-width/use-window-width';
+
+import http from "../../utils/axios-instance";
+import { selectCurrentUserId } from "../../redux/user/user.selectors";
+import { selectValidationErrMsg } from "../../utils/utility-functions";
+import ErrorMessage from "../error-message/error-message.component";
 import "./listing-form.styles.css";
 import { Presets, Listing } from "../../pages/listing-page/listing-page.types";
 import { ValidationError } from "../../redux/redux.types";
-import useRelativeHeight from '../../hooks/use-relative-height/use-relative-height';
+import { desktopBreakpoint } from "../../constants/breakpoints.constants";
+import { SpecificationTableGroup } from '../specification-table/specification-table.types';
 
 const formInitialState = {
   contractTypeId: 1,
@@ -39,13 +40,14 @@ const formInitialState = {
 
 type ListingFormProps = {
   dataPresets: Presets | undefined;
-  listing?: Listing | undefined;
-  setListing: React.Dispatch<React.SetStateAction<Listing | undefined>>;
+  listing?: Listing | SpecificationTableGroup[] | undefined;
+  setListing: React.Dispatch<React.SetStateAction<Listing | SpecificationTableGroup[] | undefined>>;
 };
 
 const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => {
   
   const userId = useSelector(selectCurrentUserId);
+  const { clientid, listingid } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
   const formRef = useRef<FormApi>();
@@ -54,6 +56,7 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
   const [selectedMode, setSelectedMode] = useState<number>(0);
   const formWrapperRef = useRef<HTMLDivElement | null>(null);
   const formHeight = useRelativeHeight(formWrapperRef, 60);
+  const windowWidth = useWindowWidth();
 
   useEffect(() => {
     if (location.pathname === "/newlisting" && formRef.current) {
@@ -77,19 +80,21 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
 
     try {
       const res = location.pathname === `/newlisting`
-        ? await http.post<Listing>(`/listings/${userId}`, remainingProps)
-        : await http.put<Listing>(`/listings/${userId}/${clientId}/${estateId}/${contractId}`, remainingProps);
-      setListing(res.data);
-      console.log(res.data);
+        ? await http.post<SpecificationTableGroup[]>(`/listings/${userId}`, remainingProps)
+        : await http.put<SpecificationTableGroup[]>(`/listings/${userId}/${clientId}/${estateId}/${contractId}`, remainingProps);
       
-      navigate(`/listingdetail/${userId}/${res.data.estateId}`);
+      setListing(res.data);      
+      navigate(`/listingdetail/${clientid}/${listingid}`);
     } catch (err) {
       setErrors(err as AxiosError<{ validationErrors: ValidationError[] }>);
     }
   };
 
   return (
-    <>
+    <Pane 
+      width={windowWidth > desktopBreakpoint ? 600 : '100%'}
+      marginX={'auto'}
+    >
       <Tablist width={"100%"} marginBottom={'.5rem'} display={"flex"} className="tablist">
         {[t('basic', { ns: 'listing' }), t('detailed', { ns: 'listing' })].map((tab, index) => (
           <Tab
@@ -920,7 +925,10 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                     </Field>
                     </>
                   }
-                  </Pane>
+                </Pane>
+                {
+                  errors && <ErrorMessage fieldErrorMsg={t('errorGenericMessage')} />
+                }
                 <Pane
                   position={'absolute'}
                   display={'flex'}
@@ -929,7 +937,7 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                   bottom={10} left={0}
                 >
                   <Button
-                    width={'90%'}
+                    width={windowWidth > desktopBreakpoint ? 400 : '90%'}
                     height={40}
                     type="submit"
                     appearance="primary"
@@ -943,7 +951,7 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
           }}
         />
       </Pane>
-    </>
+    </Pane>
   );
 };
 

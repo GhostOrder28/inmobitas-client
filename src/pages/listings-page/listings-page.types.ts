@@ -1,8 +1,9 @@
 export type ListingItem = {
+  [index: string]: string | number | undefined;
   clientId: number;
   estateId: number;
   district: string,
   neighborhood: string; 
-  currencySymbol: string;
-  estatePrice: number;
+  totalArea?: number;
+  builtArea?: number;
 }

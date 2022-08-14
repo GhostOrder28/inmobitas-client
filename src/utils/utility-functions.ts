@@ -2,6 +2,8 @@ import { AxiosError } from 'axios';
 import { ContractPreset, CurrencyPreset, EstatePreset } from '../pages/listing-page/listing-page.types';
 import { ValidationError } from '../redux/redux.types';
 import { AnyAction } from 'redux';
+import { ItemIds } from '../components/custom-table/custom-table.types';
+import { RouteSource } from './utility-types';
 
 export const strParseIn = (str: string) => {
   return str.replaceAll(' ', '-').toLowerCase();
@@ -10,6 +12,19 @@ export const strParseIn = (str: string) => {
 export const strParseOut = (str: string) => {
   return str?.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 };
+
+export const buildRoute = (source: RouteSource, structure: string[]) => {
+  const arrayFromItemIds = Object.keys(source).filter(prop => prop.includes('Id'));
+  const itemParamsIds: ItemIds = arrayFromItemIds.reduce((acc, curr) => {
+    return { ...acc, [curr]: source[curr] }
+  }, {});
+
+  const detailUrl = structure.reduce((acc, curr) => {
+    if (structure[0] === curr) return '/' + curr;
+    return acc + '/' + itemParamsIds[curr]
+  }, '');
+  return detailUrl;
+}
 
 // Non redux 'selectors'
 

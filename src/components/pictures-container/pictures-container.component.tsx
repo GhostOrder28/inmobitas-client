@@ -1,6 +1,5 @@
 import React, { ReactNode } from 'react';
-import { Pane, PaneOwnProps } from 'evergreen-ui';
-import { BoxComponent } from 'ui-box';
+import { Pane } from 'evergreen-ui';
 
 type PicturesContainerProps = {
   children: ReactNode;

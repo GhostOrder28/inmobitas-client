@@ -1,12 +1,13 @@
 {
   "owner": "Owner",
   "name": "Name",
+  "clientName": "Client Name",
   "ownerName": "Owner Name",
   "phone": "Phone",
-  "ownerContactPhone": "Owner Contact Phone",
-  "clientType": "Client Type",
   "contactPhone": "Contact Phone",
-  "age": "Age",
+  "ownerContactPhone": "Owner Contact Phone",
+  "type": "Type",
+  "clientAge": "Age",
   "clientDetails": "Client Details",
   "estates": "Estates"
 }

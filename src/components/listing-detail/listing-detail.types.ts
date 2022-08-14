@@ -4,3 +4,4 @@ export type Picture = {
   smallSizeUrl: string;
   largeSizeUrl: string;
 }
+

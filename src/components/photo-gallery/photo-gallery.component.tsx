@@ -1,16 +1,26 @@
 import React, { Dispatch, SetStateAction, useEffect, useState, useRef, MouseEvent } from "react";
-import ReactDOM from "react-dom";
-import http from "../../utils/axios-instance";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import ReactDOM from "react-dom";
+import { 
+  Pane, 
+  Checkbox, 
+  DocumentIcon,
+  TrashIcon,
+} from "evergreen-ui";
+import { useTranslation } from "react-i18next";
+
+import useRelativeHeight from '../../hooks/use-relative-height/use-relative-height';
+import useWindowWidth from "../../hooks/use-window-width/use-window-width";
+
+import { desktopBreakpoint } from '../../constants/breakpoints.constants';
+import http from "../../utils/axios-instance";
 import { selectCurrentUserId } from "../../redux/user/user.selectors";
-import { Pane, Checkbox, DocumentIcon, TrashIcon } from "evergreen-ui";
 import FilesUploader from "../files-uploader/files-uploader.component";
 import GalleryMenu from "../gallery-menu/gallery-menu.component";
 import DeletionPanel from "../deletion-panel/deletion-panel.component";
 import "./photo-gallery.styles.css";
 import { Picture } from "../listing-detail/listing-detail.types";
-import { useTranslation } from "react-i18next";
 import PopupMessage from "../popup-message/popup-message.component";
 import ContentSpinner from "../content-spinner/content-spinner.component";
 import PicturesContainer from '../pictures-container/pictures-container.component';
@@ -47,6 +57,9 @@ const PhotoGallery = ({ display, listingPictures, generatePresentationFilename }
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { t } = useTranslation(['ui']);
   const [noImages, setNoImages] = useState(false);
+  const galleryRef = useRef<HTMLDivElement | null>(null);
+  const galleryHeight = useRelativeHeight(galleryRef);
+  const windowWidth = useWindowWidth();
 
   useEffect(() => {
     setFiles([...listingPictures]);
@@ -111,91 +124,107 @@ const PhotoGallery = ({ display, listingPictures, generatePresentationFilename }
   }
 
   return (
-    <Pane display={display} position={"relative"}>
-      <PopupMessage message={ t('noImages') } displayCondition={noImages}/>
-      <GalleryMenu
+    <>
+      <DeletionPanel
         showDeletionMenu={showDeletionMenu}
+        setShowDeletionMenu={setShowDeletionMenu}
+        setMarkedPictures={setMarkedPictures}
+        submitDeletion={submitDeletion}
+      />        
+      <Pane 
+        ref={galleryRef}
+        height={galleryHeight}
+        display={display}
+        position={"relative"}
+        overflow={'scroll'}
       >
-        <DeletionPanel
+        <PopupMessage message={ t('noImages') } displayCondition={noImages}/>
+        <GalleryMenu
+          width={windowWidth > desktopBreakpoint ? desktopBreakpoint : undefined}
           showDeletionMenu={showDeletionMenu}
-          setShowDeletionMenu={setShowDeletionMenu}
-          setMarkedPictures={setMarkedPictures}
-          submitDeletion={submitDeletion}
-        />        
-        <GalleryMenuButton Icon={DocumentIcon} fn={generatePresentation}/>
-        {/*<GalleryMenuButton Icon={TrashIcon} fn={() => setShowDeletionMenu(!showDeletionMenu)}/>*/}
-        <FilesUploader
-          files={files}
-          setFiles={setFiles}
-          setIsLoading={setIsLoading}
-          setNoImages={setNoImages}
-        />
-      </GalleryMenu>
-      <Pane position="relative">
-        { isLoading && <ContentSpinner /> }
-        { files.length ?
-          <PicturesContainer showDeletionMenu={showDeletionMenu}>
-            {
-              files.map((file, idx) => {
-                return (
-                  <Pane
-                    key={`image-${idx}`}
-                    className="gallery-img-container"
-                    position={"relative"}
-                    border={showDeletionMenu ? "3px solid white" : ""}
-                  >
+        >
+          <GalleryMenuButton 
+            Icon={DocumentIcon}
+            fn={generatePresentation}
+          />
+          <FilesUploader
+            files={files}
+            setFiles={setFiles}
+            setIsLoading={setIsLoading}
+            setNoImages={setNoImages}
+          />
+          { windowWidth > desktopBreakpoint &&
+            <GalleryMenuButton Icon={TrashIcon} fn={() => setShowDeletionMenu(!showDeletionMenu)}/>
+          }
+        </GalleryMenu>
+        <Pane position="relative">
+          { isLoading && <ContentSpinner /> }
+          { files.length ?
+            <PicturesContainer showDeletionMenu={showDeletionMenu}>
+              {
+                files.map((file, idx) => {
+                  return (
                     <Pane
-                      top="0"
-                      left="0"
-                      zIndex={90}
-                      cursor={"pointer"}
-                      onClick={
-                        showDeletionMenu
-                          ? () => toggleMark(file.pictureId)
-                          : () => setFullscreenPicture(file)
-                      }
-                      onContextMenu={(e: MouseEvent) => e.preventDefault()}
-                      onTouchStart={() => {timeout.current = setTimeout(() => setShowDeletionMenu(true), 500)}}
-                      onTouchEnd={ () => clearTimeout(timeout.current) }
+                      key={`image-${idx}`}
+                      className="gallery-img-container"
+                      position={"relative"}
+                      border={showDeletionMenu ? "3px solid white" : ""}
                     >
-                      {showDeletionMenu && (
-                        <Checkbox
-                          position="absolute"
-                          top="0"
-                          right="0"
-                          zIndex="98"
-                          size={30}
-                          checked={markedPictures.some(
-                            (pictureId) => pictureId === file.pictureId
-                          )}
-                          margin=".6rem"
-                          pointerEvents={"none"}
+                      <Pane
+                        top="0"
+                        left="0"
+                        zIndex={90}
+                        cursor={"pointer"}
+                        onClick={
+                          showDeletionMenu
+                            ? () => toggleMark(file.pictureId)
+                            : () => setFullscreenPicture(file)
+                        }
+                        onContextMenu={(e: MouseEvent) => e.preventDefault()}
+                        onTouchStart={() => {timeout.current = setTimeout(() => setShowDeletionMenu(true), 500)}}
+                        onTouchEnd={ () => clearTimeout(timeout.current) }
+                        onTouchMove={() => clearTimeout(timeout.current)}
+                      >
+                        {showDeletionMenu && (
+                          <Checkbox
+                            position="absolute"
+                            top="0"
+                            right="0"
+                            zIndex="98"
+                            size={30}
+                            checked={markedPictures.some(
+                              (pictureId) => pictureId === file.pictureId
+                            )}
+                            margin=".6rem"
+                            pointerEvents={"none"}
+                            transition={"margin .6"}
+                          />
+                        )}
+                        <img
+                          className="gallery-img"
+                          alt=""
+                          src={file.smallSizeUrl}
                         />
-                      )}
-                      <img
-                        className="gallery-img"
-                        alt=""
-                        src={file.smallSizeUrl}
-                      />
+                      </Pane>
                     </Pane>
-                  </Pane>
-                );
-              })            
-            }
-          </PicturesContainer> : ""
-        }
+                  );
+                })            
+              }
+            </PicturesContainer> : ""
+          }
+        </Pane>
+        {fullscreenPicture && globalContainer ? (
+          <FullScreen
+            userId={userId}
+            fullscreenPicture={fullscreenPicture}
+            setFullscreenPicture={setFullscreenPicture}
+            cloudinaryPicturesPath={cloudinaryPicturesPath} 
+          />
+        ) : (
+          ""
+        )}
       </Pane>
-      {fullscreenPicture && globalContainer ? (
-        <FullScreen
-          userId={userId}
-          fullscreenPicture={fullscreenPicture}
-          setFullscreenPicture={setFullscreenPicture}
-          cloudinaryPicturesPath={cloudinaryPicturesPath} 
-        />
-      ) : (
-        ""
-      )}
-    </Pane>
+    </>
   );
 };
 

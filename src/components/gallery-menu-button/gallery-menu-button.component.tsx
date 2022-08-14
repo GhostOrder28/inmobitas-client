@@ -1,5 +1,5 @@
 import React from 'react';
-import { IconComponent, Pane } from 'evergreen-ui';
+import { IconComponent, Pane, minorScale } from 'evergreen-ui';
 
 type GalleryMenuButtonProps = {
   Icon: IconComponent;
@@ -17,7 +17,7 @@ const GalleryMenuButton = ({ Icon, fn }: GalleryMenuButtonProps) => (
     cursor={"pointer"}
     borderRight={'1px solid #E9E9ED'}
   >
-    <Icon size={"100%" as any as number} color={"#3A3E58"} />
+    <Icon size={minorScale(5)} color={"#3A3E58"} />
   </Pane>
 )
 
