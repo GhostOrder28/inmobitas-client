@@ -1,6 +1,7 @@
 import React from 'react';
 import { ClientItem } from '../../pages/clients-page/clients-page.types';
 import { ListingItem } from '../../pages/listings-page/listings-page.types';
+import { Row } from 'react-table';
 
 export type CustomTableProps = {
   source: (ListingItem | ClientItem)[];
@@ -14,4 +15,13 @@ export type CustomTableProps = {
 export type ItemIds = {
   [index: string]: number;
 };
+
+export type CustomTableColumn = {
+  Header: string;
+  accessor: string;
+}
+
+export type CustomTableRow = Row<{
+  [index: string]: any;
+}>
 

@@ -36,13 +36,9 @@ import ModalContainer from '../../components/modal-container/modal-container.com
 import ContentSpinner from '../../components/content-spinner/content-spinner.component';
 import CustomTableOption from '../../components/custom-table/custom-table-option';
 import useOrientation from '../../hooks/use-orientation';
+import { getPageSize } from '../../components/custom-table/custom-table.utils';
 
 const views = ['month', 'week', 'day', 'today'];
-
-const getPageSize = (tableHeight: number) => {
-  const pageSize = Math.floor(tableHeight / 50);
-  return pageSize;
-}
 
 const AgendaPage = () => {
 
@@ -58,11 +54,11 @@ const AgendaPage = () => {
   const [displayEventForm, setDisplayEventForm] = useState<boolean>(false);
   const [showPastEvents, setShowPastEvents] = useState<boolean>(false);
   const eventListRef = useRef<HTMLDivElement | null>(null);
+  const eventListHeight = (useRelativeHeight(eventListRef) || 0) - 70;
   const buttonsRef = useRef(null);
   useClickOutside(buttonsRef, () => setSelectedEvent(null));
   const { t, i18n } = useTranslation(['agenda']);
   const locale = i18n.language.includes('es') ? es : enUS;
-  const eventListHeight = (useRelativeHeight(eventListRef) || 0) - 70;
   const orientation = useOrientation();
 
   const requestEventsData = useCallback(async () => {
@@ -160,7 +156,7 @@ const AgendaPage = () => {
   }, [])
 
   useEffect(() => {
-    setPageSize(getPageSize(eventListHeight))
+    setPageSize(getPageSize(eventListHeight, 50))
   }, [eventListHeight])
 
   useEffect(() => {

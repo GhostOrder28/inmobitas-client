@@ -1,4 +1,4 @@
-import React, { useRef, useState, FC, useMemo } from "react";
+import React, { useEffect, useRef, useState, FC, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectCurrentUserId } from '../../redux/user/user.selectors';
@@ -11,83 +11,99 @@ import {
   TableRow, 
   TableCell,
   TableHeaderCell,
+  Text,
+  Pane, 
+  Pagination
 } from "evergreen-ui";
-//import { useTable, usePagination } from 'react-table';
+import { useTable, usePagination } from 'react-table';
 
 import { buildRoute } from "../../utils/utility-functions";
 import useRelativeHeight from '../../hooks/use-relative-height/use-relative-height';
-import { CustomTableProps } from './custom-table.types';
+import { CustomTableProps, CustomTableColumn, CustomTableRow } from './custom-table.types';
 import CustomTableOption from './custom-table-option';
 import http from '../../utils/axios-instance';
+import { getPageSize } from "./custom-table.utils";
 
 const CustomTable: FC<CustomTableProps> = ({ source, setSource, labels, detailRouteStructure, editRouteStructure, deleteBaseUrl }) => {
   const navigate = useNavigate();
   const sourceListRef = useRef<HTMLDivElement | null>(null);
-  const tableRelativeHeight = useRelativeHeight(sourceListRef);
+  const tableRelativeHeight = (useRelativeHeight(sourceListRef) || 0) - 70;
   const userId = useSelector(selectCurrentUserId) as number;
-  const [highlightedRow, setHighlightedRow] = useState<number | null>(null)
+  const [highlightedRow, setHighlightedRow] = useState<number | null>(null);
 
-  //const data = useMemo(() => source.map(item => {
-    //const itemKeys = Object.keys(item);
-    //const itemProps = itemKeys.filter(prop => !prop.includes('Id'));
-    //const entityIdentifier = itemKeys.find(key => key.includes('Id')) as string; //id is always present, if not then it is an error from the server side, same happems with entityId
-    //const entityId = item[entityIdentifier] as number;
+  const data = useMemo(() => source.map(item => {
+    const itemKeys = Object.keys(item);
+    return itemKeys.reduce((acc, curr) => {
+      return { ...acc, [curr]: item[curr] }
+    }, {})
 
-    //return itemProps.map(prop => item[prop]);
+  }), [source]);
 
-  //}), [source]);
+  const columns: CustomTableColumn[] = useMemo(() => {
+    if (source.length) {
+      const itemKeys = Object.keys(source[0]);
+      const itemProps = itemKeys.filter(prop => !prop.includes('Id'));
+      
+      const columnsArray = itemProps.map((prop, idx) => ({
+        Header: labels[idx],
+        accessor: prop
+      }))
 
-  //const columns = useMemo(() => source.map(item => {
-    //const itemKeys = Object.keys(item);
-    //const itemProps = itemKeys.filter(prop => !prop.includes('Id'));
+      columnsArray.push({ Header: '', accessor: 'options' });
 
-    //return itemProps.map((prop, idx) => ({
-      //Header: labels[idx],
-      //accessor: prop,
-    //}))
-  //}), [])
+      return columnsArray
+    } else {
+      return [];
+    }
 
-  //const tableInstance = useTable(
-    //{ 
-      //columns, 
-      //data, 
-      //initialState: {
-        //pageIndex: 0,
-      //},
-    //}, 
-    //usePagination
-  //)
+  }, [source])
 
-  //const {
-    //getTableProps,
-    //getTableBodyProps,
-    //headerGroups,
-    //prepareRow,
-    //page,
-    //pageCount,
-    //state,
-    //setPageSize,
-    //previousPage,
-    //nextPage,
-    //gotoPage,
-  //} = tableInstance;
+  const tableInstance = useTable(
+    { 
+      columns, 
+      data, 
+      initialState: {
+        pageIndex: 0,
+      },
+    }, 
+    usePagination
+  )
 
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    prepareRow,
+    page,
+    pageCount,
+    state,
+    setPageSize,
+    previousPage,
+    nextPage,
+    gotoPage,
+  } = tableInstance;
 
   const onDelete = async (userId: number, entityId: number, entityIdentifier: string) => {
     const deletedEntity = await http.delete(`${deleteBaseUrl}/${userId}/${entityId}`);
     const remainingEntities = source.filter(item => item[entityIdentifier] !== deletedEntity.data)
-    setSource(remainingEntities) 
+    setSource(remainingEntities);
+    setHighlightedRow(null);
   }
 
-  //const getFlexValues = (idx: number, columnsLength: number) => idx === columnsLength - 1 ? .4 : .45;
+  useEffect(() => {
+    setPageSize(getPageSize(tableRelativeHeight, 64))
+  }, [tableRelativeHeight])
+
+  const getFlexValues = (idx: number) => idx === columns.length - 1 ? .4 : .45;
 
   return (
-      /*<Table flex={1} {...getTableProps()}>
+    <>
+      <Table flex={1} {...getTableProps()}>
         <TableHead display={'flex'} userSelect={'none'}>
           {
             headerGroups.map(headerGroup => (
               headerGroup.headers.map((column, idx) => (
-                <TableHeaderCell  flex={getFlexValues(idx, headerGroup.headers.length)} {...column.getHeaderProps()}>
+                <TableHeaderCell flex={getFlexValues(idx)} {...column.getHeaderProps()}>
                   {
                     column.render('Header')
                   }
@@ -98,163 +114,77 @@ const CustomTable: FC<CustomTableProps> = ({ source, setSource, labels, detailRo
         </TableHead>
         <TableBody ref={sourceListRef} height={tableRelativeHeight} overflow={'scroll'} {...getTableBodyProps()}>
           {
-            page.map((row, rowIdx) => {
+            page.map((row: CustomTableRow, rowIdx) => {
+              const rowKeys = Object.keys(row.original);
+              const entityIdentifier = rowKeys.find(key => key.includes('Id')) as string; //id is always present, if not then it is an error from the server side, same happems with entityId;
               prepareRow(row)
               return (
                 <TableRow
-                  height={50}
                   isSelectable
                   color={'#3a3e58'} 
                   position={'relative'}
-                  onMouseOver={() => setSelectedEvent(rowIdx)}
-                  onMouseLeave={() => setSelectedEvent(null)}
+                  onMouseOver={() => setHighlightedRow(rowIdx)}
+                  onMouseLeave={() => setHighlightedRow(null)}
+                  onClick={() => navigate(buildRoute(source[rowIdx], detailRouteStructure))}
                   {...row.getRowProps()}
                 >
-
-              {
-                itemProps.map((prop, idx) => (
-                  <TableCell key={`item-prop-${idx}`} flex={.45}>{item[prop]}</TableCell>
-                ))
-              }
-              <TableCell flex ={.4} paddingRight={0}>
-                { highlightedRow === idx ?
-                  <>
-                    <CustomTableOption
-                      icon={EditIcon}
-                      onClick={
-                        (e: React.MouseEvent<HTMLDivElement>) => {
-                          e.stopPropagation();
-                          navigate(buildRoute(item, editRouteStructure));
-                        } 
-                      }
-                    />
-                    <CustomTableOption
-                      icon={CrossIcon}
-                      color={'danger'}
-                      onClick={
-                        (e: React.MouseEvent<HTMLDivElement>) => {
-                          e.stopPropagation();
-                          onDelete(userId, entityId, entityIdentifier);
-                        } 
-                      }
-                    />
-                  </> : ''
-                }
-              </TableCell>
-
-
                   {
-                    row.cells.map((cell, idx) => {
-                      return idx !== 3 ? (
-                        <TableCell flex={getFlexValues(idx, row.cells.length)} {...cell.getCellProps()}>
-                          {
-                            <Text userSelect={'none'}> 
-                              {cell.render('Cell')}
-                            </Text>
-                          }
-                        </TableCell>
-                      ) :
-                        <Pane
-                          ref={buttonsRef}
-                          position={'absolute'}
-                          display={selectedEvent === rowIdx ? 'flex' : 'none'}
-                          width={100}
-                          height={49}
-                          right={0}
-                          backgroundColor={'#F9FAFC'}
-                        >
-                          <CustomTableOption
-                            icon={EditIcon}
-                            onClick={() => {
-                              const eventId = page[rowIdx].original.eventId;
-                              setCurrentEvent(events.find(evt => evt.eventId === eventId) as AgendaEvent); // this can't be undefined
-                              setDisplayEventForm(true);
-                              setSelectedEvent(null);
-                            }}
-                          />
-                          <CustomTableOption
-                            icon={CrossIcon}
-                            color={'danger'}
-                            onClick={() => {
-                              const eventId = page[rowIdx].original.eventId;
-                              deleteEvent((events.find(evt => evt.eventId === eventId) as AgendaEvent).eventId)} // this can't be undefined
-                            }
-                          />
-                        </Pane>
-                    })
+                    row.cells.map((cell, idx) => ( 
+                      <TableCell
+                        key={`item-prop-${idx}`} 
+                        flex={getFlexValues(idx)}
+                        paddingX={idx === row.cells.length - 1 ? 0 : 12}
+                      > 
+                        {
+                          idx !== row.cells.length - 1 ?
+                            <Text>{ cell.render('Cell') }</Text> :
+                            highlightedRow === rowIdx ?
+                            <>
+                              <CustomTableOption
+                                icon={EditIcon}
+                                onClick={
+                                  (e: React.MouseEvent<HTMLDivElement>) => {
+                                    e.stopPropagation();
+                                    navigate(buildRoute(source[rowIdx], editRouteStructure));
+                                  } 
+                                }
+                              />
+                              <CustomTableOption
+                                icon={CrossIcon}
+                                color={'danger'}
+                                onClick={
+                                  (e: React.MouseEvent<HTMLDivElement>) => {
+                                    e.stopPropagation();
+                                    onDelete(userId, row.original[entityIdentifier], entityIdentifier);
+                                  } 
+                                }
+                              />
+                            </> : ''
+                        }
+                      </TableCell>
+                    ))
                   }
                 </TableRow>
               )
             })
           } 
         </TableBody>
-      </Table>*/
-    <Table>
-      <TableHead>
-        {
-          labels.map((label, idx) => {
-            return (
-              <TableHeaderCell key={`row-${idx}`} flex={1}>{ label }</TableHeaderCell>
-            )
-          })
-        }
-        <TableHeaderCell flex={.4}></TableHeaderCell>
-      </TableHead>
-      <TableBody ref={sourceListRef} height={tableRelativeHeight}>
-        { source && source.map((item, idx) => {
-          const itemKeys = Object.keys(item);
-          const itemProps = itemKeys.filter(prop => !prop.includes('Id'));
-          const entityIdentifier = itemKeys.find(key => key.includes('Id')) as string; //id is always present, if not then it is an error from the server side, same happems with entityId
-          const entityId = item[entityIdentifier] as number;
-
-          return (
-            <TableRow
-              display={'flex'}
-              isSelectable
-              onClick={
-                detailRouteStructure ?
-                  () => { navigate(buildRoute(item, detailRouteStructure)) } :
-                  undefined
-              }
-              onMouseOver={ () => setHighlightedRow(idx) }
-              onMouseLeave={ () => setHighlightedRow(null) }
-              key={idx}
-            >
-              {
-                itemProps.map((prop, idx) => (
-                  <TableCell key={`item-prop-${idx}`} flex={.45}>{item[prop]}</TableCell>
-                ))
-              }
-              <TableCell flex ={.4} paddingRight={0}>
-                { highlightedRow === idx ?
-                  <>
-                    <CustomTableOption
-                      icon={EditIcon}
-                      onClick={
-                        (e: React.MouseEvent<HTMLDivElement>) => {
-                          e.stopPropagation();
-                          navigate(buildRoute(item, editRouteStructure));
-                        } 
-                      }
-                    />
-                    <CustomTableOption
-                      icon={CrossIcon}
-                      color={'danger'}
-                      onClick={
-                        (e: React.MouseEvent<HTMLDivElement>) => {
-                          e.stopPropagation();
-                          onDelete(userId, entityId, entityIdentifier);
-                        } 
-                      }
-                    />
-                  </> : ''
-                }
-              </TableCell>
-            </TableRow>
-          )
-        })}
-      </TableBody>
-    </Table>
+      </Table>
+      <Pane
+        width={'100%'}
+        display={'flex'}
+        justifyContent={'center'}
+      >
+        <Pagination
+          margin={'auto'}
+          page={state.pageIndex + 1} 
+          totalPages={pageCount}
+          onNextPage={nextPage}
+          onPreviousPage={previousPage}
+          onPageChange={page => gotoPage(page - 1)}
+        />
+      </Pane>
+    </>
   );
 };
 
