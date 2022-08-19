@@ -13,7 +13,7 @@ import {
   minorScale,
 } from "evergreen-ui";
 
-import useWindowWidth from '../../hooks/use-window-width/use-window-width';
+import useWindowDimensions from '../../hooks/use-window-dimensions';
 
 import http from "../../utils/axios-instance";
 import { selectCurrentUserId } from "../../redux/user/user.selectors";
@@ -34,7 +34,7 @@ const ClientForm: FC<ClientFormProps> = ({ clientData, setClient }) => {
   const { clientid } = useParams();
   const { t } = useTranslation(['client', 'listing']);
   const userId = useSelector(selectCurrentUserId);
-  const windowWidth = useWindowWidth();
+  const { windowInnerWidth } = useWindowDimensions();
   const [errors, setErrors] = useState<AxiosError<{ validationErrors: ValidationError[] }>>();
 
   const onSubmit = async (formData: Client) => {
@@ -51,7 +51,7 @@ const ClientForm: FC<ClientFormProps> = ({ clientData, setClient }) => {
 
   return (
     <Pane
-      width={windowWidth > desktopBreakpoint ? 600 : '100%'}
+      width={windowInnerWidth > desktopBreakpoint ? 600 : '100%'}
       marginX={'auto'}
     >
       <Form
@@ -160,7 +160,7 @@ const ClientForm: FC<ClientFormProps> = ({ clientData, setClient }) => {
                 marginTop={minorScale(5)}
               >
                 <Button
-                  width={windowWidth > desktopBreakpoint ? 400 : '100%'}
+                  width={windowInnerWidth > desktopBreakpoint ? 400 : '100%'}
                   height={40}
                   type="submit"
                   appearance="primary"

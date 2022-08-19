@@ -11,7 +11,7 @@ import {
 import { useTranslation } from "react-i18next";
 
 import useRelativeHeight from '../../hooks/use-relative-height/use-relative-height';
-import useWindowWidth from "../../hooks/use-window-width/use-window-width";
+import useWindowDimensions from "../../hooks/use-window-dimensions";
 
 import { desktopBreakpoint } from '../../constants/breakpoints.constants';
 import http from "../../utils/axios-instance";
@@ -59,7 +59,7 @@ const PhotoGallery = ({ display, listingPictures, generatePresentationFilename }
   const [noImages, setNoImages] = useState(false);
   const galleryRef = useRef<HTMLDivElement | null>(null);
   const galleryHeight = useRelativeHeight(galleryRef);
-  const windowWidth = useWindowWidth();
+  const { windowInnerWidth } = useWindowDimensions();
 
   useEffect(() => {
     setFiles([...listingPictures]);
@@ -140,7 +140,7 @@ const PhotoGallery = ({ display, listingPictures, generatePresentationFilename }
       >
         <PopupMessage message={ t('noImages') } displayCondition={noImages}/>
         <GalleryMenu
-          width={windowWidth > desktopBreakpoint ? desktopBreakpoint : undefined}
+          width={windowInnerWidth > desktopBreakpoint ? desktopBreakpoint : undefined}
           showDeletionMenu={showDeletionMenu}
         >
           <GalleryMenuButton 
@@ -153,7 +153,7 @@ const PhotoGallery = ({ display, listingPictures, generatePresentationFilename }
             setIsLoading={setIsLoading}
             setNoImages={setNoImages}
           />
-          { windowWidth > desktopBreakpoint &&
+          { windowInnerWidth > desktopBreakpoint &&
             <GalleryMenuButton Icon={TrashIcon} fn={() => setShowDeletionMenu(!showDeletionMenu)}/>
           }
         </GalleryMenu>

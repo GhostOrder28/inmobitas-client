@@ -18,7 +18,7 @@ import {
 } from "evergreen-ui";
 
 import useRelativeHeight from '../../hooks/use-relative-height/use-relative-height';
-import useWindowWidth from '../../hooks/use-window-width/use-window-width';
+import useWindowDimensions from '../../hooks/use-window-dimensions';
 
 import http from "../../utils/axios-instance";
 import { selectCurrentUserId } from "../../redux/user/user.selectors";
@@ -56,7 +56,7 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
   const [selectedMode, setSelectedMode] = useState<number>(0);
   const formWrapperRef = useRef<HTMLDivElement | null>(null);
   const formHeight = useRelativeHeight(formWrapperRef, 60);
-  const windowWidth = useWindowWidth();
+  const { windowInnerWidth } = useWindowDimensions();
 
   useEffect(() => {
     if (location.pathname === "/newlisting" && formRef.current) {
@@ -92,7 +92,7 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
 
   return (
     <Pane 
-      width={windowWidth > desktopBreakpoint ? 600 : '100%'}
+      width={windowInnerWidth > desktopBreakpoint ? 600 : '100%'}
       marginX={'auto'}
     >
       <Tablist width={"100%"} marginBottom={'.5rem'} display={"flex"} className="tablist">
@@ -937,7 +937,7 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                   bottom={10} left={0}
                 >
                   <Button
-                    width={windowWidth > desktopBreakpoint ? 400 : '90%'}
+                    width={windowInnerWidth > desktopBreakpoint ? 400 : '90%'}
                     height={40}
                     type="submit"
                     appearance="primary"

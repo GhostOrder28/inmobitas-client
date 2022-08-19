@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { Pane } from 'evergreen-ui';
 import { useTranslation } from 'react-i18next';
 
-import useWindowWidth from '../../hooks/use-window-width/use-window-width';
+import useWindowDimensions from '../../hooks/use-window-dimensions';
 
 import http from '../../utils/axios-instance';
 import { ListingItem } from './listings-page.types';
@@ -18,7 +18,7 @@ const ListingsPage = () => {
   const [listings, setListings] = useState<ListingItem[]>([]);
   const userId = useSelector(selectCurrentUserId);
   const { t } = useTranslation(['listing']);
-  const windowWidth = useWindowWidth();
+  const { windowInnerWidth } = useWindowDimensions();
 
   useEffect(() => {
     (async function () {
@@ -36,12 +36,12 @@ const ListingsPage = () => {
       {
         listings && 
         <CustomTable 
-          source={windowWidth > tabletBreakpoint ? listings : filterListingsProps(listings)}
+          source={windowInnerWidth > tabletBreakpoint ? listings : filterListingsProps(listings)}
           setSource={setListings}
           labels={[
             t('district'),
             t('neighborhood'),
-            ...(windowWidth > tabletBreakpoint ? [
+            ...(windowInnerWidth > tabletBreakpoint ? [
               t('totalArea') + ' ' + 'm²',
               t('builtArea') + ' ' + 'm²'
             ] : [])

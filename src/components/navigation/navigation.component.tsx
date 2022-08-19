@@ -19,7 +19,7 @@ import {
 import LogoIcon from "../../icons/logo-icon/logo-icon.component";
 import SignoutButton from '../signout-btn/signout-btn.component';
 import MainMenuButton from "../main-menu-button/main-menu-button.component";
-import useWindowWidth from '../../hooks/use-window-width/use-window-width';
+import useWindowDimensions from '../../hooks/use-window-dimensions';
 import { desktopBreakpoint } from "../../constants/breakpoints.constants";
 
 import "./navigation.styles.css";
@@ -30,7 +30,7 @@ const Navigation = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { t } = useTranslation(['ui', 'listing', 'agenda']);
-  const windowWidth = useWindowWidth();
+  const { windowInnerWidth } = useWindowDimensions();
   const signOut = () => {
     dispatch(signOutStart());
     navigate("/signin");
@@ -48,7 +48,7 @@ const Navigation = () => {
           justifyContent={'space-between'}
           alignItems={'center'}
           padding={minorScale(4)}
-          width={windowWidth && windowWidth > desktopBreakpoint ? desktopBreakpoint : '100%'} 
+          width={windowInnerWidth && windowInnerWidth > desktopBreakpoint ? desktopBreakpoint : '100%'} 
           marginX={'auto'}
         >
           <SideSheet
@@ -86,7 +86,7 @@ const Navigation = () => {
         </Pane>
       </Pane>
       <Pane 
-        width={windowWidth && windowWidth > desktopBreakpoint ? desktopBreakpoint : '100%'} 
+        width={windowInnerWidth && windowInnerWidth > desktopBreakpoint ? desktopBreakpoint : '100%'} 
         marginX={'auto'}
       >
         <Outlet />

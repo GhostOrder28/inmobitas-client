@@ -22,13 +22,15 @@ import es from 'date-fns/locale/es';
 import { useSelector } from 'react-redux';
 import { useTable, usePagination } from 'react-table';
 
+import useClickOutside from '../../hooks/use-click-outside/use-click-outside';
+import useRelativeHeight from '../../hooks/use-relative-height/use-relative-height';
+import usePrevious from '../../hooks/use-previous/use-previous';
+import useClientDevice from '../../hooks/use-client-device';
+
 import http from '../../utils/axios-instance';
 import { AgendaEvent, AgendaTableColumns } from './agenda-page.types';
 import { selectCurrentUserId } from '../../redux/user/user.selectors';
 import { strParseOut } from '../../utils/utility-functions';
-import useClickOutside from '../../hooks/use-click-outside/use-click-outside';
-import useRelativeHeight from '../../hooks/use-relative-height/use-relative-height';
-import usePrevious from '../../hooks/use-previous/use-previous';
 import AgendaViewOptions from './agenda-subcomponents/agenda-view-options.component';
 import AgendaHeader from './agenda-subcomponents/agenda-header.component';
 import EventForm from '../../components/event-form/event-form.component';
@@ -39,6 +41,7 @@ import useOrientation from '../../hooks/use-orientation';
 import { getPageSize } from '../../components/custom-table/custom-table.utils';
 
 const views = ['month', 'week', 'day', 'today'];
+const rowHeight = 50;
 
 const AgendaPage = () => {
 
@@ -54,12 +57,14 @@ const AgendaPage = () => {
   const [displayEventForm, setDisplayEventForm] = useState<boolean>(false);
   const [showPastEvents, setShowPastEvents] = useState<boolean>(false);
   const eventListRef = useRef<HTMLDivElement | null>(null);
-  const eventListHeight = (useRelativeHeight(eventListRef) || 0) - 70;
+  const eventListHeight = useRelativeHeight(eventListRef);
   const buttonsRef = useRef(null);
   useClickOutside(buttonsRef, () => setSelectedEvent(null));
   const { t, i18n } = useTranslation(['agenda']);
   const locale = i18n.language.includes('es') ? es : enUS;
   const orientation = useOrientation();
+  const clientDevice = useClientDevice();
+  const [timeoutId, setTimeoutId] = useState<ReturnType<typeof setTimeout>>();
 
   const requestEventsData = useCallback(async () => {
     const currentCalendarYear = getYear(currentDate);
@@ -156,7 +161,10 @@ const AgendaPage = () => {
   }, [])
 
   useEffect(() => {
-    setPageSize(getPageSize(eventListHeight, 50))
+    if(eventListHeight) {
+      const pageSize = getPageSize(eventListHeight, rowHeight);
+      if (pageSize > 0) setPageSize(pageSize);
+    } 
   }, [eventListHeight])
 
   useEffect(() => {
@@ -181,9 +189,8 @@ const AgendaPage = () => {
     return source.filter(event => event.startDate > now);
   }
 
-
   return (
-    <Pane>
+    <Pane display={'flex'} flexDirection={'row'}>
       <Pane paddingX={20} flex={1}>
         <AgendaHeader
           currentDate={currentDate}
@@ -237,12 +244,21 @@ const AgendaPage = () => {
               prepareRow(row)
               return (
                 <TableRow
-                  height={50}
-                  isSelectable
+                  isHighlighted={selectedEvent === rowIdx ? true : false}
+                  height={rowHeight}
                   color={'#3a3e58'} 
                   position={'relative'}
-                  onMouseOver={() => setSelectedEvent(rowIdx)}
-                  onMouseLeave={() => setSelectedEvent(null)}
+                  onMouseOver={ clientDevice === 'desktop' ? () => setSelectedEvent(rowIdx) : undefined}
+                  onMouseLeave={ clientDevice === 'desktop' ? () => setSelectedEvent(null) : undefined }
+                  onTouchStart={ clientDevice === 'touchscreen' ? () => {
+                    setTimeoutId(setTimeout(() => setSelectedEvent(rowIdx), 500))
+                  } : undefined }
+                  onTouchEnd={ clientDevice === 'touchscreen' ? () => {
+                    clearTimeout(timeoutId)
+                  } : undefined }
+                  onTouchMove={ clientDevice === 'touchscreen' ? () => {
+                    clearTimeout(timeoutId)
+                  } : undefined }
                   {...row.getRowProps()}
                 >
                   {
@@ -261,7 +277,7 @@ const AgendaPage = () => {
                           position={'absolute'}
                           display={selectedEvent === rowIdx ? 'flex' : 'none'}
                           width={100}
-                          height={49}
+                          height={rowHeight - 1}
                           right={0}
                           backgroundColor={'#F9FAFC'}
                         >

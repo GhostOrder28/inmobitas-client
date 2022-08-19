@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { Pane, Heading } from "evergreen-ui";
 
-import useWindowWidth from "../../hooks/use-window-width/use-window-width";
+import useWindowDimensions from "../../hooks/use-window-dimensions";
 
 import http from "../../utils/axios-instance";
 import { ListingItem } from "../../pages/listings-page/listings-page.types";
@@ -31,7 +31,7 @@ const ClientDetail = ({ clientData }: ClientDetailProps) => {
   const userId = useSelector(selectCurrentUserId);
   const params = useParams();
   const { t } = useTranslation(['client', 'listing']);
-  const windowWidth = useWindowWidth();
+  const { windowInnerWidth } = useWindowDimensions();
 
   useEffect(() => {
     (async function () {
@@ -100,12 +100,12 @@ const ClientDetail = ({ clientData }: ClientDetailProps) => {
           {
             listings &&
               <CustomTable 
-                source={windowWidth > tabletBreakpoint ? listings : filterListingsProps(listings)}
+                source={windowInnerWidth > tabletBreakpoint ? listings : filterListingsProps(listings)}
                 setSource={setListings}
                 labels={[
                   t('district', { ns: 'listing' }),
                   t('neighborhood', { ns: 'listing' }),
-                  ...(windowWidth > tabletBreakpoint ? [
+                  ...(windowInnerWidth > tabletBreakpoint ? [
                     t('totalArea', { ns: 'listing' }) + ' ' + 'm²',
                     t('builtArea', { ns: 'listing' }) + ' ' + 'm²'
                   ] : [])
