@@ -190,7 +190,7 @@ const AgendaPage = () => {
   }
 
   return (
-    <Pane display={'flex'} flexDirection={'row'}>
+    <Pane>
       <Pane paddingX={20} flex={1}>
         <AgendaHeader
           currentDate={currentDate}
