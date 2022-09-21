@@ -18,6 +18,7 @@ export const buildRoute = (source: RouteSource, structure: string[]) => {
   const itemParamsIds: ItemIds = arrayFromItemIds.reduce((acc, curr) => {
     return { ...acc, [curr]: source[curr] }
   }, {});
+  console.log(itemParamsIds)
 
   const detailUrl = structure.reduce((acc, curr) => {
     if (structure[0] === curr) return '/' + curr;

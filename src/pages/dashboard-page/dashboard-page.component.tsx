@@ -7,7 +7,7 @@ import { AgendaEvent } from '../agenda-page/agenda-page.types';
 import { format } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import ContentSpinner from '../../components/content-spinner/content-spinner.component';
-import useRelativeHeight from '../../hooks/use-relative-height/use-relative-height';
+import useRelativeHeight from '../../hooks/use-relative-height';
 import { strParseOut } from '../../utils/utility-functions';
 
 const DashboardPage = () => {

@@ -1,5 +1,6 @@
 {
   "signin": "Ingresar",
+  "signinWithGoogle": "Ingresar con Google",
   "signup": "Registrarse",
   "signout": "Salir",
   "names": "nombres",

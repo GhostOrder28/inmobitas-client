@@ -17,7 +17,7 @@ import {
 } from "evergreen-ui";
 import { useTable, usePagination } from 'react-table';
 
-import useRelativeHeight from '../../hooks/use-relative-height/use-relative-height';
+import useRelativeHeight from '../../hooks/use-relative-height';
 import useClientDevice from "../../hooks/use-client-device";
 
 import { buildRoute } from "../../utils/utility-functions";

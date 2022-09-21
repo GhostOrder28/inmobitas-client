@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate, Outlet } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
+import http from '../../utils/axios-instance';
 import { signOutStart } from "../../redux/user/user.actions";
 import { selectCurrentUser } from "../../redux/user/user.selectors";
 import {
@@ -31,9 +32,9 @@ const Navigation = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation(['ui', 'listing', 'agenda']);
   const { windowInnerWidth } = useWindowDimensions();
-  const signOut = () => {
-    dispatch(signOutStart());
-    navigate("/signin");
+
+  const signOut = async () => {
+    dispatch(signOutStart(http));
     setIsShown(false);
   };
 

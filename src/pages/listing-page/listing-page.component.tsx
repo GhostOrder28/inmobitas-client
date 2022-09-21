@@ -26,7 +26,6 @@ const ListingPage = () => {
 
     (async function () {
       try {
-        console.log(location.pathname) 
         if (location.pathname !== '/newlisting') {
           let listingData;
           if (location.pathname.includes('/listingdetail')) {

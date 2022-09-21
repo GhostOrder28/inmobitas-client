@@ -7,9 +7,9 @@ describe('user selectors', () => {
 
   const user: UserState = {
     currentUser: {
-      email: 'test@test.com',
       names: 'test',
-      userId: 1
+      userId: 1,
+      oauthId: 41313541345
     },
     errors: { response: 'there is an error' } as any as AxiosError
   }

@@ -18,7 +18,7 @@ import {
   TableCell,
 } from "evergreen-ui";
 import CustomTable from '../custom-table/custom-table.component';
-import { tabletBreakpoint } from '../../constants/breakpoints.constants';
+import { mobileBreakpoint } from '../../constants/breakpoints.constants';
 import { filterListingsProps } from '../../pages/listings-page/listings-page.utils';
 
 type ClientDetailProps = {
@@ -100,12 +100,12 @@ const ClientDetail = ({ clientData }: ClientDetailProps) => {
           {
             listings &&
               <CustomTable 
-                source={windowInnerWidth > tabletBreakpoint ? listings : filterListingsProps(listings)}
+                source={windowInnerWidth > mobileBreakpoint ? listings : filterListingsProps(listings)}
                 setSource={setListings}
                 labels={[
                   t('district', { ns: 'listing' }),
                   t('neighborhood', { ns: 'listing' }),
-                  ...(windowInnerWidth > tabletBreakpoint ? [
+                  ...(windowInnerWidth > mobileBreakpoint ? [
                     t('totalArea', { ns: 'listing' }) + ' ' + 'm²',
                     t('builtArea', { ns: 'listing' }) + ' ' + 'm²'
                   ] : [])

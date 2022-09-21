@@ -10,6 +10,8 @@ import {
   signOutSuccess,
   signOutFailure,
   clearErrors,
+  requestUserInfoForSignInSuccess,
+  requestUserInfoForSignInFailure,
 } from './user.actions'
 
 export type ResponseError = { [ Property in UserError ]: ValidationError[] | string };
@@ -26,7 +28,12 @@ const INITIAL_STATE: UserState = {
 
 const userReducer = (state = INITIAL_STATE, action = {} as AnyAction) => {
 
-  if (signUpFailure.match(action) || signInFailure.match(action) || signOutFailure.match(action)) {
+  if (
+    signUpFailure.match(action) ||
+    signInFailure.match(action) || 
+    signOutFailure.match(action) ||
+    requestUserInfoForSignInFailure.match(action)
+  ) {
     
     return {
       ...state,
@@ -34,7 +41,10 @@ const userReducer = (state = INITIAL_STATE, action = {} as AnyAction) => {
     } 
   }
 
-  if (signInSuccess.match(action)) {
+  if (
+    signInSuccess.match(action) || 
+    requestUserInfoForSignInSuccess.match(action)
+  ) {
     return {
       ...state,
       currentUser: action.payload,

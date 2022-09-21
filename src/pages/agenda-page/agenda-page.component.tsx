@@ -22,9 +22,9 @@ import es from 'date-fns/locale/es';
 import { useSelector } from 'react-redux';
 import { useTable, usePagination } from 'react-table';
 
-import useClickOutside from '../../hooks/use-click-outside/use-click-outside';
-import useRelativeHeight from '../../hooks/use-relative-height/use-relative-height';
-import usePrevious from '../../hooks/use-previous/use-previous';
+import useClickOutside from '../../hooks/use-click-outside';
+import useRelativeHeight from '../../hooks/use-relative-height';
+import usePrevious from '../../hooks/use-previous';
 import useClientDevice from '../../hooks/use-client-device';
 
 import http from '../../utils/axios-instance';

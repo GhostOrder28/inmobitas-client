@@ -10,7 +10,7 @@ import { ListingItem } from './listings-page.types';
 import { selectCurrentUserId } from '../../redux/user/user.selectors';
 import CustomTable from '../../components/custom-table/custom-table.component';
 import '../../global-styles/listings-page-scroll.styles.css';
-import { tabletBreakpoint } from '../../constants/breakpoints.constants';
+import { mobileBreakpoint } from '../../constants/breakpoints.constants';
 import { filterListingsProps } from './listings-page.utils';
 
 const ListingsPage = () => {
@@ -24,6 +24,7 @@ const ListingsPage = () => {
     (async function () {
       try {
         const res = await http.get<ListingItem[]>(`/listings/${userId}`)
+        console.log(res.data)
         setListings(res.data)
       } catch (err) {
         console.log(err);
@@ -36,12 +37,12 @@ const ListingsPage = () => {
       {
         listings && 
         <CustomTable 
-          source={windowInnerWidth > tabletBreakpoint ? listings : filterListingsProps(listings)}
+          source={windowInnerWidth > mobileBreakpoint ? listings : filterListingsProps(listings)}
           setSource={setListings}
           labels={[
             t('district'),
             t('neighborhood'),
-            ...(windowInnerWidth > tabletBreakpoint ? [
+            ...(windowInnerWidth > mobileBreakpoint ? [
               t('totalArea') + ' ' + 'm²',
               t('builtArea') + ' ' + 'm²'
             ] : [])

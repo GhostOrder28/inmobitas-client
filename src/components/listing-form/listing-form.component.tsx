@@ -17,7 +17,7 @@ import {
   Tab,
 } from "evergreen-ui";
 
-import useRelativeHeight from '../../hooks/use-relative-height/use-relative-height';
+import useRelativeHeight from '../../hooks/use-relative-height';
 import useWindowDimensions from '../../hooks/use-window-dimensions';
 
 import http from "../../utils/axios-instance";

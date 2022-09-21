@@ -21,7 +21,7 @@ import { css } from 'glamor';
 import { compareAsc } from 'date-fns';
 import ErrorMessage from '../error-message/error-message.component';
 import { selectValidationErrMsg } from '../../utils/utility-functions';
-import useClickOutside from '../../hooks/use-click-outside/use-click-outside';
+import useClickOutside from '../../hooks/use-click-outside';
 import './event-form.styles.scss';
 
 type EventFormProps = {

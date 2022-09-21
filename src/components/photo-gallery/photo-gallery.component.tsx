@@ -10,7 +10,7 @@ import {
 } from "evergreen-ui";
 import { useTranslation } from "react-i18next";
 
-import useRelativeHeight from '../../hooks/use-relative-height/use-relative-height';
+import useRelativeHeight from '../../hooks/use-relative-height';
 import useWindowDimensions from "../../hooks/use-window-dimensions";
 
 import { desktopBreakpoint } from '../../constants/breakpoints.constants';

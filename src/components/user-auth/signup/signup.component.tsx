@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { signUpStart } from '../../../redux/user/user.actions';
+import { signUpStart, signInWithGoogleStart } from '../../../redux/user/user.actions';
 import { useTranslation } from "react-i18next";
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';

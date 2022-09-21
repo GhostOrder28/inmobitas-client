@@ -10,7 +10,7 @@ export type SignUpData = SignInData & {
 }
 
 export type UserInfo = {
-  email: string;
   names: string;
   userId: number;
+  oauthId: number | string;
 }

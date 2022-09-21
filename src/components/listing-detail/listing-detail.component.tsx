@@ -23,8 +23,6 @@ export type ListingDetailProps = {
 };
 
 const ListingDetail = ({ dataPresets, listing }: ListingDetailProps) => {
-  console.log(listing)
-  console.log(dataPresets)
   const userId = useSelector(selectCurrentUserId);
   const { listingid } = useParams();
   const [selectedTab, setSelectedTab] = useState(0);

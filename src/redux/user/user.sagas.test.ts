@@ -2,7 +2,7 @@ import * as userSagas from './user.sagas';
 import * as userActions from './user.actions';
 import userActionTypes from './user.types';
 import { takeLatest, put, call } from 'typed-redux-saga/macro';
-import createRequest from '../redux-utils/create-request';
+import { createPostRequest } from '../redux-utils/create-request';
 import mockAxiosInstance from 'axios';
 import { AxiosError } from 'axios';
 
@@ -39,7 +39,7 @@ describe('Saga watchers', () => {
 })
 
 describe('Sagas', () => {
-  const apiCall = createRequest(mockAxiosInstance);
+  const apiCall = createPostRequest(mockAxiosInstance);
 
   const signUpData = {
     email: 'test@test.com',
@@ -62,7 +62,8 @@ describe('Sagas', () => {
     data: {
       email: 'test@test.com',
       userId: 1,
-      names: 'test'
+      names: 'test',
+      oauthId: '13546343545'
     }
   }
 
@@ -119,7 +120,7 @@ describe('Sagas', () => {
 
   describe('signOut', () => {
     it('should dispatch SIGN_OUT_SUCCESS', () => {
-      const gen = userSagas.signOut();
+      const gen = userSagas.signOut({ type: userActionTypes.SIGN_OUT_START, http: mockAxiosInstance });
       expect(gen.next().value)
         .toEqual(put(userActions.signOutSuccess()));
       expect(gen.next().done)

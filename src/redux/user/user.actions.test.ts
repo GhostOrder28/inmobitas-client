@@ -21,7 +21,8 @@ describe('user actions', () => {
   const signInResponse = {
     email: 'test@test.com',
     userId: 1,
-    names: 'test'
+    names: 'test',
+    oauthId: 923764226352789
   }
 
   describe('sign up actions', () => {
@@ -60,7 +61,7 @@ describe('user actions', () => {
 
   describe('sign in actions', () => {
     it('should return SIGN_OUT_START action object', () => {
-      const result = userActions.signOutStart();
+      const result = userActions.signOutStart(mockAxiosInstance);
       expect(result).toStrictEqual({ type: userActionTypes.SIGN_OUT_START, payload: undefined });
     })
 

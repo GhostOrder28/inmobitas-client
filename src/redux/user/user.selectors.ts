@@ -29,9 +29,7 @@ export const selectErrorMessage = (errorType: UserError, field?: string) =>
       const data = errorObj?.response?.data;
       const errorData = data?.[errorType];
 
-      function isValidationError(
-        err: string | ValidationError[]
-      ): err is ValidationError[] {
+      function isValidationError(err: string | ValidationError[]): err is ValidationError[] {
         return (err as ValidationError[]).find !== undefined;
       }
 
@@ -51,3 +49,9 @@ export const selectCurrentUserId = createSelector(
   [selectCurrentUser],
   (currentUser) => currentUser?.userId
 );
+
+export const selectCurrentUserOAuthId = createSelector(
+  [selectCurrentUser],
+  (currentUser) => currentUser?.oauthId
+);
+

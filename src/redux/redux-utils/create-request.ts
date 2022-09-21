@@ -1,7 +1,14 @@
 import { AxiosInstance, AxiosResponse } from "axios";
 
-const createRequest = (http: AxiosInstance) => async <T, Y>(url: string, body: T): Promise<AxiosResponse<Y>> => {
+const createPostRequest = (http: AxiosInstance) => async <T, Y>(url: string, body: T): Promise<AxiosResponse<Y>> => {
   return await http.post(url, body)
 }
 
-export default createRequest;
+const createGetRequest = (http: AxiosInstance) => async <T, Y>(url: string): Promise<AxiosResponse<Y>> => {
+  return await http.get(url)
+}
+
+export {
+  createPostRequest,
+  createGetRequest
+};

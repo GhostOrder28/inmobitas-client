@@ -9,7 +9,7 @@ import {
   TableHeaderCell,
 } from "evergreen-ui";
 
-import useRelativeHeight from '../../hooks/use-relative-height/use-relative-height';
+import useRelativeHeight from '../../hooks/use-relative-height';
 
 import { SpecificationTableGroup } from './specification-table.types';
  
@@ -18,7 +18,6 @@ type SpecificationtTableProps = {
 }
 
 const SpecificationTable: FC<SpecificationtTableProps> = ({ source }) => {
-  console.log(source)
   const tableRef = useRef<HTMLDivElement | null>(null);
   const tableHeight = useRelativeHeight(tableRef);
   const headers = source.map(group => group.header);

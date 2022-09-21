@@ -46,9 +46,9 @@ describe('user reducer', () => {
 
   it('should handle SIGN_IN_SUCCESS', () => {
     expect(userReducer(initialState, signInSuccess({
-      email: 'test@test.com',
       names: 'test',
-      userId: 2
+      userId: 2,
+      oauthId: 4654313484
     }))).toEqual({
       currentUser: {
         email: 'test@test.com',

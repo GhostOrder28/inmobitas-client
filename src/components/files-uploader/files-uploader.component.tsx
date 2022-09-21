@@ -47,8 +47,8 @@ const FilesUploader = ({
           return (err as AxiosError).isAxiosError !== undefined;
         }
         if (isAxiosError(err) && err.response) {
-          toaster.warning(err.response.data.notVerifiedMessage1, {
-            description: err.response.data.notVerifiedMessage2,
+          toaster.warning(err.response.data.unverifiedUserError.errorMessage, {
+            description: err.response.data.unverifiedUserError.errorMessageDescription,
             duration: 7
           });
         }
