@@ -13,6 +13,7 @@ import useWindowDimensions from '../../../hooks/use-window-dimensions';
 import { tabletBreakpoint } from '../../../constants/breakpoints.constants';
 import GoogleIcon from "../../../icons/social-media-icons/google.icon";
 import { signInStart, requestUserInfoForSignInStart } from "../../../redux/user/user.actions";
+import { options } from '../../../utils/axios-instance';
 
 const Signin = () => {
   const emailErrMsg = useSelector(
@@ -33,7 +34,8 @@ const Signin = () => {
   };
 
   const signinWithGoogle = async () => {
-    window.open("https://localhost:3001/auth/google", "_self")
+
+    window.open(`${options.baseURL}auth/google`, "_self")
   }
 
   useEffect(() => {

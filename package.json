@@ -55,7 +55,6 @@
     "typescript": "^4.6.3",
     "web-vitals": "^2.1.4"
   },
-  "proxy": "https://localhost:3001",
   "scripts": {
     "start": "node server/server.js",
     "dev": "BROWSER=none react-scripts start",
