@@ -201,7 +201,7 @@ const PhotoGallery = ({ display, listingPictures, generatePresentationFilename }
                           />
                         )}
                         <img
-                          className={`gallery-img-${idx}`}
+                          className={`gallery-img`}
                           crossOrigin='anonymous'
                           alt=""
                           src={file.smallSizeUrl}
