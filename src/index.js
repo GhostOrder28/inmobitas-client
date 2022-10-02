@@ -13,7 +13,6 @@ if (process.env.NODE_ENV === 'production') {
   console.log = function () {};
 }
 
-
 ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>

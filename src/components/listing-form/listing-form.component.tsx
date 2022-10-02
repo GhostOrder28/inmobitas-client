@@ -28,7 +28,7 @@ import "./listing-form.styles.css";
 import { Presets, Listing } from "../../pages/listing-page/listing-page.types";
 import { ValidationError } from "../../redux/redux.types";
 import { desktopBreakpoint } from "../../constants/breakpoints.constants";
-import { SpecificationTableGroup } from '../specification-table/specification-table.types';
+import { SpecificationTable } from '../specification-table/specification-table.types';
 
 const formInitialState = {
   contractTypeId: 1,
@@ -40,8 +40,8 @@ const formInitialState = {
 
 type ListingFormProps = {
   dataPresets: Presets | undefined;
-  listing?: Listing | SpecificationTableGroup[] | undefined;
-  setListing: React.Dispatch<React.SetStateAction<Listing | SpecificationTableGroup[] | undefined>>;
+  listing?: Listing | SpecificationTable | undefined;
+  setListing: React.Dispatch<React.SetStateAction<Listing | SpecificationTable | undefined>>;
 };
 
 const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => {
@@ -80,11 +80,11 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
 
     try {
       const res = location.pathname === `/newlisting`
-        ? await http.post<SpecificationTableGroup[]>(`/listings/${userId}`, remainingProps)
-        : await http.put<SpecificationTableGroup[]>(`/listings/${userId}/${clientId}/${estateId}/${contractId}`, remainingProps);
+        ? await http.post<SpecificationTable>(`/listings/${userId}`, remainingProps)
+        : await http.put<SpecificationTable>(`/listings/${userId}/${clientId}/${estateId}/${contractId}`, remainingProps);
       
       setListing(res.data);      
-      navigate(`/listingdetail/${clientid}/${listingid}`);
+      navigate(`/listingdetail/${res.data.clientId}/${res.data.estateId}`);
     } catch (err) {
       setErrors(err as AxiosError<{ validationErrors: ValidationError[] }>);
     }

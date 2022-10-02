@@ -9,7 +9,7 @@ import { selectCurrentUserId } from '../../redux/user/user.selectors';
 
 import { Presets, Listing } from './listing-page.types';
 
-import { SpecificationTableGroup } from '../../components/specification-table/specification-table.types';
+import { SpecificationTable } from '../../components/specification-table/specification-table.types';
 const ListingForm = lazy(() => import('../../components/listing-form/listing-form.component'));
 const ListingDetail = lazy(() => import('../../components/listing-detail/listing-detail.component'));
 
@@ -17,7 +17,7 @@ const ListingPage = () => {
 
   const location = useLocation();
   const { clientid, listingid } = useParams();
-  const [listing, setListing] = useState<Listing | SpecificationTableGroup[]>();
+  const [listing, setListing] = useState<Listing | SpecificationTable>();
   const [presets, setPresets] = useState<Presets>();
   const [error, setError] = useState<Error | null>(null);
   const userId = useSelector(selectCurrentUserId);

@@ -4,7 +4,9 @@ import { signOutSuccess } from '../redux/user/user.actions';
 
 export const options = {
   withCredentials: true,
-  baseURL: process.env.NODE_ENV === 'production' ? 'https://inmobitas-api.herokuapp.com/' : `https://localhost:3001/`,
+  baseURL: `https://inmobitas.herokuapp.com/`,
+  //baseURL: `https://localhost:3001/`,
+  //baseURL: process.env.NODE_ENV === 'production' ? 'https://inmobitas.herokuapp.com/' : `https://localhost:3001/`,
 }
 
 const http = axios.create(options);

@@ -10,7 +10,6 @@ import inmobitasTheme from '../global-styles/evergreen-custom-theme';
 import '../i18n/i18n.js';
 import './app.css';
 
-
 const ListingPage = lazy(() => import('../pages/listing-page/listing-page.component'));
 const ListingsPage = lazy(() => import('../pages/listings-page/listings-page.component'));
 const ClientPage = lazy(() => import('../pages/client-page/client-page.component'));

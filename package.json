@@ -56,10 +56,11 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "node server/server.js",
     "dev": "BROWSER=none react-scripts start",
+    "dev-https": " HTTPS=true BROWSER=none react-scripts start",
     "devhttps": "set HTTP=true yarn dev",
-    "build": "react-scripts build && sw-precache --config=sw-precache-config.js",
+    "build": "BUILD_PATH=../inmobitas-api/public react-scripts build && sw-precache --config=sw-precache-config.js",
+    "build-on-client": "react-scripts build && sw-precache --config=sw-precache-config.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

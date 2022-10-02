@@ -11,16 +11,16 @@ import {
 
 import useRelativeHeight from '../../hooks/use-relative-height';
 
-import { SpecificationTableGroup } from './specification-table.types';
+import { SpecificationTable as SpecificationTableType } from './specification-table.types';
  
 type SpecificationtTableProps = {
-  source: SpecificationTableGroup[];
+  source: SpecificationTableType;
 }
 
 const SpecificationTable: FC<SpecificationtTableProps> = ({ source }) => {
   const tableRef = useRef<HTMLDivElement | null>(null);
   const tableHeight = useRelativeHeight(tableRef);
-  const headers = source.map(group => group.header);
+  const headers = source.data.map(group => group.header);
   const groupSwitcher = headers.reduce((acc, curr) => {
     return { ...acc, [curr]: false }
   }, {})
@@ -29,7 +29,7 @@ const SpecificationTable: FC<SpecificationtTableProps> = ({ source }) => {
   return (
     <Table> {/* why i can't give a ref to Table being that it is just a div under the hood? */}
       <Pane ref={tableRef} height={tableHeight} overflow={'scroll'}>
-        { source && source.map((group, idx) => {
+        { source && source.data.map((group, idx) => {
           const { header, items } = group;
           return (
           <Pane key={`table-group-${idx}`}>

@@ -56,7 +56,7 @@ const DatePicker: FC<DatePickerProps> = ({ value, onChange }) => {
             mode="single"
             locale={locale}
             selected={value} 
-            onSelect={(newDate) => handleDateSelection(newDate)}
+            onSelect={(newDate: Date | undefined) => { handleDateSelection(newDate) }}
           />
         </Pane>
       }

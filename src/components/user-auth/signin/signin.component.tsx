@@ -34,8 +34,8 @@ const Signin = () => {
   };
 
   const signinWithGoogle = async () => {
-
-    window.open(`${options.baseURL}auth/google`, "_self")
+    const url = `${options.baseURL}auth/google`;
+    window.open(url, '_self');
   }
 
   useEffect(() => {
@@ -83,7 +83,7 @@ const Signin = () => {
                   { t('signin') } 
                 </Button>
                 <Button iconBefore={GoogleIcon} width={'100%'} type='button' appearance="default" onClick={signinWithGoogle}>
-                  { t('signinWithGoogle') }
+                { t('signinWithGoogle') }
                 </Button>
                 <Button
                   width={"100%"}
