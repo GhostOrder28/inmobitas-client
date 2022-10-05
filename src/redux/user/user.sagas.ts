@@ -61,7 +61,6 @@ export function* signOut ({ http }: SignOutStart) {
   try {
     const requestSignOut = createGetRequest(http);
     const order = yield* call(requestSignOut, '/auth/signout');
-    console.log(order.data)
     yield* put(signOutSuccess());
   } catch (error) {
     console.log(error) 
