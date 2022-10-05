@@ -33,7 +33,7 @@ const Navigation = () => {
   const { t } = useTranslation(['ui', 'listing', 'agenda']);
   const { windowInnerWidth } = useWindowDimensions();
 
-  const signOut = async () => {
+  const signOut = () => {
     dispatch(signOutStart(http));
     setIsShown(false);
   };

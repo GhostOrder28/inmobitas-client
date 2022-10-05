@@ -15,6 +15,11 @@ import GoogleIcon from "../../../icons/social-media-icons/google.icon";
 import { signInStart, requestUserInfoForSignInStart } from "../../../redux/user/user.actions";
 import { options } from '../../../utils/axios-instance';
 
+const signinWithGoogle = async () => {
+  const url = `${options.baseURL}auth/google`;
+  window.open(url, "_self");
+}
+
 const Signin = () => {
   const emailErrMsg = useSelector(
     selectErrorMessage("validationErrors", "email")
@@ -32,11 +37,6 @@ const Signin = () => {
   const onSubmit = (userData: SignInData) => {
     dispatch(signInStart(userData, http));
   };
-
-  const signinWithGoogle = async () => {
-    const url = `${options.baseURL}auth/google`;
-    window.open(url, '_self');
-  }
 
   useEffect(() => {
     dispatch(requestUserInfoForSignInStart(http))
