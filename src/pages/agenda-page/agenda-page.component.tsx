@@ -22,20 +22,22 @@ import es from 'date-fns/locale/es';
 import { useSelector } from 'react-redux';
 import { useTable, usePagination } from 'react-table';
 
-import useClickOutside from '../../hooks/use-click-outside';
-import useRelativeHeight from '../../hooks/use-relative-height';
 import usePrevious from '../../hooks/use-previous';
+import useClickOutside from '../../hooks/use-click-outside';
 import useClientDevice from '../../hooks/use-client-device';
+import useRelativeHeight from '../../hooks/use-relative-height';
+
+import EventForm from '../../components/event-form/event-form.component';
+import AgendaHeader from './agenda-subcomponents/agenda-header.component';
+import AgendaViewOptions from './agenda-subcomponents/agenda-view-options.component';
+import NoDataMessage from '../../components/no-data-message/no-data-message.component';
+import ModalContainer from '../../components/modal-container/modal-container.component';
+import ContentSpinner from '../../components/content-spinner/content-spinner.component';
 
 import http from '../../utils/axios-instance';
 import { AgendaEvent, AgendaTableColumns } from './agenda-page.types';
 import { selectCurrentUserId } from '../../redux/user/user.selectors';
 import { strParseOut } from '../../utils/utility-functions';
-import AgendaViewOptions from './agenda-subcomponents/agenda-view-options.component';
-import AgendaHeader from './agenda-subcomponents/agenda-header.component';
-import EventForm from '../../components/event-form/event-form.component';
-import ModalContainer from '../../components/modal-container/modal-container.component';
-import ContentSpinner from '../../components/content-spinner/content-spinner.component';
 import CustomTableOption from '../../components/custom-table/custom-table-option';
 import useOrientation from '../../hooks/use-orientation';
 import { getPageSize } from '../../components/custom-table/custom-table.utils';

@@ -1,10 +1,16 @@
 module.exports = {
-  stripPrefix: 'build/',
+  stripPrefix: '../inmobitas-api/public/',
   staticFileGlobs: [
-    'build/*.html',
-    'build/manifest.json',
-    'build/static/**/!(*map*)'
+    '../inmobitas-api/public/*.html',
+    '../inmobitas-api/public/manifest.json',
+    '../inmobitas-api/public/static/**/!(*map*)'
   ],
   dontCacheBustUrlsMatching: /\.\w{8}\./,
-  swFilePath: 'build/service-worker.js'
+  swFilePath: '../inmobitas-api/public/service-worker.js',
+  runtimeCaching: [
+    {
+      urlPattern: /signin/,
+      handler: 'networkOnly'
+    }
+  ]
 };

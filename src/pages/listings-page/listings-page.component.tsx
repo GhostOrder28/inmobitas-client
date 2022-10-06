@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { Pane } from 'evergreen-ui';
+import { Pane, Heading, Link } from 'evergreen-ui';
 import { useTranslation } from 'react-i18next';
 
 import useWindowDimensions from '../../hooks/use-window-dimensions';
@@ -17,8 +17,8 @@ const ListingsPage = () => {
 
   const [listings, setListings] = useState<ListingItem[]>([]);
   const userId = useSelector(selectCurrentUserId);
-  const { t } = useTranslation(['listing']);
-  const { windowInnerWidth } = useWindowDimensions();
+  const { t } = useTranslation(['listing', 'ui']);
+  const { windowInnerWidth, windowInnerHeight } = useWindowDimensions();
 
   useEffect(() => {
     (async function () {
@@ -35,7 +35,7 @@ const ListingsPage = () => {
   return (
     <Pane>
       {
-        listings && 
+        listings.length ?
         <CustomTable 
           source={windowInnerWidth > mobileBreakpoint ? listings : filterListingsProps(listings)}
           setSource={setListings}
@@ -50,7 +50,7 @@ const ListingsPage = () => {
           detailRouteStructure={['listingdetail', 'clientId', 'estateId']}
           editRouteStructure={['editlisting', 'clientId', 'estateId']}
           deleteBaseUrl={'/listings'}
-        /> 
+        /> : ''
       }
     </Pane>
   )

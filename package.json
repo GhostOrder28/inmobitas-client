@@ -23,6 +23,7 @@
     "@types/styled-components": "^5.1.25",
     "axios": "^0.26.0",
     "compression": "^1.7.4",
+    "cra-append-sw": "^2.7.0",
     "date-fns": "^2.28.0",
     "evergreen-ui": "^6.8.2",
     "express": "^4.18.1",
@@ -60,7 +61,7 @@
     "dev-https": " HTTPS=true BROWSER=none react-scripts start",
     "devhttps": "set HTTP=true yarn dev",
     "build": "BUILD_PATH=../inmobitas-api/public react-scripts build && sw-precache --config=sw-precache-config.js",
-    "build-on-client": "react-scripts build && sw-precache --config=sw-precache-config.js",
+    "build-on-client": "react-scripts build && cat src/custom-sw.js >> build/service-worker.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

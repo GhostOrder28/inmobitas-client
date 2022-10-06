@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { Pane } from 'evergreen-ui';
 import { useSelector } from 'react-redux';
 import { useTranslation } from "react-i18next";
-import { Pane } from 'evergreen-ui';
+import React, { useState, useEffect, useRef } from 'react';
 
 import http from '../../utils/axios-instance';
 import { selectCurrentUserId } from '../../redux/user/user.selectors';
@@ -32,7 +32,7 @@ const ClientsPage = () => {
   return (
     <Pane overflow={'scroll'} borderColor={'black'}>
       {
-        clients &&
+        clients.length ?
         <CustomTable 
           source={clients}
           setSource={setClients}
@@ -43,7 +43,7 @@ const ClientsPage = () => {
           detailRouteStructure={['clientdetail', 'clientId']}
           editRouteStructure={['editclient', 'clientId']}
           deleteBaseUrl={'/clients'}
-        /> 
+        /> : ''
       }
     </Pane>
   )

@@ -6,17 +6,17 @@ type WindowDimensions = {
 }
 
 const useWindowDimensions = () => {
-  const [windowWidth, setWindowWidth] = useState<WindowDimensions>({ windowInnerWidth: window.innerWidth, windowInnerHeight: window.innerHeight });
+  const [windowDimensions, setWindowDimensions] = useState<WindowDimensions>({ windowInnerWidth: window.innerWidth, windowInnerHeight: window.innerHeight });
   useEffect(() => {
     window.addEventListener('resize', () => {
-      setWindowWidth({
+      setWindowDimensions({
         windowInnerWidth: window.innerWidth,
         windowInnerHeight: window.innerHeight
       })
     });
     return () => {
     window.removeEventListener('resize', () => {
-      setWindowWidth({
+      setWindowDimensions({
         windowInnerWidth: window.innerWidth,
         windowInnerHeight: window.innerHeight
       })
@@ -24,7 +24,7 @@ const useWindowDimensions = () => {
     }
   }, []);
 
-  return windowWidth;
+  return windowDimensions;
 }
 
 export default useWindowDimensions;

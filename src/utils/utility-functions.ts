@@ -13,6 +13,12 @@ export const strParseOut = (str: string) => {
   return str?.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 };
 
+export const parseCamellCase = (str: string) => {
+  const strWithSpaces = str.replace( /([A-Z])/g, " $1");
+  const parsedStr = strWithSpaces.charAt(0).toUpperCase() + strWithSpaces.slice(1);
+  return parsedStr;
+}
+
 export const buildRoute = (source: RouteSource, structure: string[]) => {
   const arrayFromItemIds = Object.keys(source).filter(prop => prop.includes('Id'));
   const itemParamsIds: ItemIds = arrayFromItemIds.reduce((acc, curr) => {

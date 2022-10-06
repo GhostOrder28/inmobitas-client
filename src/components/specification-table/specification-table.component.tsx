@@ -1,4 +1,4 @@
-import React, { FC, useState, useRef, useEffect } from 'react';
+import React, { FC, useState, useRef } from 'react';
 import {
   Pane,
   Table, 
@@ -11,6 +11,7 @@ import {
 
 import useRelativeHeight from '../../hooks/use-relative-height';
 
+import { parseCamellCase } from '../../utils/utility-functions';
 import { SpecificationTable as SpecificationTableType } from './specification-table.types';
  
 type SpecificationtTableProps = {
@@ -24,6 +25,7 @@ const SpecificationTable: FC<SpecificationtTableProps> = ({ source }) => {
   const groupSwitcher = headers.reduce((acc, curr) => {
     return { ...acc, [curr]: false }
   }, {})
+  console.log('source: ', source);
 
   const [hiddenGroups, setHiddenGroups] = useState<{ [index: string]: boolean }>(groupSwitcher)
   return (
@@ -40,7 +42,7 @@ const SpecificationTable: FC<SpecificationtTableProps> = ({ source }) => {
             }}
           >
             <TableHeaderCell>
-            { header }
+            { parseCamellCase(header) }
             </TableHeaderCell>
           </TableHead>
             { !hiddenGroups[header] && 

@@ -19,5 +19,8 @@
   "requiredField": "(Campo Requerido)",
   "hello": "Hola",
   "eventsForTodayMessage": "Estos son los eventos de hoy",
-  "noEventsForTodayMessage": "No hay eventos para hoy"
+  "noEventsForTodayMessage": "No hay eventos para hoy",
+  "noListings": "No hay propiedades para mostrar",
+  "noClients": "Aún no tienes clientes, estos aparecerán aquí conforme agreges nuevas propiedades",
+  "startAddingOne": "empieza agregando una"
 }
