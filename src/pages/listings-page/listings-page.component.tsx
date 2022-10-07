@@ -12,10 +12,12 @@ import CustomTable from '../../components/custom-table/custom-table.component';
 import '../../global-styles/listings-page-scroll.styles.css';
 import { mobileBreakpoint } from '../../constants/breakpoints.constants';
 import { filterListingsProps } from './listings-page.utils';
+import NoDataMessage from '../../components/no-data-message/no-data-message.component';
 
 const ListingsPage = () => {
 
   const [listings, setListings] = useState<ListingItem[]>([]);
+  const [noListings, setNoListings] = useState<boolean>(false);
   const userId = useSelector(selectCurrentUserId);
   const { t } = useTranslation(['listing', 'ui']);
   const { windowInnerWidth, windowInnerHeight } = useWindowDimensions();
@@ -23,9 +25,12 @@ const ListingsPage = () => {
   useEffect(() => {
     (async function () {
       try {
-        const res = await http.get<ListingItem[]>(`/listings/${userId}`)
-        console.log(res.data)
-        setListings(res.data)
+        const res = await http.get<ListingItem[]>(`/listings/${userId}`);
+        if (res.data.length) {
+          setListings(res.data)
+        } else {
+          setNoListings(true);
+        }
       } catch (err) {
         console.log(err);
       }
@@ -34,6 +39,13 @@ const ListingsPage = () => {
 
   return (
     <Pane>
+      { noListings &&
+        <NoDataMessage
+          messageText={t('noListings', { ns: 'ui' }) + ', '}
+          linkText={t('startAddingOne', { ns: 'ui' })}
+          url={'/newlisting'}
+        /> 
+      }
       {
         listings.length ?
         <CustomTable 
