@@ -50,7 +50,7 @@ const ListingDetail = ({ dataPresets, listing }: ListingDetailProps) => {
     if (listing && isSpecificationTable(listing)) {
       // this whole process to get the district and neighborhood data is not really good, I need to find a better way to get that data
       const locationData = listing.data[listing.data.length - 2];
-      const [district, neighborhood] = locationData.items.filter(item => item.label === 'District' || item.label === 'Neighborhood');
+      const [district, neighborhood] = locationData.items.filter(item => item.label === 'district' || item.label === 'neighborhood');
       return strParseIn(`${district.value}_${neighborhood.value ? neighborhood + '_' : ''}presentation_${date}_${timestamp}.pdf`);
     }
     return `presentation_${date}_${timestamp}.pdf` ;
