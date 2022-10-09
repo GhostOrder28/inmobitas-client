@@ -250,6 +250,7 @@ const FullScreen = ({
       <Pane position={"absolute"} zIndex={99}>
         <img
           alt=""
+          crossOrigin="anonymous"
           src={fullscreenPicture.largeSizeUrl}
         />
       </Pane>
