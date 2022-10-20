@@ -1,6 +1,7 @@
 export type SignInData = {
   email: string;
   password: string;
+  userType: 'normal' | 'guest';
 }
 
 export type SignUpData = SignInData & {

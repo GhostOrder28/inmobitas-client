@@ -35,8 +35,13 @@ const Signin = () => {
   const { t } = useTranslation(['ui']);
 
   const onSubmit = (userData: SignInData) => {
-    dispatch(signInStart(userData, http));
+    dispatch(signInStart({ ...userData, userType: 'normal' }, http));
   };
+
+  const generateGuest = async () => {
+    const res = await http.get('/auth/guest');
+    console.log(res.data);
+  }
 
   useEffect(() => {
     dispatch(requestUserInfoForSignInStart(http))
@@ -92,6 +97,7 @@ const Signin = () => {
                 >
                   { t('signup') } 
                 </Button>
+                <Button type='button' onClick={generateGuest}>Sign in as a Guest</Button>
               </Pane>
             </form>
           );
