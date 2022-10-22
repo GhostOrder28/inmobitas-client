@@ -4,7 +4,7 @@ export type SignInData = {
   userType: 'normal' | 'guest';
 }
 
-export type SignUpData = SignInData & {
+export type SignUpData = Omit<SignInData, 'userType'> & {
   names: string;
   contactPhone: number;
   confirmPassword: string;

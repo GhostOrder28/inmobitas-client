@@ -1,7 +1,13 @@
 import userActionTypes from './user.types';
 import { SignUpData, SignInData } from '../../components/user-auth/user-auth.types'
 import { AxiosInstance, AxiosError, AxiosResponse } from 'axios';
-import { ValidationError } from '../redux.types';
+import { 
+  ValidationError, 
+  GenerateGuestError,
+  SignUpFailureError,
+  SignInFailureError,
+  RequestUserInfoFailureError,
+} from '../redux.types';
 import { UserInfo } from '../../components/user-auth/user-auth.types';
 import { withMatcher } from '../../utils/utility-functions';
 import { 
@@ -26,13 +32,12 @@ export type UserAction =
   | SignOutFailure
   | ClearErrors;
 
-export type SignUpFailureError = { validationErrors: ValidationError[]; } | { duplicateEntityError: string; };
-export type SignInFailureError = { validationErrors: ValidationError[]; } | { authenticationError: string; };
-export type RequestUserInfoFailureError = { authenticationError: string; };
-
 export type SignUpStart = ActionWithDependencyAndPayload<userActionTypes.SIGN_UP_START, SignUpData>;
 export type SignUpSuccess = ActionWithDependencyAndPayload<userActionTypes.SIGN_UP_SUCCESS, SignInData>;
 export type SignUpFailure = ActionWithPayload<userActionTypes.SIGN_UP_FAILURE, AxiosError<AxiosResponse<SignUpFailureError>>>;
+export type GenerateGuestStart = ActionWithDependency<userActionTypes.GENERATE_GUEST_START>;
+export type GenerateGuestSuccess = ActionWithDependencyAndPayload<userActionTypes.GENERATE_GUEST_SUCCESS, SignInData>;
+export type GenerateGuestFailure = ActionWithPayload<userActionTypes.GENERATE_GUEST_FAILURE, AxiosError<AxiosResponse<GenerateGuestError>>>;
 export type SignInStart = ActionWithDependencyAndPayload<userActionTypes.SIGN_IN_START, SignInData>;
 export type SignInSuccess = ActionWithPayload<userActionTypes.SIGN_IN_SUCCESS, UserInfo>;
 export type SignInFailure = ActionWithPayload<userActionTypes.SIGN_IN_FAILURE, AxiosError<AxiosResponse<SignInFailureError>> | Error>;
@@ -53,6 +58,15 @@ export const signUpSuccess = withMatcher((signInData: SignInData, http: AxiosIns
 
 export const signUpFailure = withMatcher((error: AxiosError<AxiosResponse<SignUpFailureError>>): SignUpFailure =>
   createAction(userActionTypes.SIGN_UP_FAILURE, error));
+
+export const generateGuestStart = withMatcher((http: AxiosInstance): GenerateGuestStart =>
+  createActionWithDependency(userActionTypes.GENERATE_GUEST_START, http));
+
+export const generateGuestSuccess = withMatcher((signInData: SignInData, http: AxiosInstance): GenerateGuestSuccess =>
+  createActionWithDependencyAndPayload(userActionTypes.GENERATE_GUEST_SUCCESS, signInData, http));
+
+export const generateGuestFailure = withMatcher((error: AxiosError<AxiosResponse<GenerateGuestError>>): GenerateGuestFailure =>
+  createAction(userActionTypes.GENERATE_GUEST_FAILURE, error));
 
 export const signInStart = withMatcher((signInData: SignInData, http: AxiosInstance): SignInStart =>
   createActionWithDependencyAndPayload(userActionTypes.SIGN_IN_START, signInData, http));

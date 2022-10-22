@@ -7,13 +7,13 @@ import { IconButton, Button, Pane, TextInput, Heading } from "evergreen-ui";
 
 import { SignInData } from "../user-auth.types";
 import http from '../../../utils/axios-instance';
+import { options } from '../../../utils/axios-instance';
 import ErrorMessage from "../../error-message/error-message.component";
 import { selectErrorMessage } from "../../../redux/user/user.selectors";
 import useWindowDimensions from '../../../hooks/use-window-dimensions';
-import { tabletBreakpoint } from '../../../constants/breakpoints.constants';
 import GoogleIcon from "../../../icons/social-media-icons/google.icon";
-import { signInStart, requestUserInfoForSignInStart } from "../../../redux/user/user.actions";
-import { options } from '../../../utils/axios-instance';
+import { tabletBreakpoint } from '../../../constants/breakpoints.constants';
+import { signInStart, requestUserInfoForSignInStart, generateGuestStart } from "../../../redux/user/user.actions";
 
 const signinWithGoogle = async () => {
   const url = `${options.baseURL}auth/google`;
@@ -38,9 +38,8 @@ const Signin = () => {
     dispatch(signInStart({ ...userData, userType: 'normal' }, http));
   };
 
-  const generateGuest = async () => {
-    const res = await http.get('/auth/guest');
-    console.log(res.data);
+  const generateGuest = () => {
+    dispatch(generateGuestStart(http))
   }
 
   useEffect(() => {

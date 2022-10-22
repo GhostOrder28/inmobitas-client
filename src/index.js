@@ -9,9 +9,9 @@ import App from './containers/app';
 import 'tachyons';
 import './index.css';
 
-if (process.env.NODE_ENV === 'production') {
-  console.log = function () {};
-}
+//if (process.env.NODE_ENV === 'production') {
+  //console.log = function () {};
+//}
 
 ReactDOM.render(
   <Provider store={store}>

@@ -11,16 +11,23 @@ import {
   signOutSuccess,
   requestUserInfoForSignInSuccess,
   requestUserInfoForSignInFailure,
+  generateGuestSuccess,
+  generateGuestFailure,
   // types
   SignUpStart,
   SignInStart,
   SignOutStart,
-  SignInFailureError,
-  SignUpFailureError,
   RequestUserInfoForSignInStart,
   RequestUserInfoForSignInSuccess,
-  RequestUserInfoFailureError,
+  GenerateGuestStart,
+  GenerateGuestSuccess,
 } from './user.actions';
+import {
+  SignInFailureError,
+  SignUpFailureError,
+  RequestUserInfoFailureError,
+  GenerateGuestError,
+} from '../redux.types';
 import { createGetRequest, createPostRequest } from '../redux-utils/create-request';
 
 function isResponse(res: AxiosResponse | Error): res is AxiosResponse {
@@ -34,6 +41,17 @@ export function* signUp ({ payload, http }: SignUpStart) {
     yield* put(signUpSuccess(res.data, http));
   } catch (err) {
     yield* put(signUpFailure(err as AxiosError<AxiosResponse<SignUpFailureError>>));
+  }
+}
+
+export function* generateGuest ({ http }: GenerateGuestStart) {
+    console.log('calling /auth/guest...');
+  try {
+    const requestGuestUser = createGetRequest(http);
+    const res: AxiosResponse = yield* call(requestGuestUser, '/auth/guest');
+    yield* put(generateGuestSuccess(res.data, http));
+  } catch (err) {
+    yield* put(generateGuestFailure(err as AxiosError<AxiosResponse<GenerateGuestError>>)); 
   }
 }
 
@@ -68,6 +86,7 @@ export function* signOut ({ http }: SignOutStart) {
 }
 
 export function* signInAfterSignUp ({ payload, http }: SignInStart) {
+  console.log(payload);
   try {
     yield* put(signInStart(payload, http));
   } catch (err) {
@@ -82,6 +101,9 @@ export function* signInWithUserInfo ({ payload }: RequestUserInfoForSignInSucces
 export function* onSignUpStart () {
   yield* takeLatest(userActionTypes.SIGN_UP_START, signUp)
 }
+export function* onGenerateGuestStart () {
+  yield* takeLatest(userActionTypes.GENERATE_GUEST_START, generateGuest)
+}
 export function* onSignInStart () {
   yield* takeLatest(userActionTypes.SIGN_IN_START, signIn)
 }
@@ -90,6 +112,9 @@ export function* onSignOutStart () {
 }
 export function* onSignUpSuccess () {
   yield* takeLatest(userActionTypes.SIGN_UP_SUCCESS, signInAfterSignUp)
+}
+export function* onGenerateGuestSuccess () {
+  yield* takeLatest(userActionTypes.GENERATE_GUEST_SUCCESS, signInAfterSignUp)
 }
 export function* onRequestUserInfoForSignInStart () {
   yield* takeLatest(userActionTypes.REQUEST_USER_INFO_FOR_SIGN_IN_START, requestUserInfoForSignIn)
@@ -106,5 +131,7 @@ export function* userSagas () {
     call(onSignUpSuccess),
     call(onRequestUserInfoForSignInStart),
     call(onRequestUserInfoForSignInSuccess),
+    call(onGenerateGuestStart),
+    call(onGenerateGuestSuccess),
   ])
 }

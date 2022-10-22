@@ -51,7 +51,8 @@ describe('Sagas', () => {
 
   const signInData = {
     email: 'test@test.com',
-    password: 'mypassword'
+    password: 'mypassword',
+    userType: 'normal' as const
   }
 
   const signUpResponseMock = { 
