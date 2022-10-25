@@ -51,8 +51,10 @@ const ListingDetail = ({ dataPresets, listing }: ListingDetailProps) => {
     if (listing && isSpecificationTable(listing)) {
       // this whole process to get the district and neighborhood data is not really good, I need to find a better way to get that data
       const locationData = listing.data[listing.data.length - 2];
-      const [district, neighborhood] = locationData.items.filter(item => item.label === 'district' || item.label === 'neighborhood');
-      return strParseIn(`${district.value}_${neighborhood.value ? neighborhood + '_' : ''}presentation_${date}_${timestamp}.pdf`);
+      console.log(locationData)
+      // WARNING: District and Neighborhood are capitalized because they are being extracted from the returned grouped listing array, these are used as labels and that's why they are capitalized.
+      const [district, neighborhood] = locationData.items.filter(item => item.label === 'District' || item.label === 'Neighborhood');
+      return strParseIn(`${district.value}_${neighborhood.value ? neighborhood.value + '_' : ''}presentation_${date}_${timestamp}.pdf`);
     }
     return `presentation_${date}_${timestamp}.pdf` ;
   }
