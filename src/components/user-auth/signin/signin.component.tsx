@@ -3,7 +3,15 @@ import { useTranslation } from "react-i18next";
 import { Form, Field } from "react-final-form";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { IconButton, Button, Pane, TextInput, Heading } from "evergreen-ui";
+import { 
+  Text,
+  Button, 
+  Pane, 
+  TextInput, 
+  Heading, 
+  minorScale, 
+  Card
+} from "evergreen-ui";
 
 import { SignInData } from "../user-auth.types";
 import http from '../../../utils/axios-instance';
@@ -14,6 +22,8 @@ import useWindowDimensions from '../../../hooks/use-window-dimensions';
 import GoogleIcon from "../../../icons/social-media-icons/google.icon";
 import { tabletBreakpoint } from '../../../constants/breakpoints.constants';
 import { signInStart, requestUserInfoForSignInStart, generateGuestStart } from "../../../redux/user/user.actions";
+
+import './signin.styles.css';
 
 const signinWithGoogle = async () => {
   const url = `${options.baseURL}auth/google`;
@@ -54,51 +64,92 @@ const Signin = () => {
         render={({ handleSubmit, values }) => {
           //console.log("form values: ", values);
           return (
-            <form onSubmit={handleSubmit}>
+            <>
               <Heading size={800}>{ t('signin') }</Heading>
-              <div>
-                <Field name="email" component="input">
-                  {(props) => (
-                    <TextInput
-                      {...props.input}
-                      placeholder={ t('email') }
-                      width={"100%"}
-                    />
-                  )}
-                </Field>
-                <ErrorMessage fieldErrorMsg={emailErrMsg} />
-              </div>
-              <div>
-                <Field name="password" component="input">
-                  {(props) => (
-                    <TextInput
-                      {...props.input}
-                      type="password"
-                      placeholder={ t('password') }
-                      width={"100%"}
-                    />
-                  )}
-                </Field>
-                <ErrorMessage fieldErrorMsg={passwordErrMsg} />
-              </div>
-              <ErrorMessage fieldErrorMsg={authErrMsg} />
-              <Pane display="flex" flexDirection={ windowInnerWidth > tabletBreakpoint ? 'row' : 'column' }>
-                <Button width={"100%"} type="submit" appearance="primary">
-                  { t('signin') } 
-                </Button>
-                <Button iconBefore={GoogleIcon} width={'100%'} type='button' appearance="default" onClick={signinWithGoogle}>
-                { t('signinWithGoogle') }
-                </Button>
-                <Button
-                  width={"100%"}
-                  type="button"
-                  onClick={() => navigate("/signup")}
+              <Pane display={'flex'} flexDirection={ windowInnerWidth > tabletBreakpoint ? 'row' : 'column' }>
+                <Pane flex={1}>
+                  <form onSubmit={handleSubmit}>
+                    <div>
+                      <Field name="email" component="input">
+                        {(props) => (
+                          <TextInput
+                            {...props.input}
+                            placeholder={ t('email') }
+                            width={"100%"}
+                          />
+                        )}
+                      </Field>
+                      <ErrorMessage fieldErrorMsg={emailErrMsg} />
+                    </div>
+                    <div>
+                      <Field name="password" component="input">
+                        {(props) => (
+                          <TextInput
+                            {...props.input}
+                            type="password"
+                            placeholder={ t('password') }
+                            width={"100%"}
+                          />
+                        )}
+                      </Field>
+                      <ErrorMessage fieldErrorMsg={passwordErrMsg} />
+                    </div>
+                    <ErrorMessage fieldErrorMsg={authErrMsg} />
+                    <Pane display="flex" flexDirection={ windowInnerWidth > tabletBreakpoint ? 'row' : 'column' }>
+                      <Button width={"100%"} type="submit" appearance="primary">
+                        { t('signin') } 
+                      </Button>
+                      <Button iconBefore={GoogleIcon} width={'100%'} type='button' appearance="default" onClick={signinWithGoogle}>
+                      { t('signinWithGoogle') }
+                      </Button>
+                      <Button
+                        width={"100%"}
+                        type="button"
+                        onClick={() => navigate("/signup")}
+                      >
+                        { t('signup') } 
+                      </Button>
+                    </Pane>
+                  </form>
+                </Pane>
+                <Card
+                  display={'flex'}
+                  flexDirection={'column'}
+                  justifyContent={'center'}
+                  alignItems={'center'}
+                  flex={1}
+                  width={'100%'}
+                  marginLeft={ windowInnerWidth > tabletBreakpoint ? minorScale(10) : null }
+                  marginTop={ windowInnerWidth > tabletBreakpoint ? null : minorScale(10) }
+                  paddingY={ windowInnerWidth > tabletBreakpoint ? null : minorScale(6) }
+                  elevation={1}
+                  className={'guest-button'}
                 >
-                  { t('signup') } 
-                </Button>
-                <Button type='button' onClick={generateGuest}>Sign in as a Guest</Button>
+                  <Button 
+                    type='button'
+                    onClick={generateGuest}
+                    width={'70%'}
+                    marginX={minorScale(15)}
+                    appearance={'primary'}
+                    intent={'success'}
+                    size={'medium'}
+                  >
+                    { t('signinAsGuest') }
+                  </Button>
+                  <Text 
+                    width={'80%'}
+                    marginX={minorScale(15)}
+                    marginTop={minorScale(3)}
+                    textAlign={'center'}
+                    size={'300'}
+                    color={'#696f8c'}
+                  >
+                    { t('signinAsGuestMessage') }
+                  </Text>
+                </Card>
               </Pane>
-            </form>
+
+            </>
           );
         }}
       />

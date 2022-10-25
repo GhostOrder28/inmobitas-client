@@ -1,5 +1,7 @@
 {
   "signin": "Ingresar",
+  "signinAsGuest": "Ingresa como invitado",
+  "signinAsGuestMessage": "Configuraremos una cuenta con datos de prueba",
   "signinWithGoogle": "Ingresar con Google",
   "signup": "Registrarse",
   "signout": "Salir",

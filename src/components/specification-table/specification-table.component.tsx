@@ -7,6 +7,8 @@ import {
   TableRow, 
   TableCell,
   TableHeaderCell,
+  majorScale,
+  minorScale,
 } from "evergreen-ui";
 
 import useRelativeHeight from '../../hooks/use-relative-height';
@@ -49,9 +51,14 @@ const SpecificationTable: FC<SpecificationtTableProps> = ({ source }) => {
               <TableBody>
                 {
                   items.map((item, idx) => (
-                    <TableRow key={`item-prop-${idx}`}>
-                    <TableCell>{ item.label }</TableCell>
-                    <TableCell>{ item.value }</TableCell>
+                    <TableRow
+                      key={`item-prop-${idx}`}
+                      minHeight={majorScale(7)}
+                      height={'100%'}
+                      paddingY={minorScale(5)}
+                    >
+                      <TableCell>{ item.label }</TableCell>
+                      <TableCell>{ item.value }</TableCell>
                     </TableRow>
                   ))
                 }

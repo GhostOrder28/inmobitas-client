@@ -1,5 +1,7 @@
 {
   "signin": "Sign In",
+  "signinAsGuest": "Sign in as Guest",
+  "signinAsGuestMessage": "We will set an account with dumb data",
   "signinWithGoogle": "Sign In With Google",
   "signup": "Sign Up",
   "signout": "Sign Out",
