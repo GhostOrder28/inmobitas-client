@@ -1,7 +1,7 @@
 export type SignInData = {
   email: string;
   password: string;
-  userType: 'normal' | 'guest';
+  userType?: 'normal' | 'guest';
 }
 
 export type SignUpData = Omit<SignInData, 'userType'> & {

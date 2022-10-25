@@ -32,9 +32,9 @@ import { SpecificationTable } from '../specification-table/specification-table.t
 
 const formInitialState = {
   contractTypeId: 1,
-  currencyTypeId: 1,
+  //currencyTypeId: 1,
   estateTypeId: 1,
-  isPercentage: false,
+  //isPercentage: false,
   isExclusive: false,
 };
 

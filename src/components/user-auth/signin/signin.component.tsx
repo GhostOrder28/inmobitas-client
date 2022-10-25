@@ -35,7 +35,7 @@ const Signin = () => {
   const { t } = useTranslation(['ui']);
 
   const onSubmit = (userData: SignInData) => {
-    dispatch(signInStart({ ...userData, userType: 'normal' }, http));
+    dispatch(signInStart(userData, http));
   };
 
   const generateGuest = () => {

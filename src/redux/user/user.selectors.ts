@@ -12,6 +12,11 @@ export const selectCurrentUser = createSelector(
   (userReducer) => userReducer.currentUser
 );
 
+export const selectGuestPending = createSelector(
+  [selectUserReducer],
+  (userReducer) => userReducer.guestPending
+);
+
 export const selectErrorObj = createSelector(
   [selectUserReducer],
   (userReducer) => userReducer.errors

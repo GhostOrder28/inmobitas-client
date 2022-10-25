@@ -37,7 +37,7 @@ function isResponse(res: AxiosResponse | Error): res is AxiosResponse {
 export function* signUp ({ payload, http }: SignUpStart) { 
   try {
     const requestNewUser = createPostRequest(http);
-    const res: AxiosResponse = yield* call(requestNewUser, '/auth/signup', payload);
+    const res: AxiosResponse = yield* call(requestNewUser, '/auth/signup/normal', payload);
     yield* put(signUpSuccess(res.data, http));
   } catch (err) {
     yield* put(signUpFailure(err as AxiosError<AxiosResponse<SignUpFailureError>>));
@@ -45,10 +45,9 @@ export function* signUp ({ payload, http }: SignUpStart) {
 }
 
 export function* generateGuest ({ http }: GenerateGuestStart) {
-    console.log('calling /auth/guest...');
   try {
     const requestGuestUser = createGetRequest(http);
-    const res: AxiosResponse = yield* call(requestGuestUser, '/auth/guest');
+    const res: AxiosResponse = yield* call(requestGuestUser, '/auth/signup/guest');
     yield* put(generateGuestSuccess(res.data, http));
   } catch (err) {
     yield* put(generateGuestFailure(err as AxiosError<AxiosResponse<GenerateGuestError>>)); 
@@ -56,9 +55,15 @@ export function* generateGuest ({ http }: GenerateGuestStart) {
 }
 
 export function* signIn ({ payload, http }: SignInStart) {  
-  try {   
+  try {  
     const requestSignIn = createPostRequest(http);
-    const res: AxiosResponse = yield* call(requestSignIn, '/auth/signin', payload);
+    let userType;
+    if (!payload.userType) {
+      userType = 'normal';
+    } else {
+      userType = payload.userType;
+    }
+    const res: AxiosResponse = yield* call(requestSignIn, `/auth/signin/${userType}`, payload);
     yield* put(signInSuccess(res.data));
   } catch (err) {
     yield* put(signInFailure(err as AxiosError<AxiosResponse<SignInFailureError>>));

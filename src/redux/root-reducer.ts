@@ -25,7 +25,7 @@ const persistConfig = {
 const persistConfigErrors = {
   key: 'user',
   storage: localStorage,
-  blacklist: ['errors']
+  blacklist: ['errors', 'guestPending']
 };
 
 const rootReducer = combineReducers({

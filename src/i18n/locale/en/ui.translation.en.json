@@ -22,5 +22,6 @@
   "noEventsForTodayMessage": "There are no events for today",
   "noListings": "There are no listings to show",
   "noClients": "There are no clients yet, they will appear here as you add new listings",
-  "startAddingOne": "start adding one"
+  "startAddingOne": "start adding one",
+  "waitForGuest": "Wait a moment please, we are setting your guest account, this will take less than a minute."
 }

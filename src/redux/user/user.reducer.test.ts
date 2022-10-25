@@ -1,4 +1,3 @@
-import userActionTypes from "./user.types";
 import { 
   signUpFailure,
   signInSuccess,
@@ -17,6 +16,7 @@ describe('user reducer', () => {
   const initialState: UserState = {
     currentUser: null,
     errors: null,
+    guestPending: false,
   };
 
   it('should handle undefined args', () => {

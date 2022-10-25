@@ -34,6 +34,7 @@ const ListingDetail = ({ dataPresets, listing }: ListingDetailProps) => {
       const estatePictures = await http.get<Picture[]>(
         `/pictures/${userId}/${listingid}`
       );
+      console.log(estatePictures);
       setListingPictures(estatePictures.data);
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
