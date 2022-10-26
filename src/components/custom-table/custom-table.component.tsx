@@ -19,6 +19,7 @@ import { useTable, usePagination } from 'react-table';
 
 import useRelativeHeight from '../../hooks/use-relative-height';
 import useClientDevice from "../../hooks/use-client-device";
+import useClickOutside from "../../hooks/use-click-outside";
 
 import { buildRoute } from "../../utils/utility-functions";
 import { CustomTableProps, CustomTableColumn, CustomTableRow } from './custom-table.types';
@@ -33,6 +34,8 @@ const CustomTable: FC<CustomTableProps> = ({ source, setSource, labels, detailRo
   const userId = useSelector(selectCurrentUserId) as number;
   const [highlightedRow, setHighlightedRow] = useState<number | null>(null);
   const [timeoutId, setTimeoutId] = useState<ReturnType<typeof setTimeout>>();
+  const buttonsRef = useRef(null);
+  useClickOutside(buttonsRef, () => setHighlightedRow(null));
   const clientDevice = useClientDevice();
 
   const data = useMemo(() => source.map(item => {
@@ -167,7 +170,7 @@ const CustomTable: FC<CustomTableProps> = ({ source, setSource, labels, detailRo
                     paddingX={0}
                   >
                     { rowIdx === highlightedRow &&
-                      <>
+                      <Pane ref={buttonsRef} display={'flex'} width={'100%'} height={'100%'}>
                         <CustomTableOption
                           icon={EditIcon}
                           onClick={
@@ -187,7 +190,7 @@ const CustomTable: FC<CustomTableProps> = ({ source, setSource, labels, detailRo
                             } 
                           }
                         />
-                      </>
+                      </Pane>
                     }
                   </TableCell>                  
                 </TableRow>

@@ -274,10 +274,10 @@ const AgendaPage = () => {
                       ) :
                         <Pane
                           ref={buttonsRef}
-                          position={'absolute'}
-                          display={selectedEvent === rowIdx ? 'flex' : 'none'}
                           width={100}
                           height={rowHeight - 1}
+                          position={'absolute'}
+                          display={selectedEvent === rowIdx ? 'flex' : 'none'}
                           right={0}
                           backgroundColor={'#F9FAFC'}
                         >
