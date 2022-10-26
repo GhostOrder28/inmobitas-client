@@ -39,6 +39,8 @@ type FullScreenProps = {
   cloudinaryPicturesPath: string;
 };
 
+export type IsLoading = 'presentation' | 'upload' | 'delete' | null;
+
 const globalContainer = document.getElementById(
   "globalContainer"
 ) as HTMLElement;
@@ -54,7 +56,7 @@ const PhotoGallery = ({ display, listingPictures, generatePresentationFilename }
   const [files, setFiles] = useState<Picture[]>([]);
   const [showDeletionMenu, setShowDeletionMenu] = useState(false);
   const [markedPictures, setMarkedPictures] = useState<number[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<IsLoading>(null);
   const { t } = useTranslation(['ui']);
   const [noImages, setNoImages] = useState(false);
   const galleryRef = useRef<HTMLDivElement | null>(null);
@@ -81,7 +83,7 @@ const PhotoGallery = ({ display, listingPictures, generatePresentationFilename }
   };
 
   const submitDeletion = async (): Promise<void> => {
-    setIsLoading(true);
+    setIsLoading('delete');
     const res = await Promise.all(
       markedPictures.map((pictureId) => {
         const deletedPicture = http.delete<number>(
@@ -98,12 +100,12 @@ const PhotoGallery = ({ display, listingPictures, generatePresentationFilename }
     setFiles(remaningPictures);
     setShowDeletionMenu(false);
     setMarkedPictures([]);
-    setIsLoading(false);
+    setIsLoading(null);
   };
 
   const generatePresentation = async () => {
     if (files.length || generatePresentationFilename !== undefined) {
-      setIsLoading(true);
+      setIsLoading('presentation');
       const res = await http.get(`/presentations/${userId}/${listingid}`, {
         responseType: 'blob',
         headers: {
@@ -114,7 +116,7 @@ const PhotoGallery = ({ display, listingPictures, generatePresentationFilename }
       cloudRef.current.setAttribute('href', url);
       cloudRef.current.setAttribute('download', generatePresentationFilename());
       cloudRef.current.click()
-      setIsLoading(false);      
+      setIsLoading(null);      
     } else {
       setNoImages(true);
       setTimeout(() => {
@@ -158,7 +160,15 @@ const PhotoGallery = ({ display, listingPictures, generatePresentationFilename }
           }
         </GalleryMenu>
         <Pane position="relative">
-          { isLoading && <ContentSpinner waitMessage={t('waitForPresentation')} /> }
+          { isLoading && 
+            <ContentSpinner
+              waitMessage={
+                isLoading === 'presentation' ? t('waitForPresentation') :
+                isLoading === 'upload' ? t('waitForPictureUpload') :
+                isLoading === 'delete' ? t('waitForPictureDelete') : ''
+              }
+            /> 
+          }
           { files.length ?
             <PicturesContainer showDeletionMenu={showDeletionMenu}>
               {

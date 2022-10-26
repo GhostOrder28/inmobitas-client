@@ -26,5 +26,7 @@
   "noClients": "There are no clients yet, they will appear here as you add new listings",
   "startAddingOne": "start adding one",
   "waitForGuest": "Wait a moment please, we are setting your guest account.",
-  "waitForPresentation": "Wait a moment please, we are building the presentation."
+  "waitForPresentation": "Wait a moment please, we are building the presentation.",
+  "waitForPictureUpload": "Uploading images",
+  "waitForPictureDelete": "Deleting images"
 }

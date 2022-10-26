@@ -26,5 +26,7 @@
   "noClients": "Aún no tienes clientes, estos aparecerán aquí conforme agreges nuevas propiedades",
   "startAddingOne": "empieza agregando una",
   "waitForGuest": "Un momento porfavor, estamos configurando tu cuenta de invitado.",
-  "waitForPresentation": "Un momento porfavor, estamos creando la presentación."
+  "waitForPresentation": "Un momento porfavor, estamos creando la presentación.",
+  "waitForPictureUpload": "Subiendo imágenes",
+  "waitForPictureDelete": "Borrando imágenes"
 }

@@ -7,11 +7,12 @@ import "./files-uploader.styles.css";
 import http from "../../utils/axios-instance";
 import { Picture } from "../listing-detail/listing-detail.types";
 import {AxiosError} from "axios";
+import { IsLoading } from '../photo-gallery/photo-gallery.component';
 
 export type FilesUploaderProps = {
   files: Picture[];
   setFiles: React.Dispatch<React.SetStateAction<Picture[]>>;
-  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsLoading: React.Dispatch<React.SetStateAction<IsLoading>>;
   setNoImages: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
@@ -25,7 +26,7 @@ const FilesUploader = ({
   const params = useParams();
 
   const onUploadFile: ChangeEventHandler<HTMLInputElement> = async (e) => {
-    setIsLoading(true);
+    setIsLoading('upload');
     const filesToUpload = e.target.files ? [...e.target.files] : [];
     try {
       await http.get(`/checkverified/${userId}/${params.listingid}/${filesToUpload.length}`);
@@ -39,9 +40,9 @@ const FilesUploader = ({
       console.log(uploadedFiles);      
       setFiles([...files, ...uploadedFiles.map((file) => file.data)]);
       setNoImages(false)
-      setIsLoading(false);
+      setIsLoading(null);
     } catch (err) {
-      setIsLoading(false);
+      setIsLoading(null);
       if (err instanceof Error) {
         function isAxiosError (err: Error | AxiosError): err is AxiosError {
           return (err as AxiosError).isAxiosError !== undefined;
