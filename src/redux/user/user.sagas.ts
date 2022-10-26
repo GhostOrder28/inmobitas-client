@@ -47,7 +47,8 @@ export function* signUp ({ payload, http }: SignUpStart) {
 export function* generateGuest ({ http }: GenerateGuestStart) {
   try {
     const requestGuestUser = createGetRequest(http);
-    const res: AxiosResponse = yield* call(requestGuestUser, '/auth/signup/guest');
+    const tzOffset = new Date().getTimezoneOffset()/60;
+    const res: AxiosResponse = yield* call(requestGuestUser, `/auth/signup/guest/${tzOffset}`);
     yield* put(generateGuestSuccess(res.data, http));
   } catch (err) {
     yield* put(generateGuestFailure(err as AxiosError<AxiosResponse<GenerateGuestError>>)); 
