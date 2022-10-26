@@ -98,7 +98,6 @@ const CustomTable: FC<CustomTableProps> = ({ source, setSource, labels, detailRo
     } 
   }, [tableRelativeHeight])
 
-
   const getFlexValues = (idx: number) => idx === columns.length - 1 ? .4 : .45;
 
   return (
@@ -145,7 +144,7 @@ const CustomTable: FC<CustomTableProps> = ({ source, setSource, labels, detailRo
                     if (clientDevice === 'touchscreen') {
                       highlightedRow ? setHighlightedRow(null) : navigate(buildRoute(source[rowIdx], detailRouteStructure))
                     } else {
-                      navigate(buildRoute(source[rowIdx], detailRouteStructure))
+                      navigate(buildRoute(page[rowIdx], detailRouteStructure))
                     }
                    }}
                    {...row.getRowProps()}
@@ -174,7 +173,7 @@ const CustomTable: FC<CustomTableProps> = ({ source, setSource, labels, detailRo
                           onClick={
                             (e: React.MouseEvent<HTMLDivElement>) => {
                               e.stopPropagation();
-                              navigate(buildRoute(source[rowIdx], editRouteStructure));
+                              navigate(buildRoute(page[rowIdx], editRouteStructure));
                             } 
                           }
                         />

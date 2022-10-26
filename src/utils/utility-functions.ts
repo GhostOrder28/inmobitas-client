@@ -20,6 +20,7 @@ export const parseCamellCase = (str: string) => {
 }
 
 export const buildRoute = (source: RouteSource, structure: string[]) => {
+  if (source.original) source = source.original
   const arrayFromItemIds = Object.keys(source).filter(prop => prop.includes('Id'));
   const itemParamsIds: ItemIds = arrayFromItemIds.reduce((acc, curr) => {
     return { ...acc, [curr]: source[curr] }

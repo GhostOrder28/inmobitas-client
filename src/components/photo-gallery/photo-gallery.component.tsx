@@ -158,7 +158,7 @@ const PhotoGallery = ({ display, listingPictures, generatePresentationFilename }
           }
         </GalleryMenu>
         <Pane position="relative">
-          { isLoading && <ContentSpinner /> }
+          { isLoading && <ContentSpinner waitMessage={t('waitForPresentation')} /> }
           { files.length ?
             <PicturesContainer showDeletionMenu={showDeletionMenu}>
               {

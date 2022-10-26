@@ -25,5 +25,6 @@
   "noListings": "No hay propiedades para mostrar",
   "noClients": "Aún no tienes clientes, estos aparecerán aquí conforme agreges nuevas propiedades",
   "startAddingOne": "empieza agregando una",
-  "waitForGuest": "Un momento porfavor, estamos configurando tu cuenta de invitado, tomará menos de un minuto"
+  "waitForGuest": "Un momento porfavor, estamos configurando tu cuenta de invitado.",
+  "waitForPresentation": "Un momento porfavor, estamos creando la presentación."
 }
