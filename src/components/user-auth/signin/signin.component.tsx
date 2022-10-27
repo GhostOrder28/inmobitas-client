@@ -40,6 +40,7 @@ const Signin = () => {
   );
   const { windowInnerWidth  } = useWindowDimensions();
   const authErrMsg = useSelector(selectErrorMessage("authenticationError"));
+  const rateLimitErrMsg = useSelector(selectErrorMessage("limitReachedError"));
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { t } = useTranslation(['ui']);
@@ -146,6 +147,7 @@ const Signin = () => {
                   >
                     { t('signinAsGuestMessage') }
                   </Text>
+                  <ErrorMessage fieldErrorMsg={rateLimitErrMsg} />
                 </Card>
               </Pane>
 

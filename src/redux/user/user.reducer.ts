@@ -14,6 +14,7 @@ import {
   requestUserInfoForSignInFailure,
   generateGuestStart,
   generateGuestSuccess,
+  generateGuestFailure,
 } from './user.actions'
 
 export type ResponseError = { [ Property in UserError ]: ValidationError[] | string };
@@ -43,11 +44,13 @@ const userReducer = (state = INITIAL_STATE, action = {} as AnyAction) => {
     signUpFailure.match(action) ||
     signInFailure.match(action) || 
     signOutFailure.match(action) ||
-    requestUserInfoForSignInFailure.match(action)
+    requestUserInfoForSignInFailure.match(action) ||
+    generateGuestFailure.match(action)
   ) {
     
     return {
       ...state,
+      guestPending: false,
       errors: action.payload
     } 
   }

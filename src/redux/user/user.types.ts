@@ -20,6 +20,6 @@ export enum userActionTypes {
   REQUEST_USER_INFO_FOR_SIGN_IN_FAILURE = 'REQUEST_USER_INFO_FOR_SIGN_IN_FAILURE',
 };
 
-export type UserError = 'validationErrors' | 'authenticationError' | 'duplicateEntityError';
+export type UserError = 'validationErrors' | 'authenticationError' | 'duplicateEntityError' | 'limitReachedError';
 
 export default userActionTypes;

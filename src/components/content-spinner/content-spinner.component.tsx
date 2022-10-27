@@ -16,7 +16,7 @@ const ContentSpinner: FC<ContentSpinnerProps> = ({ waitMessage }) => (
     opacity=".85"
     position="absolute"
     zIndex={60}
-    width="100vw"
+    width="100%"
     height="100%"
   >
     <Spinner />

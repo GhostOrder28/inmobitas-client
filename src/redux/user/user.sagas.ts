@@ -50,7 +50,10 @@ export function* generateGuest ({ http }: GenerateGuestStart) {
     const tzOffset = new Date().getTimezoneOffset()/60;
     const res: AxiosResponse = yield* call(requestGuestUser, `/auth/signup/guest/${tzOffset}`);
     yield* put(generateGuestSuccess(res.data, http));
-  } catch (err) {
+  } catch (err: any) {
+    if (err.response.data.limitReachedError) {
+      yield* put(generateGuestFailure(err as AxiosError<AxiosResponse<GenerateGuestError>>)); 
+    }
     yield* put(generateGuestFailure(err as AxiosError<AxiosResponse<GenerateGuestError>>)); 
   }
 }

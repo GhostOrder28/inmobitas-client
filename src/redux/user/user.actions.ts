@@ -100,4 +100,3 @@ export const requestUserInfoForSignInSuccess = withMatcher((userInfo: UserInfo):
 
 export const requestUserInfoForSignInFailure = withMatcher((error: AxiosError<AxiosResponse<RequestUserInfoFailureError>>) => 
   createAction(userActionTypes.REQUEST_USER_INFO_FOR_SIGN_IN_FAILURE, error));
-
