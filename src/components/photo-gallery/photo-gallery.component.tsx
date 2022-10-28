@@ -141,24 +141,6 @@ const PhotoGallery = ({ display, listingPictures, generatePresentationFilename }
         overflow={'scroll'}
       >
         <PopupMessage message={ t('noImages') } displayCondition={noImages}/>
-        <GalleryMenu
-          width={windowInnerWidth > desktopBreakpoint ? desktopBreakpoint : undefined}
-          showDeletionMenu={showDeletionMenu}
-        >
-          <GalleryMenuButton 
-            Icon={DocumentIcon}
-            fn={generatePresentation}
-          />
-          <FilesUploader
-            files={files}
-            setFiles={setFiles}
-            setIsLoading={setIsLoading}
-            setNoImages={setNoImages}
-          />
-          { windowInnerWidth > desktopBreakpoint &&
-            <GalleryMenuButton Icon={TrashIcon} fn={() => setShowDeletionMenu(!showDeletionMenu)}/>
-          }
-        </GalleryMenu>
         <Pane position="relative">
           { isLoading && 
             <ContentSpinner
@@ -167,6 +149,7 @@ const PhotoGallery = ({ display, listingPictures, generatePresentationFilename }
                 isLoading === 'upload' ? t('waitForPictureUpload') :
                 isLoading === 'delete' ? t('waitForPictureDelete') : ''
               }
+              zIndex={20}
             /> 
           }
           { files.length ?
@@ -183,7 +166,6 @@ const PhotoGallery = ({ display, listingPictures, generatePresentationFilename }
                       <Pane
                         top="0"
                         left="0"
-                        zIndex={90}
                         cursor={"pointer"}
                         onClick={
                           showDeletionMenu
@@ -235,6 +217,24 @@ const PhotoGallery = ({ display, listingPictures, generatePresentationFilename }
           ""
         )}
       </Pane>
+      <GalleryMenu
+        width={windowInnerWidth > desktopBreakpoint ? desktopBreakpoint : undefined}
+        showDeletionMenu={showDeletionMenu}
+      >
+        <GalleryMenuButton 
+          Icon={DocumentIcon}
+          fn={generatePresentation}
+        />
+        <FilesUploader
+          files={files}
+          setFiles={setFiles}
+          setIsLoading={setIsLoading}
+          setNoImages={setNoImages}
+        />
+        { windowInnerWidth > desktopBreakpoint &&
+          <GalleryMenuButton Icon={TrashIcon} fn={() => setShowDeletionMenu(!showDeletionMenu)}/>
+        }
+      </GalleryMenu>
     </>
   );
 };

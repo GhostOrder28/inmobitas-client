@@ -3,9 +3,10 @@ import { Pane, Spinner, Paragraph, majorScale, minorScale } from 'evergreen-ui';
 
 type ContentSpinnerProps = {
   waitMessage?: string;
+  zIndex?: number;
 }
 
-const ContentSpinner: FC<ContentSpinnerProps> = ({ waitMessage }) => (
+const ContentSpinner: FC<ContentSpinnerProps> = ({ waitMessage, zIndex }) => (
   <Pane
     display="flex"
     flexDirection="column"
@@ -15,7 +16,7 @@ const ContentSpinner: FC<ContentSpinnerProps> = ({ waitMessage }) => (
     backgroundColor="white"
     opacity=".85"
     position="absolute"
-    zIndex={60}
+    zIndex={zIndex || undefined}
     width="100%"
     height="100%"
   >

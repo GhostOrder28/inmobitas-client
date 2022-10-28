@@ -1,16 +1,26 @@
 import { useState, useEffect, MutableRefObject } from 'react';
 
-const paginationSpace = 70;
+const paginationSpace = 50;
 
-const useRelativeHeight = (ref: MutableRefObject<HTMLDivElement | undefined | null>, extraSpace?: number): number | undefined => {
+type RelativeHeightOptions = {
+  extraSpace?: number;
+  ignorePaginationSpace?: boolean;
+}
+
+const useRelativeHeight = (ref: MutableRefObject<HTMLDivElement | undefined | null>, options?: RelativeHeightOptions): number | undefined => {
 
   const [componentHeight, setComponentHeight] = useState<number>();
   const calculateRelativeHeight = () => {
     if (ref?.current) {
       let height = 0;
       height = window.innerHeight - ref.current?.offsetTop - 1;
-      if (extraSpace) height -= extraSpace;
-      setComponentHeight(height - paginationSpace);
+      if (options?.extraSpace) height -= options.extraSpace;
+
+      if (options?.ignorePaginationSpace) {
+        setComponentHeight(height);
+      } else {
+        setComponentHeight(height - paginationSpace);
+      }
     } 
   }
 

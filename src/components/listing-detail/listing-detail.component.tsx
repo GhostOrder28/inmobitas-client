@@ -89,11 +89,13 @@ const ListingDetail = ({ dataPresets, listing }: ListingDetailProps) => {
           source={listing}
         />
       }
-      <PhotoGallery
-        display={selectedTab === 1 ? "block" : "none"}
-        listingPictures={listingPictures}
-        generatePresentationFilename={generatePresentationFilename}
-      />
+      { selectedTab === 1 &&
+        <PhotoGallery
+          display={selectedTab === 1 ? "block" : "none"}
+          listingPictures={listingPictures}
+          generatePresentationFilename={generatePresentationFilename}
+        />
+      }
     </>
   );
 };

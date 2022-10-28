@@ -11,6 +11,7 @@ const PicturesContainer = ({ children, showDeletionMenu }: PicturesContainerProp
     display="grid"
     gridTemplateColumns={"repeat(3, 1fr)"}
     position={"relative"}
+    zIndex={10}
     width={"100%"}
     padding={showDeletionMenu ? "1.5px" : ""}
     transition={"all .3s"}

@@ -13,7 +13,7 @@ import {
   TableHeaderCell,
   Text,
   Pane, 
-  Pagination
+  //Pagination
 } from "evergreen-ui";
 import { useTable, usePagination } from 'react-table';
 
@@ -25,6 +25,7 @@ import { buildRoute } from "../../utils/utility-functions";
 import { CustomTableProps, CustomTableColumn, CustomTableRow } from './custom-table.types';
 import CustomTableOption from './custom-table-option';
 import http from '../../utils/axios-instance';
+import Pagination from '../pagination/pagination.component';
 import { getPageSize } from "./custom-table.utils";
 
 const CustomTable: FC<CustomTableProps> = ({ source, setSource, labels, detailRouteStructure, editRouteStructure, deleteBaseUrl }) => {
@@ -205,7 +206,6 @@ const CustomTable: FC<CustomTableProps> = ({ source, setSource, labels, detailRo
         justifyContent={'center'}
       >
         <Pagination
-          margin={'auto'}
           page={state.pageIndex + 1} 
           totalPages={pageCount}
           onNextPage={nextPage}

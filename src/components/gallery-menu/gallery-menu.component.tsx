@@ -19,7 +19,7 @@ const GalleryMenu = ({
       bottom={!showDeletionMenu ? 0 : -50}
       width={width || '100%'}
       height={50}
-      zIndex={97}
+      zIndex={20}
       backgroundColor={"#F9FAFC"}
       transition={"all .5s"}
     >

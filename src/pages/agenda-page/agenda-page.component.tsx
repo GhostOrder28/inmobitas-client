@@ -13,7 +13,7 @@ import {
   Text,
   CrossIcon,
   EditIcon,
-  Pagination,
+  //Pagination,
 } from 'evergreen-ui';
 import { format, getDate, getWeekOfMonth, getMonth, getYear } from 'date-fns';
 import { useTranslation } from "react-i18next";
@@ -31,6 +31,7 @@ import EventForm from '../../components/event-form/event-form.component';
 import AgendaHeader from './agenda-subcomponents/agenda-header.component';
 import AgendaViewOptions from './agenda-subcomponents/agenda-view-options.component';
 import ModalContainer from '../../components/modal-container/modal-container.component';
+import Pagination from '../../components/pagination/pagination.component';
 
 import http from '../../utils/axios-instance';
 import { AgendaEvent, AgendaTableColumns } from './agenda-page.types';
@@ -42,6 +43,7 @@ import { getPageSize } from '../../components/custom-table/custom-table.utils';
 
 const views = ['month', 'week', 'day', 'today'];
 const rowHeight = 50;
+const paginationSpace = 70;
 
 const AgendaPage = () => {
 
@@ -313,7 +315,6 @@ const AgendaPage = () => {
         justifyContent={'center'}
       >
         <Pagination
-          margin={'auto'}
           page={state.pageIndex + 1} 
           totalPages={pageCount}
           onNextPage={nextPage}

@@ -22,7 +22,7 @@ type SpecificationtTableProps = {
 
 const SpecificationTable: FC<SpecificationtTableProps> = ({ source }) => {
   const tableRef = useRef<HTMLDivElement | null>(null);
-  const tableHeight = useRelativeHeight(tableRef);
+  const tableHeight = useRelativeHeight(tableRef, { ignorePaginationSpace: true });
   const headers = source.data.map(group => group.header);
   const groupSwitcher = headers.reduce((acc, curr) => {
     return { ...acc, [curr]: false }

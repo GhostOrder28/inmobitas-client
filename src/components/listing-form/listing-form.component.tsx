@@ -55,7 +55,7 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
   const [errors, setErrors] = useState<AxiosError<{ validationErrors: ValidationError[] }>>();
   const [selectedMode, setSelectedMode] = useState<number>(0);
   const formWrapperRef = useRef<HTMLDivElement | null>(null);
-  const formHeight = useRelativeHeight(formWrapperRef, 60);
+  const formHeight = useRelativeHeight(formWrapperRef, { extraSpace: 60 });
   const { windowInnerWidth } = useWindowDimensions();
 
   useEffect(() => {

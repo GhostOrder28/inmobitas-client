@@ -16,7 +16,7 @@ const DashboardPage = () => {
   const [todayEvents, setTodayEvents] = useState<AgendaEvent[]>();
   const { t } = useTranslation(['ui']);
   const todayEventsRef = useRef<HTMLDivElement | null>(null);
-  const todayEventsHeight = useRelativeHeight(todayEventsRef, 60);
+  const todayEventsHeight = useRelativeHeight(todayEventsRef, { extraSpace: 60 });
   const now = new Date();
 
   useEffect(() => {
