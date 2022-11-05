@@ -1,13 +1,18 @@
-import { useState, useEffect, MutableRefObject } from 'react';
+import { useState, useEffect, MutableRefObject, FC } from 'react';
 
 const paginationSpace = 50;
+
+type RelativeHeight = (
+  ref: MutableRefObject<HTMLDivElement | undefined | null>,
+  options?: RelativeHeightOptions
+) => number | undefined;
 
 type RelativeHeightOptions = {
   extraSpace?: number;
   ignorePaginationSpace?: boolean;
 }
 
-const useRelativeHeight = (ref: MutableRefObject<HTMLDivElement | undefined | null>, options?: RelativeHeightOptions): number | undefined => {
+const useRelativeHeight: RelativeHeight = (ref, options) => {
 
   const [componentHeight, setComponentHeight] = useState<number>();
   const calculateRelativeHeight = () => {
