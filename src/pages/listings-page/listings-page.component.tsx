@@ -10,7 +10,7 @@ import { ListingItem } from './listings-page.types';
 import { selectCurrentUserId } from '../../redux/user/user.selectors';
 import CustomTable from '../../components/custom-table/custom-table.component';
 import '../../global-styles/listings-page-scroll.styles.css';
-import { mobileBreakpoint } from '../../constants/breakpoints.constants';
+import { MOBILE_BREAKPOINT_VALUE } from '../../constants/breakpoints.constants';
 import { filterListingsProps } from './listings-page.utils';
 import NoDataMessage from '../../components/no-data-message/no-data-message.component';
 
@@ -49,12 +49,12 @@ const ListingsPage = () => {
       {
         listings.length ?
         <CustomTable 
-          source={windowInnerWidth > mobileBreakpoint ? listings : filterListingsProps(listings)}
+          source={windowInnerWidth > MOBILE_BREAKPOINT_VALUE ? listings : filterListingsProps(listings)}
           setSource={setListings}
           labels={[
             t('district'),
             t('neighborhood'),
-            ...(windowInnerWidth > mobileBreakpoint ? [
+            ...(windowInnerWidth > MOBILE_BREAKPOINT_VALUE ? [
               t('totalArea') + ' ' + 'm²',
               t('builtArea') + ' ' + 'm²'
             ] : [])

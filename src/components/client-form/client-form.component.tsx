@@ -20,7 +20,7 @@ import { selectCurrentUserId } from "../../redux/user/user.selectors";
 import { selectValidationErrMsg } from "../../utils/utility-functions";
 import ErrorMessage from "../error-message/error-message.component";
 import { ValidationError } from "../../redux/redux.types";
-import { desktopBreakpoint } from "../../constants/breakpoints.constants";
+import { DESKTOP_BREAKPOINT_VALUE } from "../../constants/breakpoints.constants";
 import { Client } from '../../pages/client-page/client-page.types';
 
 type ClientFormProps = {
@@ -51,7 +51,7 @@ const ClientForm: FC<ClientFormProps> = ({ clientData, setClient }) => {
 
   return (
     <Pane
-      width={windowInnerWidth > desktopBreakpoint ? 600 : '100%'}
+      width={windowInnerWidth > DESKTOP_BREAKPOINT_VALUE ? 600 : '100%'}
       marginX={'auto'}
     >
       <Form
@@ -160,7 +160,7 @@ const ClientForm: FC<ClientFormProps> = ({ clientData, setClient }) => {
                 marginTop={minorScale(5)}
               >
                 <Button
-                  width={windowInnerWidth > desktopBreakpoint ? 400 : '100%'}
+                  width={windowInnerWidth > DESKTOP_BREAKPOINT_VALUE ? 400 : '100%'}
                   height={40}
                   type="submit"
                   appearance="primary"

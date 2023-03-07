@@ -21,7 +21,7 @@ import LogoIcon from "../../icons/logo-icon/logo-icon.component";
 import SignoutButton from '../signout-btn/signout-btn.component';
 import MainMenuButton from "../main-menu-button/main-menu-button.component";
 import useWindowDimensions from '../../hooks/use-window-dimensions';
-import { desktopBreakpoint } from "../../constants/breakpoints.constants";
+import { DESKTOP_BREAKPOINT_VALUE } from "../../constants/breakpoints.constants";
 
 import "./navigation.styles.css";
 
@@ -49,7 +49,7 @@ const Navigation = () => {
           justifyContent={'space-between'}
           alignItems={'center'}
           padding={minorScale(4)}
-          width={windowInnerWidth && windowInnerWidth > desktopBreakpoint ? desktopBreakpoint : '100%'} 
+          width={windowInnerWidth && windowInnerWidth > DESKTOP_BREAKPOINT_VALUE ? DESKTOP_BREAKPOINT_VALUE : '100%'} 
           marginX={'auto'}
         >
           <SideSheet
@@ -87,7 +87,7 @@ const Navigation = () => {
         </Pane>
       </Pane>
       <Pane 
-        width={windowInnerWidth && windowInnerWidth > desktopBreakpoint ? desktopBreakpoint : '100%'} 
+        width={windowInnerWidth && windowInnerWidth > DESKTOP_BREAKPOINT_VALUE ? DESKTOP_BREAKPOINT_VALUE : '100%'} 
         marginX={'auto'}
       >
         <Outlet />

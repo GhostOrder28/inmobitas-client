@@ -27,7 +27,7 @@ import ErrorMessage from "../error-message/error-message.component";
 import "./listing-form.styles.css";
 import { Presets, Listing } from "../../pages/listing-page/listing-page.types";
 import { ValidationError } from "../../redux/redux.types";
-import { desktopBreakpoint } from "../../constants/breakpoints.constants";
+import { DESKTOP_BREAKPOINT_VALUE } from "../../constants/breakpoints.constants";
 import { SpecificationTable } from '../specification-table/specification-table.types';
 
 const formInitialState = {
@@ -92,7 +92,7 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
 
   return (
     <Pane 
-      width={windowInnerWidth > desktopBreakpoint ? 600 : '100%'}
+      width={windowInnerWidth > DESKTOP_BREAKPOINT_VALUE ? 600 : '100%'}
       marginX={'auto'}
     >
       <Tablist width={"100%"} marginBottom={'.5rem'} display={"flex"} className="tablist">
@@ -937,7 +937,7 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                   bottom={10} left={0}
                 >
                   <Button
-                    width={windowInnerWidth > desktopBreakpoint ? 400 : '90%'}
+                    width={windowInnerWidth > DESKTOP_BREAKPOINT_VALUE ? 400 : '90%'}
                     height={40}
                     type="submit"
                     appearance="primary"

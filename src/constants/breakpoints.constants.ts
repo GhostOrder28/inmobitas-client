@@ -1,4 +1,4 @@
-export const desktopBreakpoint = 992;
-export const tabletBreakpoint = 768;
-export const mobileBreakpoint = 480;
+export const DESKTOP_BREAKPOINT_VALUE = 992;
+export const TABLET_BREAKPOINT_VALUE = 768;
+export const MOBILE_BREAKPOINT_VALUE = 480;
 

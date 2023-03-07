@@ -15,12 +15,13 @@ import {
 
 import { SignInData } from "../user-auth.types";
 import http from '../../../utils/axios-instance';
+import axios from 'axios';
 import { options } from '../../../utils/axios-instance';
 import ErrorMessage from "../../error-message/error-message.component";
 import { selectErrorMessage } from "../../../redux/user/user.selectors";
 import useWindowDimensions from '../../../hooks/use-window-dimensions';
 import GoogleIcon from "../../../icons/social-media-icons/google.icon";
-import { tabletBreakpoint } from '../../../constants/breakpoints.constants';
+import { TABLET_BREAKPOINT_VALUE } from '../../../constants/breakpoints.constants';
 import { signInStart, requestUserInfoForSignInStart, generateGuestStart } from "../../../redux/user/user.actions";
 
 import './signin.styles.css';
@@ -45,7 +46,7 @@ const Signin = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation(['ui']);
 
-  const onSubmit = (userData: SignInData) => {
+  const onSubmit = async (userData: SignInData) => {
     dispatch(signInStart(userData, http));
   };
 
@@ -67,7 +68,7 @@ const Signin = () => {
           return (
             <>
               <Heading size={800}>{ t('signin') }</Heading>
-              <Pane display={'flex'} flexDirection={ windowInnerWidth > tabletBreakpoint ? 'row' : 'column' }>
+              <Pane display={'flex'} flexDirection={ windowInnerWidth > TABLET_BREAKPOINT_VALUE ? 'row' : 'column' }>
                 <Pane flex={1}>
                   <form onSubmit={handleSubmit}>
                     <div>
@@ -96,7 +97,7 @@ const Signin = () => {
                       <ErrorMessage fieldErrorMsg={passwordErrMsg} />
                     </div>
                     <ErrorMessage fieldErrorMsg={authErrMsg} />
-                    <Pane display="flex" flexDirection={ windowInnerWidth > tabletBreakpoint ? 'row' : 'column' }>
+                    <Pane display="flex" flexDirection={ windowInnerWidth > TABLET_BREAKPOINT_VALUE ? 'row' : 'column' }>
                       <Button width={"100%"} type="submit" appearance="primary">
                         { t('signin') } 
                       </Button>
@@ -120,9 +121,9 @@ const Signin = () => {
                   alignItems={'center'}
                   flex={1}
                   width={'100%'}
-                  marginLeft={ windowInnerWidth > tabletBreakpoint ? minorScale(10) : null }
-                  marginTop={ windowInnerWidth > tabletBreakpoint ? null : minorScale(10) }
-                  paddingY={ windowInnerWidth > tabletBreakpoint ? null : minorScale(6) }
+                  marginLeft={ windowInnerWidth > TABLET_BREAKPOINT_VALUE ? minorScale(10) : null }
+                  marginTop={ windowInnerWidth > TABLET_BREAKPOINT_VALUE ? null : minorScale(10) }
+                  paddingY={ windowInnerWidth > TABLET_BREAKPOINT_VALUE ? null : minorScale(6) }
                   elevation={1}
                   className={'guest-button'}
                 >

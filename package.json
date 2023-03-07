@@ -57,11 +57,11 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "dev": "BROWSER=none react-scripts start",
-    "dev-https": " HTTPS=true BROWSER=none react-scripts start",
-    "devhttps": "set HTTP=true yarn dev",
-    "build": "BUILD_PATH=../inmobitas-api/public react-scripts build && sw-precache --config=sw-precache-config.js",
-    "build-on-client": "react-scripts build && cat src/custom-sw.js >> build/service-worker.js",
+    "watch": "HTTPS=true BROWSER=none react-scripts start",
+    "build-rest": "BUILD_PATH=../inmobitas-api/public react-scripts build && sw-precache --config=sw-precache-config.js",
+    "build-gql": "BUILD_PATH=../inmobitas-api-graphql/public react-scripts build && sw-precache --config=sw-precache-config.js",
+    "build-on-client": "react-scripts build &&cat src/custom-sw.js >> build/service-worker.js",
+    "build-client": "rimraf ../inmobitas-api/public & BUILD_PATH='../inmobitas-api/public' react-scripts build && cat src/custom-sw.js >> ../inmobitas-api/public/service-worker.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -89,7 +89,8 @@
     "babel-plugin-macros": "^3.1.0",
     "enzyme": "^3.11.0",
     "enzyme-to-json": "^3.6.2",
-    "redux-logger": "^3.0.6"
+    "redux-logger": "^3.0.6",
+    "webpack": "^5.75.0"
   },
   "jest": {
     "snapshotSerializers": [

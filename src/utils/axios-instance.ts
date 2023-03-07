@@ -5,6 +5,7 @@ import { signOutSuccess } from '../redux/user/user.actions';
 export const options = {
   withCredentials: true,
   baseURL: process.env.REACT_APP_BASE_URL,
+  // baseURL: '/',
 }
 
 const http = axios.create(options);

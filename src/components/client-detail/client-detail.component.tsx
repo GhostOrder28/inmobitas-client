@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
-import { Pane, Heading } from "evergreen-ui";
+import { Pane } from "evergreen-ui";
 
 import useWindowDimensions from "../../hooks/use-window-dimensions";
 
@@ -18,7 +18,8 @@ import {
   TableCell,
 } from "evergreen-ui";
 import CustomTable from '../custom-table/custom-table.component';
-import { mobileBreakpoint } from '../../constants/breakpoints.constants';
+import Heading from "../heading/heading.component";
+import { MOBILE_BREAKPOINT_VALUE } from '../../constants/breakpoints.constants';
 import { filterListingsProps } from '../../pages/listings-page/listings-page.utils';
 
 type ClientDetailProps = {
@@ -26,11 +27,25 @@ type ClientDetailProps = {
 };
 
 const ClientDetail = ({ clientData }: ClientDetailProps) => {
-  const [listings, setListings] = useState<ListingItem[]>([]);
+  const { t } = useTranslation(['client', 'listing']);
+  const [clientListings, setClientListings] = useState<ListingItem[]>([]);
+  const [ clientPersonalData ] = useState([
+    {
+      label: t('contactPhone', { ns: 'client' }),
+      content: clientData?.clientContactPhone || ''
+    },
+    {
+      label: t('clientAge', { ns: 'client' }),
+      content: clientData?.clientAge || ''
+    },
+    {
+      label: t('clientDetails', { ns: 'client' }),
+      content: clientData?.clientDetails || ''
+    },
+  ]);
 
   const userId = useSelector(selectCurrentUserId);
   const params = useParams();
-  const { t } = useTranslation(['client', 'listing']);
   const { windowInnerWidth } = useWindowDimensions();
 
   useEffect(() => {
@@ -39,9 +54,9 @@ const ClientDetail = ({ clientData }: ClientDetailProps) => {
         const clientListingsData = await http.get<ListingItem[]>(
           `/listings/${userId}/${params.clientid}`
         );
-        setListings(clientListingsData.data);
+        setClientListings(clientListingsData.data);
       } catch (err) {
-        console.log(err);
+        throw new Error(`there was an error, ${err}`)
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -51,61 +66,40 @@ const ClientDetail = ({ clientData }: ClientDetailProps) => {
     <div>
       {clientData && (
         <>
-          <Heading
-            is={"h1"}
-            size={800}
-            margin={20}
-          >
-            {strParseOut(clientData.clientName)}
+          <Heading type={"h1"}>
+            { strParseOut(clientData.clientName) }
           </Heading>
           <Table>
             <TableBody>
-              <TableRow>
-                <TableCell>
-                  { t('contactPhone', { ns: 'client' }) }
-                </TableCell>
-                <TableCell>
-                  { clientData.clientContactPhone }
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>
-                  { t('clientAge', { ns: 'client' }) }
-                </TableCell>
-                <TableCell>
-                  { clientData.clientAge }
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>
-                  { t('clientDetails', { ns: 'client' }) }
-                </TableCell>
-                <TableCell>
-                  {clientData.clientDetails}
-                </TableCell>
-              </TableRow>
+              {
+                clientPersonalData.map((dataItem, idx) => (
+                  <TableRow key={`row-${idx}`}>
+                    <TableCell>
+                      { dataItem.label }
+                    </TableCell>
+                    <TableCell>
+                      { dataItem.content }
+                    </TableCell>
+                  </TableRow>
+                ))
+              }
             </TableBody>
           </Table>
         </>
       )}
       <Pane overflow={"scroll"} borderColor={"black"}>
-        <Heading
-          is={"h2"}
-          size={700} 
-          fontWeight={500} 
-          margin={20}
-        >
+        <Heading type={"h2"}>
           { t('estates', { ns: 'listing' }) }
         </Heading>
           {
-            listings &&
+            clientListings &&
               <CustomTable 
-                source={windowInnerWidth > mobileBreakpoint ? listings : filterListingsProps(listings)}
-                setSource={setListings}
+                source={windowInnerWidth > MOBILE_BREAKPOINT_VALUE ? clientListings : filterListingsProps(clientListings)}
+                setSource={setClientListings}
                 labels={[
                   t('district', { ns: 'listing' }),
                   t('neighborhood', { ns: 'listing' }),
-                  ...(windowInnerWidth > mobileBreakpoint ? [
+                  ...(windowInnerWidth > MOBILE_BREAKPOINT_VALUE ? [
                     t('totalArea', { ns: 'listing' }) + ' ' + 'm²',
                     t('builtArea', { ns: 'listing' }) + ' ' + 'm²'
                   ] : [])

@@ -13,7 +13,7 @@ import { useTranslation } from "react-i18next";
 import useRelativeHeight from '../../hooks/use-relative-height';
 import useWindowDimensions from "../../hooks/use-window-dimensions";
 
-import { desktopBreakpoint } from '../../constants/breakpoints.constants';
+import { DESKTOP_BREAKPOINT_VALUE } from '../../constants/breakpoints.constants';
 import http from "../../utils/axios-instance";
 import { selectCurrentUserId } from "../../redux/user/user.selectors";
 import FilesUploader from "../files-uploader/files-uploader.component";
@@ -218,7 +218,7 @@ const PhotoGallery = ({ display, listingPictures, generatePresentationFilename }
         )}
       </Pane>
       <GalleryMenu
-        width={windowInnerWidth > desktopBreakpoint ? desktopBreakpoint : undefined}
+        width={windowInnerWidth > DESKTOP_BREAKPOINT_VALUE ? DESKTOP_BREAKPOINT_VALUE : undefined}
         showDeletionMenu={showDeletionMenu}
       >
         <GalleryMenuButton 
@@ -231,7 +231,7 @@ const PhotoGallery = ({ display, listingPictures, generatePresentationFilename }
           setIsLoading={setIsLoading}
           setNoImages={setNoImages}
         />
-        { windowInnerWidth > desktopBreakpoint &&
+        { windowInnerWidth > DESKTOP_BREAKPOINT_VALUE &&
           <GalleryMenuButton Icon={TrashIcon} fn={() => setShowDeletionMenu(!showDeletionMenu)}/>
         }
       </GalleryMenu>
