@@ -29,16 +29,16 @@ const ListingDetail = ({ dataPresets, listing }: ListingDetailProps) => {
   const [listingPictures, setListingPictures] = useState<Picture[]>([]);
   const { t } = useTranslation(['client', 'listing', 'ui']) 
 
-  useEffect(() => {
-    (async function () {
-      const estatePictures = await http.get<Picture[]>(
-        `/pictures/${userId}/${listingid}`
-      );
-      console.log(estatePictures);
-      setListingPictures(estatePictures.data);
-    })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // useEffect(() => {
+  //   (async function () {
+  //     const estatePictures = await http.get<Picture[]>(
+  //       `/pictures/${userId}/${listingid}`
+  //     );
+  //     console.log(estatePictures);
+  //     setListingPictures(estatePictures.data);
+  //   })();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   function isSpecificationTable (data: Listing | SpecificationTableType | undefined): data is SpecificationTableType{
     return (data as SpecificationTableType).data.length !== undefined;
@@ -92,7 +92,7 @@ const ListingDetail = ({ dataPresets, listing }: ListingDetailProps) => {
       { selectedTab === 1 &&
         <PhotoGallery
           display={selectedTab === 1 ? "block" : "none"}
-          listingPictures={listingPictures}
+          /* listingPictures={listingPictures} */
           generatePresentationFilename={generatePresentationFilename}
         />
       }

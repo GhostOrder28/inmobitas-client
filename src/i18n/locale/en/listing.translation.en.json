@@ -50,5 +50,7 @@
   "commitChanges": "Commit changes",
   "information": "Information",
   "gallery": "Gallery",
+  "uncategorized": "Uncategorized",
+  "setCategoryName": "Set category name",
   "errorGenericMessage": "There are some errors, please check the fields and try again."
 }

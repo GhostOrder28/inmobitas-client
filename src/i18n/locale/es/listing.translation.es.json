@@ -50,5 +50,7 @@
   "commitChanges": "Confirmar cambios",
   "information": "Información",
   "gallery": "Galería",
+  "uncategorized": "Sin categoría",
+  "setCategoryName": "Nombre de la categoría",
   "errorGenericMessage": "Encontramos algunos errores, porfavor revisa los campos e intenta de nuevo."
 }

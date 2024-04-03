@@ -58,10 +58,7 @@
   },
   "scripts": {
     "watch": "HTTPS=true BROWSER=none react-scripts start",
-    "build-rest": "BUILD_PATH=../inmobitas-api/public react-scripts build && sw-precache --config=sw-precache-config.js",
-    "build-gql": "BUILD_PATH=../inmobitas-api-graphql/public react-scripts build && sw-precache --config=sw-precache-config.js",
-    "build-on-client": "react-scripts build &&cat src/custom-sw.js >> build/service-worker.js",
-    "build-client": "rimraf ../inmobitas-api/public & BUILD_PATH='../inmobitas-api/public' react-scripts build && cat src/custom-sw.js >> ../inmobitas-api/public/service-worker.js",
+    "build": "react-scripts build && sw-precache --config=sw-precache-config.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

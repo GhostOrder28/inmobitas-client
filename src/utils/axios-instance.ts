@@ -16,6 +16,7 @@ http.interceptors.response.use(
   },
   function (error) {
     if (error.response.data.authorizationError) store.dispatch(signOutSuccess());
+    if (error.response.data.authenticationError) store.dispatch(signOutSuccess());
     return Promise.reject(error);
   }
 )
