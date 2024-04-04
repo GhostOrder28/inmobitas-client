@@ -59,6 +59,7 @@
   "scripts": {
     "watch": "HTTPS=true BROWSER=none react-scripts start",
     "build": "react-scripts build && sw-precache --config=sw-precache-config.js",
+    "start": "caddy run",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
