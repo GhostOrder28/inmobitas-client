@@ -20,4 +20,3 @@ export type SignInFailureError =
 export type RequestUserInfoFailureError = {
   authenticationError: string; 
 };
-

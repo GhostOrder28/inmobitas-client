@@ -106,3 +106,4 @@ dist
 # ghost custom ignores
 
 build/
+Dockerfile
