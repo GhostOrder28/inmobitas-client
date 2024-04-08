@@ -14,9 +14,6 @@ RUN apk add --no-cache caddy
 COPY . /app
 
 RUN npm install --include=dev
-
-WORKDIR /app
-
 RUN npm run build
 
 CMD [ "npm", "run", "start" ]
