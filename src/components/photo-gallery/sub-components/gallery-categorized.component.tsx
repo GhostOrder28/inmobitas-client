@@ -59,7 +59,7 @@ const GalleryCategorized = ({
   const timeout = useRef<NodeJS.Timeout>();
   const categoryTouchTimeout = useRef<NodeJS.Timeout>();
   const [ editMode, setEditMode ] = useState(false);
-  const [ updatedName, setUpdatedname ] = useState(name);
+  const [ editableName, setEditableName ] = useState<string>('');
   const inputRef = useRef<HTMLInputElement>(null);
   const deleteCategoryBtnRef = useRef<HTMLDivElement>(null);
   const userId = useSelector(selectCurrentUserId);
@@ -70,16 +70,21 @@ const GalleryCategorized = ({
 
   useClickOutside<HTMLDivElement>(deleteCategoryBtnRef, () => setShowCategoryDeleteBtn(false));
   
+  // auto focus input
   useEffect(() => {
     if (editMode && inputRef.current) inputRef.current.focus();
   }, [editMode])
+
+  useEffect(() => {
+    setEditableName(name)
+  }, [])
 
   const updateCategoryName = async () => {
     const { 
       data: { 
         updatedName: updatedNamePlayload 
       }
-    } = await http.patch<PictureCategoryUpdatedNamePayload>(`/categories/${categoryId}`, { name: updatedName })
+    } = await http.patch<PictureCategoryUpdatedNamePayload>(`/categories/${categoryId}`, { name: editableName })
 
     setCategories((prev) => prev.map(c => {
       if (c.categoryId !== categoryId) {
@@ -148,8 +153,8 @@ const GalleryCategorized = ({
             <>
               <TextInput 
                 ref={ inputRef }
-                value={ updatedName }
-                onChange={ (e: React.ChangeEvent<HTMLInputElement>) => setUpdatedname(e.target.value) }
+                value={ editableName }
+                onChange={ (e: React.ChangeEvent<HTMLInputElement>) => setEditableName(e.target.value) }
                 width="100%"
                 border="none"
                 backgroundColor="transparent"
@@ -157,7 +162,7 @@ const GalleryCategorized = ({
               />
             </> : 
             <Strong>
-              { strParseOut(name) }
+              { editableName ? strParseOut(editableName) : '' }
             </Strong>
           }
         </Pane>
