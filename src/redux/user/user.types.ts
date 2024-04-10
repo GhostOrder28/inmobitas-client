@@ -9,6 +9,7 @@ export enum userActionTypes {
   SIGN_OUT_START = 'SIGN_OUT_START',
   SIGN_OUT_SUCCESS = 'SIGN_OUT_SUCCESS',
   SIGN_OUT_FAILURE = 'SIGN_OUT_FAILURE',
+  SIGN_OUT_WITH_ERROR = 'SIGN_OUT_WITH_ERROR',
   SIGN_OUT_WITH_OAUTH_START = 'SIGN_OUT_WITH_OAUTH_START',
   GENERATE_GUEST_START = 'GENERATE_GUEST_START',
   GENERATE_GUEST_SUCCESS = 'GENERATE_GUEST_SUCCESS',
@@ -20,6 +21,12 @@ export enum userActionTypes {
   REQUEST_USER_INFO_FOR_SIGN_IN_FAILURE = 'REQUEST_USER_INFO_FOR_SIGN_IN_FAILURE',
 };
 
-export type UserError = 'validationErrors' | 'authenticationError' | 'duplicateEntityError' | 'limitReachedError';
+export type UserError = 
+  | 'validationErrors' 
+  | 'authenticationError' 
+  | 'duplicateEntityError' 
+  | 'limitReachedError'
+  | 'dbConnectionError'
+  | 'clientError';
 
 export default userActionTypes;

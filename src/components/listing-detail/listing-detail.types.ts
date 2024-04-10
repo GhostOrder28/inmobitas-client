@@ -14,4 +14,8 @@ export type PictureCategory = {
   categoryPictures: Picture[];
 }
 
+export type PictureCategoryUpdatedNamePayload = {
+  updatedName: PictureCategory['name']
+}
+
 export type PictureCategoryFromPayload = Omit<PictureCategory, 'categoryPictures'>

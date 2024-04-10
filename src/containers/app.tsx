@@ -2,7 +2,7 @@ import React, { useEffect, useCallback, lazy, Suspense } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 
-import { selectCurrentUser } from '../redux/user/user.selectors';
+import { selectCurrentUser, selectErrorMessage } from '../redux/user/user.selectors';
 import { clearErrors } from '../redux/user/user.actions';
 import { Spinner, ThemeProvider, mergeTheme, defaultTheme } from 'evergreen-ui';
 import ErrorBoundary from '../components/error-boundary/error-boundary.component';
@@ -33,8 +33,8 @@ const App = () => {
   }, [currentUser])
 
   useEffect(() => {
-    dispatch(clearErrors())
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const clientError = selectErrorMessage('clientError');
+    if (!clientError) dispatch(clearErrors())
   }, [location]);
 
   return (

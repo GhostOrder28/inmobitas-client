@@ -17,7 +17,6 @@ export type FilesUploaderProps = {
 };
 
 const FilesUploader = ({
-  files,
   setFiles,
   setIsLoading,
   setNoImages,
@@ -38,7 +37,7 @@ const FilesUploader = ({
         })
       );
       console.log(uploadedFiles);      
-      setFiles([...files, ...uploadedFiles.map((file) => file.data)]);
+      setFiles(prev => [...prev, ...uploadedFiles.map((file) => file.data)]);
       setNoImages(false)
       setIsLoading(null);
     } catch (err) {

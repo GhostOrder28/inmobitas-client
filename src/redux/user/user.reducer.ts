@@ -9,6 +9,7 @@ import {
   signInFailure,
   signOutSuccess,
   signOutFailure,
+  signOutWithError,
   clearErrors,
   requestUserInfoForSignInSuccess,
   requestUserInfoForSignInFailure,
@@ -16,13 +17,14 @@ import {
   generateGuestSuccess,
   generateGuestFailure,
 } from './user.actions'
+import { ClientError } from '../../errors/errors.types';
 
 export type ResponseError = { [ Property in UserError ]: ValidationError[] | string };
 
 export type UserState = {
   readonly currentUser: UserInfo | null;
   readonly guestPending: boolean;
-  readonly errors: AxiosError<ResponseError> | Error | null;
+  readonly errors: AxiosError<ResponseError> | Error | ClientError | null;
 }
 
 const INITIAL_STATE: UserState = {
@@ -74,6 +76,14 @@ const userReducer = (state = INITIAL_STATE, action = {} as AnyAction) => {
       errors: null,
     } 
   }
+
+  if (signOutWithError.match(action)) {
+    return {
+      ...state,
+      currentUser: null,
+      errors: action.payload
+    }
+  };
 
   if (clearErrors.match(action)) {
     return {

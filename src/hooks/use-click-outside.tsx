@@ -6,8 +6,10 @@ const useClickOutside = <T extends HTMLElement = HTMLElement>(
 ) => {
   useEffect(() => {
     const trigger = (e: MouseEvent) => {
-      console.log('clicked!')
-      if ((e.target as T).isConnected && !ref?.current?.contains(e.target as Node)) handler();
+      if (
+        (e.target as T).isConnected && 
+        !ref?.current?.contains(e.target as Node)
+      ) handler();
     }
     document.addEventListener('click', trigger);
     return () => document.removeEventListener('click', trigger);

@@ -1,9 +1,13 @@
-import { AxiosError } from 'axios';
+import { ChangeEventHandler, ChangeEvent } from "react";
+import axios, { AxiosError } from 'axios';
+import http from './axios-instance';
+import { toaster } from "evergreen-ui";
 import { ContractPreset, CurrencyPreset, EstatePreset } from '../pages/listing-page/listing-page.types';
 import { ValidationError } from '../redux/redux.types';
 import { AnyAction } from 'redux';
 import { ItemIds } from '../components/custom-table/custom-table.types';
 import { RouteSource } from './utility-types';
+import { Picture } from "../components/listing-detail/listing-detail.types";
 
 export const strParseIn = (str: string) => {
   return str.replaceAll(' ', '-').toLowerCase();
@@ -33,6 +37,50 @@ export const buildRoute = (source: RouteSource, structure: string[]) => {
   }, '');
   return detailUrl;
 }
+
+export const pictureUploader = async (
+  e: ChangeEvent<HTMLInputElement>, 
+  userId: number, 
+  listingId: number, 
+  currentPicturesLength: number,
+  categoryId?: number, 
+) => {
+  // setIsLoading('upload');
+  const filesToUpload = e.target.files ? [...e.target.files] : [];
+  try {
+    await http.get(`/checkverified/${userId}/${listingId}/${filesToUpload.length}`);
+    const uploadedFiles = await Promise.all<{ data: Picture }>(
+      filesToUpload.map((file: File, idx) => {
+        const newPicturePosition = currentPicturesLength + (idx + 1);
+
+        let formData = new FormData();
+        formData.append("file", file);
+        formData.append("categoryId", String(categoryId));
+        formData.append("position", String(newPicturePosition));
+
+        return http.post(`/pictures/${userId}/${listingId}`, formData);
+      })
+    );
+    const newPictures = uploadedFiles.map((file) => file.data);
+    return newPictures
+  } catch (err) {
+    if (axios.isAxiosError(err)) throw err;
+    // setIsLoading(null);
+    // if (err instanceof Error) {
+    //   function isAxiosError (err: Error | AxiosError): err is AxiosError {
+    //     return (err as AxiosError).isAxiosError !== undefined;
+    //   }
+    //   if (isAxiosError(err) && err.response) {
+    //     toaster.warning(err.response.data.unverifiedUserError.errorMessage, {
+    //       description: err.response.data.unverifiedUserError.errorMessageDescription,
+    //       duration: 7
+    //     });
+    //   }
+    // } else {
+    //   console.error(err);
+    // }
+  }
+};
 
 // Non redux 'selectors'
 

@@ -19,6 +19,8 @@ import {
   ActionWithDependencyAndPayload,
   ActionWithDependency,
 } from '../../utils/action-creator'
+import { ClientError } from '../../errors/errors.types';
+
 
 export type UserAction = 
   | SignUpStart
@@ -45,6 +47,7 @@ export type SignInWithGoogleStart = ActionWithDependency<userActionTypes.SIGN_IN
 export type SignOutStart = ActionWithDependency<userActionTypes.SIGN_OUT_START>;
 export type SignOutSuccess = Action<userActionTypes.SIGN_OUT_SUCCESS>;
 export type SignOutFailure = ActionWithPayload<userActionTypes.SIGN_OUT_FAILURE, Error>;
+export type SignOutWithError = ActionWithPayload<userActionTypes.SIGN_OUT_WITH_ERROR, ClientError>;
 export type ClearErrors = Action<userActionTypes.CLEAR_ERRORS>;
 export type RequestUserInfoForSignInStart = ActionWithDependency<userActionTypes.REQUEST_USER_INFO_FOR_SIGN_IN_START>;
 export type RequestUserInfoForSignInSuccess = ActionWithPayload<userActionTypes.REQUEST_USER_INFO_FOR_SIGN_IN_SUCCESS, UserInfo>;
@@ -88,6 +91,9 @@ export const signOutSuccess = withMatcher((): SignOutSuccess =>
 
 export const signOutFailure = withMatcher((error: Error): SignOutFailure =>
   createAction(userActionTypes.SIGN_OUT_FAILURE, error));
+
+export const signOutWithError = withMatcher((error: ClientError): SignOutWithError =>
+  createAction(userActionTypes.SIGN_OUT_WITH_ERROR, error));
 
 export const clearErrors = withMatcher((): ClearErrors =>
   createAction(userActionTypes.CLEAR_ERRORS));

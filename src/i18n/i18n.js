@@ -9,6 +9,8 @@ import clientTranslationES from './locale/es/client.translation.es.json';
 import uiTranslationES from './locale/es/ui.translation.es.json';
 import agendaTranslationEN from './locale/en/agenda.translation.en.json';
 import agendaTranslationES from './locale/es/agenda.translation.es.json';
+import errorTranslationEN from './locale/en/error.translation.en.json';
+import errorTranslationES from './locale/es/error.translation.es.json';
 
 const resources = {
   en: {
@@ -16,12 +18,14 @@ const resources = {
     client: clientTranslationEN,
     ui: uiTranslationEN,
     agenda: agendaTranslationEN, 
+    error: errorTranslationEN, 
   },
   es: {
     listing: listingTranslationES,
     client: clientTranslationES,
     ui: uiTranslationES,
     agenda: agendaTranslationES,
+    error: errorTranslationES, 
   }
 }
 

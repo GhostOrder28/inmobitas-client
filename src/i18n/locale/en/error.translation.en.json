@@ -1,0 +1,6 @@
+{
+  "errorGenericMessage": "Encontramos algunos errores, porfavor revisa los campos e intenta de nuevo.",
+  "noUserIdError": "We couldn't recognize your user id, please log in again.",
+  "noListingIdError": "We couldn't recognize the listing id, please refresh the page.",
+  "picturesIsUndefinedError": "The pictures array is undefined, please try again."
+}

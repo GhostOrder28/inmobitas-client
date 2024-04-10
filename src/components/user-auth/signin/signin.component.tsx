@@ -35,13 +35,16 @@ const Signin = () => {
   const emailErrMsg = useSelector(
     selectErrorMessage("validationErrors", "email")
   );
-
   const passwordErrMsg = useSelector(
     selectErrorMessage("validationErrors", "password")
   );
-  const { windowInnerWidth  } = useWindowDimensions();
   const authErrMsg = useSelector(selectErrorMessage("authenticationError"));
   const rateLimitErrMsg = useSelector(selectErrorMessage("limitReachedError"));
+  const dbConnectionError = useSelector(selectErrorMessage("dbConnectionError"));
+  const clientError = useSelector(selectErrorMessage("clientError"));
+  console.log('clientError: ', clientError);
+
+  const { windowInnerWidth  } = useWindowDimensions();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { t } = useTranslation(['ui']);
@@ -97,6 +100,8 @@ const Signin = () => {
                       <ErrorMessage fieldErrorMsg={passwordErrMsg} />
                     </div>
                     <ErrorMessage fieldErrorMsg={authErrMsg} />
+                    <ErrorMessage fieldErrorMsg={dbConnectionError} />
+                    <ErrorMessage fieldErrorMsg={clientError} />
                     <Pane display="flex" flexDirection={ windowInnerWidth > TABLET_BREAKPOINT_VALUE ? 'row' : 'column' }>
                       <Button width={"100%"} type="submit" appearance="primary">
                         { t('signin') } 

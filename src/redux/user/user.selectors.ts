@@ -4,6 +4,7 @@ import { UserState } from "./user.reducer";
 import { UserError } from "./user.types";
 import { ValidationError } from "../redux.types";
 import { AxiosError } from "axios";
+import { ClientError } from "../../errors/errors.types";
 
 export const selectUserReducer = (state: RootState): UserState => state.user;
 
@@ -22,21 +23,30 @@ export const selectErrorObj = createSelector(
   (userReducer) => userReducer.errors
 );
 
+function isAxiosError(err: UserState['errors']): err is AxiosError {
+  return (err as AxiosError).response !== undefined;
+}
+
+function isClientError(err: UserState['errors']): err is ClientError {
+  return (err as ClientError).clientError !== undefined;
+}
+
+function isValidationError(err: string | ValidationError[]): err is ValidationError[] {
+  return (err as ValidationError[]).find !== undefined;
+}
+
 export const selectErrorMessage = (errorType: UserError, field?: string) =>
   createSelector([selectErrorObj], (errorObj) => {
     if (errorObj === null) return;
 
-    function isAxiosError(err: typeof errorObj): err is AxiosError {
-      return (err as AxiosError).response !== undefined;
-    }
-
-    if (isAxiosError(errorObj)) {
+    if (errorType === 'clientError') {
+      if (!isClientError(errorObj)) return;
+      if (!errorObj.clientError) return;
+      return errorObj.clientError.message 
+    } else {
+      if (!isAxiosError(errorObj)) return;
       const data = errorObj?.response?.data;
       const errorData = data?.[errorType];
-
-      function isValidationError(err: string | ValidationError[]): err is ValidationError[] {
-        return (err as ValidationError[]).find !== undefined;
-      }
 
       if (errorData) {
         if (isValidationError(errorData)) {
@@ -47,7 +57,8 @@ export const selectErrorMessage = (errorType: UserError, field?: string) =>
         }
         return errorData;
       }
-    }
+    };
+
   });
 
 export const selectCurrentUserId = createSelector(
