@@ -56,17 +56,23 @@ const GalleryCategorized = ({
     setFullscreenPicture, 
     setIsLoading
   }: Categorized) => {
+  const [ editableName, setEditableName ] = useState<string>('');
+  const [ editMode, setEditMode ] = useState<boolean>(false);
+
   const timeout = useRef<NodeJS.Timeout>();
   const categoryTouchTimeout = useRef<NodeJS.Timeout>();
-  const [ editMode, setEditMode ] = useState(false);
-  const [ editableName, setEditableName ] = useState<string>('');
   const inputRef = useRef<HTMLInputElement>(null);
   const deleteCategoryBtnRef = useRef<HTMLDivElement>(null);
+
   const userId = useSelector(selectCurrentUserId);
   const { listingid } = useParams();
   const { t } = useTranslation(['error']);
   const dispatch = useDispatch();
   const { colors } = useTheme();
+
+  // debug watchers
+  useEffect(() => { console.log('editableName: ', editableName); }, [ editableName ])
+  useEffect(() => { console.log('categoryId: ', categoryId); }, [ categoryId ])
 
   useClickOutside<HTMLDivElement>(deleteCategoryBtnRef, () => setShowCategoryDeleteBtn(false));
   
@@ -96,8 +102,6 @@ const GalleryCategorized = ({
 
     setEditMode(false);
   };
-
-  useEffect(() => { console.log('categoryId: ', categoryId); }, [ categoryId ])
 
   const onUpload: ChangeEventHandler<HTMLInputElement> = async (e) => {
     try {
@@ -140,14 +144,14 @@ const GalleryCategorized = ({
         alignItems="center"
         backgroundColor={ colors.gray100 }
         borderBottom={ `1px solid ${colors.gray500}` }
+        onTouchStart={ () => {categoryTouchTimeout.current = setTimeout(() => setShowCategoryDeleteBtn!!(true), 500)} }
+        onTouchEnd={ () => clearTimeout(categoryTouchTimeout.current) }
+        onTouchMove={ () => clearTimeout(categoryTouchTimeout.current) }
       >
         <Pane 
           display="flex"
           width="100%" 
           paddingLeft={ minorScale(3) }
-          onTouchStart={ () => {categoryTouchTimeout.current = setTimeout(() => setShowCategoryDeleteBtn!!(true), 500)} }
-          onTouchEnd={ () => clearTimeout(categoryTouchTimeout.current) }
-          onTouchMove={ () => clearTimeout(categoryTouchTimeout.current) }
         >
           { editMode ? 
             <>

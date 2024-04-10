@@ -81,7 +81,7 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
         const { data: categoriesData } = await http.get<PictureCategoryFromPayload[]>(
           `/categories/${userId}/${listingid}`
         );
-        // console.log('categoriesData: ', categoriesData);
+        // console.log('categoriesData payload: ', categoriesData);
 
         setPictures(picturesData)
         setCategories(categoriesData)
@@ -102,16 +102,12 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
         categoryPictures, 
       }
     });
-    console.log('categorized: ', categorized);
 
     const uncategorized = pictures.filter(p => !p.categoryId);
-    console.log('uncategorized: ', uncategorized);
 
     setCategorizedPictures(categorized)
     setUncategorizedPictures(uncategorized)
   }, [ pictures, categories ])
-
-  useEffect(() => { console.log('pictures: ', pictures); }, [ pictures ])
 
   // const onUploadFile: ChangeEventHandler<HTMLInputElement> = async (e) => {
   //   setIsLoading('upload');
