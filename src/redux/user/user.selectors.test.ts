@@ -12,7 +12,8 @@ describe('user selectors', () => {
       oauthId: 41313541345
     },
     guestPending: false,
-    errors: { response: 'there is an error' } as any as AxiosError
+    errors: { response: 'there is an error' } as any as AxiosError,
+    userSignedOut: false,
   }
 
   it('selectUserReducer', () => {

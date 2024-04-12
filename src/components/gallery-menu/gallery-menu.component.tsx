@@ -1,22 +1,23 @@
 import React, { useState } from "react";
 import { Pane } from "evergreen-ui";
+import { MenuMode } from '../photo-gallery/photo-gallery.component';
 
 type GalleryMenuProps = {
   children: React.ReactNode[];
-  showDeletionMenu: boolean;
+  menuMode: MenuMode;
   width?: number;
 };
 
 const GalleryMenu = ({
   children,
-  showDeletionMenu,
+  menuMode,
   width,
 }: GalleryMenuProps) => {
   return (
     <Pane
       position={"fixed"}
       display={"flex"}
-      bottom={!showDeletionMenu ? 0 : -50}
+      bottom={menuMode === 'pictures' ? -50 : 0}
       width={width || '100%'}
       height={50}
       zIndex={20}

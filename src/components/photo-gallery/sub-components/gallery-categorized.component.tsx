@@ -1,16 +1,13 @@
-import React, { useState, useEffect, useRef, ChangeEventHandler, MouseEventHandler} from 'react';
+import React, { useState, useEffect, useRef, ChangeEventHandler } from 'react';
 import {
   Pane,
   TextInput, 
   Checkbox, 
-  Text, 
   Strong,
   ArrowUpIcon,
-  IconButton,
   EditIcon,
   TickIcon,
   CrossIcon,
-  TrashIcon,
   toaster,
   useTheme,
   minorScale,
@@ -19,7 +16,6 @@ import {
 import { PictureCategoryUpdatedNamePayload } from "../../listing-detail/listing-detail.types";
 import { Categorized } from './gallery-category.types';
 import http from '../../../utils/axios-instance';
-import useClickOutside from '../../../hooks/use-click-outside';
 import { pictureUploader } from '../../../utils/utility-functions';
 import { useSelector } from 'react-redux';
 import { selectCurrentUserId } from '../../../redux/user/user.selectors';
@@ -31,51 +27,35 @@ import { AuthenticationError } from '../../../errors/auth.errors';
 import axios, { AxiosError } from 'axios';
 import "./gallery-category.styles.css";
 import GalleryCategoryButton from './gallery-category-button.component';
-import { css } from 'glamor';
 import { strParseOut } from '../../../utils/utility-functions';
-
-const hoverStyle = css({
-  ':focus': {
-    'outline': 'none !important',
-  }
-}).toString();
 
 const GalleryCategorized = ({ 
     name, 
     categoryId,
     categoryPictures, 
-    deleteCategory,
+    markedItems,
+    menuMode,
+    toggleMark, 
     setPictures,
     setCategories,
-    showCategoryDeleteBtn,
-    setShowCategoryDeleteBtn,
-    showDeletionMenu, 
-    setShowDeletionMenu, 
-    markedPictures, 
-    toggleMark, 
     setFullscreenPicture, 
-    setIsLoading
+    setIsLoading,
+    setMenuMode,
   }: Categorized) => {
   const [ editableName, setEditableName ] = useState<string>('');
   const [ editMode, setEditMode ] = useState<boolean>(false);
 
   const timeout = useRef<NodeJS.Timeout>();
   const categoryTouchTimeout = useRef<NodeJS.Timeout>();
+
   const inputRef = useRef<HTMLInputElement>(null);
-  const deleteCategoryBtnRef = useRef<HTMLDivElement>(null);
 
   const userId = useSelector(selectCurrentUserId);
   const { listingid } = useParams();
-  const { t } = useTranslation(['error']);
+  const { t } = useTranslation(['error', 'ui']);
   const dispatch = useDispatch();
   const { colors } = useTheme();
 
-  // debug watchers
-  useEffect(() => { console.log('editableName: ', editableName); }, [ editableName ])
-  useEffect(() => { console.log('categoryId: ', categoryId); }, [ categoryId ])
-
-  useClickOutside<HTMLDivElement>(deleteCategoryBtnRef, () => setShowCategoryDeleteBtn(false));
-  
   // auto focus input
   useEffect(() => {
     if (editMode && inputRef.current) inputRef.current.focus();
@@ -85,7 +65,7 @@ const GalleryCategorized = ({
     setEditableName(name)
   }, [])
 
-  const updateCategoryName = async () => {
+  const updateName = async () => {
     const { 
       data: { 
         updatedName: updatedNamePlayload 
@@ -100,6 +80,11 @@ const GalleryCategorized = ({
       };
     }))
 
+    setEditMode(false);
+  };
+
+  const cancelUpdateName = () => {
+    setEditableName(name)
     setEditMode(false);
   };
 
@@ -144,14 +129,19 @@ const GalleryCategorized = ({
         alignItems="center"
         backgroundColor={ colors.gray100 }
         borderBottom={ `1px solid ${colors.gray500}` }
-        onTouchStart={ () => {categoryTouchTimeout.current = setTimeout(() => setShowCategoryDeleteBtn!!(true), 500)} }
+        onTouchStart={ () => {categoryTouchTimeout.current = setTimeout(() => {
+          setMenuMode('categories')
+        }, 500)} }
         onTouchEnd={ () => clearTimeout(categoryTouchTimeout.current) }
         onTouchMove={ () => clearTimeout(categoryTouchTimeout.current) }
+        onClick={ () => toggleMark(categoryId) }
+        paddingRight={ menuMode === 'categories' ? minorScale(3) : 0 }
+        cursor={ menuMode === 'categories' ? 'pointer' : 'default' }
       >
         <Pane 
           display="flex"
           width="100%" 
-          paddingLeft={ minorScale(3) }
+          paddingX={ minorScale(3) }
         >
           { editMode ? 
             <>
@@ -162,7 +152,6 @@ const GalleryCategorized = ({
                 width="100%"
                 border="none"
                 backgroundColor="transparent"
-                className={hoverStyle}
               />
             </> : 
             <Strong>
@@ -171,7 +160,7 @@ const GalleryCategorized = ({
           }
         </Pane>
         <Pane display="flex">
-          { !editMode && !showCategoryDeleteBtn ? 
+          { !editMode && menuMode === null ? 
             <>
               <GalleryCategoryButton
                 icon={ EditIcon }
@@ -209,28 +198,25 @@ const GalleryCategorized = ({
               <GalleryCategoryButton
                 icon={ TickIcon }
                 color={ colors.green500 }
-                onClick={ updateCategoryName }
+                onClick={ updateName }
                 borderColor={ colors.gray500 }
                 size={ majorScale(6) }
               />
               <GalleryCategoryButton
                 icon={ CrossIcon }
                 color={ colors.red500 }
-                onClick={ () => setEditMode(false) }
+                onClick={ cancelUpdateName }
                 borderColor={ colors.gray500 }
                 size={ majorScale(6) }
               />
             </> : ''
           }
-          { showCategoryDeleteBtn
-            ? <GalleryCategoryButton
-                ref={ deleteCategoryBtnRef }
-                icon={ TrashIcon }
-                onClick={ () => deleteCategory(categoryId) }
-                color={ colors.red500 }
-                borderColor={ colors.gray500 }
-                size={ majorScale(6) }
-              />
+          { menuMode === 'categories' ?
+            <Checkbox
+              size={30}
+              checked={ markedItems.some((id) => id === categoryId) }
+              pointerEvents={"none"}
+            />
             : ''
           }
         </Pane>
@@ -241,7 +227,7 @@ const GalleryCategorized = ({
         position={"relative"}
         zIndex={10}
         width={"100%"}
-        padding={showDeletionMenu ? "1.5px" : ""}
+        padding={menuMode === 'pictures' && categoryPictures.length ? "1.5px" : ""}
         transition={"all .3s"}
       >
         {
@@ -251,29 +237,29 @@ const GalleryCategorized = ({
                 key={`image-${idx}`}
                 className="gallery-img-container"
                 position={"relative"}
-                border={showDeletionMenu ? "3px solid white" : ""}
+                border={menuMode === 'pictures' && categoryPictures.length ? "3px solid white" : ""}
               >
                 <Pane
                   top="0"
                   left="0"
                   cursor={"pointer"}
                   onClick={
-                    showDeletionMenu
+                    menuMode === 'pictures'
                       ? () => toggleMark(file.pictureId)
                       : () => setFullscreenPicture(file)
                   }
-                  onTouchStart={() => {timeout.current = setTimeout(() => setShowDeletionMenu(true), 500)}}
+                  onTouchStart={() => {timeout.current = setTimeout(() => setMenuMode('pictures'), 500)}}
                   onTouchEnd={ () => clearTimeout(timeout.current) }
                   onTouchMove={() => clearTimeout(timeout.current)}
                 >
-                  {showDeletionMenu && (
+                  {menuMode === 'pictures' && (
                     <Checkbox
                       position="absolute"
                       top="0"
                       right="0"
                       zIndex="98"
                       size={30}
-                      checked={markedPictures.some(
+                      checked={markedItems.some(
                         (pictureId) => pictureId === file.pictureId
                       )}
                       margin=".6rem"

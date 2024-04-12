@@ -1,12 +1,8 @@
-import React, { Dispatch, SetStateAction, useState, useEffect, useRef, ChangeEventHandler } from 'react';
-import { Picture } from '../../listing-detail/listing-detail.types';
-import PicturesContainer from '../../pictures-container/pictures-container.component';
+import React, { useRef, ChangeEventHandler } from 'react';
 import {
   Pane,
-  TextInput, 
   Checkbox, 
   Text, 
-  IconButton,
   ArrowUpIcon,
   toaster,
   majorScale,
@@ -15,7 +11,6 @@ import {
 } from 'evergreen-ui';
 import { useTranslation } from "react-i18next";
 import { Uncategorized } from './gallery-category.types';
-import http from '../../../utils/axios-instance';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { selectCurrentUserId } from '../../../redux/user/user.selectors';
@@ -28,13 +23,13 @@ import "./gallery-category.styles.css";
 
 const GalleryUncategorized = ({ 
   categoryPictures, 
-  showDeletionMenu, 
-  setShowDeletionMenu, 
-  markedPictures, 
+  menuMode,
+  markedItems,
   toggleMark, 
   setFullscreenPicture, 
   setIsLoading,
   setPictures,
+  setMenuMode,
 }: Uncategorized) => {
   const timeout = useRef<NodeJS.Timeout>();
   const userId = useSelector(selectCurrentUserId);
@@ -81,6 +76,7 @@ const GalleryUncategorized = ({
         display="flex"
         justifyContent="space-between"
         borderTop={ `1px solid ${colors.gray500}` }
+        borderBottom={ `1px solid ${colors.gray500}` }
       >
         <Pane 
           display="flex"
@@ -122,7 +118,7 @@ const GalleryUncategorized = ({
         position={"relative"}
         zIndex={10}
         width={"100%"}
-        padding={showDeletionMenu ? "1.5px" : ""}
+        padding={menuMode === 'pictures' && categoryPictures.length ? "1.5px" : ""}
         transition={"all .3s"}
       >
         {
@@ -132,29 +128,29 @@ const GalleryUncategorized = ({
                 key={`image-${idx}`}
                 className="gallery-img-container"
                 position={"relative"}
-                border={showDeletionMenu ? "3px solid white" : ""}
+                border={menuMode === 'pictures' ? "3px solid white" : ""}
               >
                 <Pane
                   top="0"
                   left="0"
                   cursor={"pointer"}
                   onClick={
-                    showDeletionMenu
+                    menuMode === 'pictures'
                       ? () => toggleMark(file.pictureId)
                       : () => setFullscreenPicture(file)
                   }
-                  onTouchStart={() => {timeout.current = setTimeout(() => setShowDeletionMenu(true), 500)}}
+                  onTouchStart={() => {timeout.current = setTimeout(() => setMenuMode('pictures'), 500)}}
                   onTouchEnd={ () => clearTimeout(timeout.current) }
                   onTouchMove={() => clearTimeout(timeout.current)}
                 >
-                  {showDeletionMenu && (
+                  {menuMode === 'pictures' && (
                     <Checkbox
                       position="absolute"
                       top="0"
                       right="0"
                       zIndex="98"
                       size={30}
-                      checked={markedPictures.some(
+                      checked={markedItems.some(
                         (pictureId) => pictureId === file.pictureId
                       )}
                       margin=".6rem"

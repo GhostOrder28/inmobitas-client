@@ -18,7 +18,7 @@ import http from '../../../utils/axios-instance';
 import axios from 'axios';
 import { options } from '../../../utils/axios-instance';
 import ErrorMessage from "../../error-message/error-message.component";
-import { selectErrorMessage } from "../../../redux/user/user.selectors";
+import { selectErrorMessage, selectUserSignedOut } from "../../../redux/user/user.selectors";
 import useWindowDimensions from '../../../hooks/use-window-dimensions';
 import GoogleIcon from "../../../icons/social-media-icons/google.icon";
 import { TABLET_BREAKPOINT_VALUE } from '../../../constants/breakpoints.constants';
@@ -40,6 +40,8 @@ const Signin = () => {
   );
   const authErrMsg = useSelector(selectErrorMessage("authenticationError"));
   const rateLimitErrMsg = useSelector(selectErrorMessage("limitReachedError"));
+
+  const userSignedOut = useSelector(selectUserSignedOut);
   const dbConnectionError = useSelector(selectErrorMessage("dbConnectionError"));
   const clientError = useSelector(selectErrorMessage("clientError"));
   console.log('clientError: ', clientError);
@@ -58,7 +60,8 @@ const Signin = () => {
   }
 
   useEffect(() => {
-    dispatch(requestUserInfoForSignInStart(http))
+    console.log('userSignedOut: ', userSignedOut);
+    if (!userSignedOut) dispatch(requestUserInfoForSignInStart(http));
   }, [])
 
   return (

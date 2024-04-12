@@ -9,6 +9,7 @@ import {
   signInSuccess,
   signInFailure,
   signOutSuccess,
+  userSignOutSuccess,
   requestUserInfoForSignInSuccess,
   requestUserInfoForSignInFailure,
   generateGuestSuccess,
@@ -17,6 +18,7 @@ import {
   SignUpStart,
   SignInStart,
   SignOutStart,
+  UserSignOutStart,
   RequestUserInfoForSignInStart,
   RequestUserInfoForSignInSuccess,
   GenerateGuestStart,
@@ -94,6 +96,16 @@ export function* signOut ({ http }: SignOutStart) {
   }
 }
 
+export function* userSignOut ({ http }: UserSignOutStart) {
+  try {
+    const requestSignOut = createGetRequest(http);
+    yield* call(requestSignOut, '/auth/signout');
+    yield* put(userSignOutSuccess());
+  } catch (error) {
+    console.log(error) 
+  }
+}
+
 export function* signInAfterSignUp ({ payload, http }: SignInStart) {
   console.log(payload);
   try {
@@ -119,6 +131,9 @@ export function* onSignInStart () {
 export function* onSignOutStart () {
   yield* takeLatest(userActionTypes.SIGN_OUT_START, signOut)
 }
+export function* onUserSignOutStart () {
+  yield* takeLatest(userActionTypes.USER_SIGN_OUT_START, userSignOut)
+}
 export function* onSignUpSuccess () {
   yield* takeLatest(userActionTypes.SIGN_UP_SUCCESS, signInAfterSignUp)
 }
@@ -137,6 +152,7 @@ export function* userSagas () {
     call(onSignUpStart),
     call(onSignInStart),
     call(onSignOutStart),
+    call(onUserSignOutStart),
     call(onSignUpSuccess),
     call(onRequestUserInfoForSignInStart),
     call(onRequestUserInfoForSignInSuccess),

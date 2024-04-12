@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useEffect, useState, useRef, MouseEvent } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState, useRef } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import ReactDOM from "react-dom";
@@ -7,6 +7,12 @@ import {
   TrashIcon,
   FolderNewIcon,
   DocumentIcon,
+  CrossIcon,
+  Button,
+  Text,
+  useTheme,
+  minorScale,
+  majorScale,
 } from "evergreen-ui";
 import { useTranslation } from "react-i18next";
 
@@ -17,14 +23,16 @@ import { DESKTOP_BREAKPOINT_VALUE } from '../../constants/breakpoints.constants'
 import http from "../../utils/axios-instance";
 import { selectCurrentUserId } from "../../redux/user/user.selectors";
 import GalleryMenu from "../gallery-menu/gallery-menu.component";
-import DeletionPanel from "../deletion-panel/deletion-panel.component";
+import InnerMenu from "../inner-menu/inner-menu.component";
 import "./photo-gallery.styles.css";
 import { Picture, PictureCategory, PictureCategoryFromPayload } from "../listing-detail/listing-detail.types";
 import PopupMessage from "../popup-message/popup-message.component";
-import ContentSpinner from "../content-spinner/content-spinner.component";
 import GalleryMenuButton from "../gallery-menu-button/gallery-menu-button.component";
 import GalleryCategorized from "./sub-components/gallery-categorized.component";
 import GalleryUncategorized from "./sub-components/gallery-uncategorized.component";
+import ContentSpinner from '../content-spinner/content-spinner.component';
+import GalleryCategoryButton from './sub-components/gallery-category-button.component';
+import ModalContainer from '../modal-container/modal-container.component';
 
 type PhotoGalleryProps = {
   generatePresentationFilename: () => string;
@@ -38,7 +46,8 @@ type FullScreenProps = {
   cloudinaryPicturesPath: string;
 };
 
-export type IsLoading = 'presentation' | 'upload' | 'delete' | null;
+export type IsLoading = 'presentation' | 'upload' | 'deletePictures' | 'deleteCategories' | null;
+export type MenuMode = 'pictures' | 'categories' | null;
 
 const globalContainer = document.getElementById(
   "globalContainer"
@@ -51,23 +60,25 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
   const cloudinaryPicturesPath = `/inmobitas/u_${userId}/l_${listingid}/pictures`;
   const cloudRef = useRef(document.createElement('a'));
 
-  const [ pictures, setPictures ] = useState<Picture[]>([]);
-  const [ categories, setCategories ] = useState<PictureCategoryFromPayload[]>([]);
+  const [ menuMode, setMenuMode ] = useState<MenuMode>(null);
+  const [ markedItems, setMarkedItems ] = useState<number[]>([]);
 
+  const [ pictures, setPictures ] = useState<Picture[]>([]);
+
+  const [ categories, setCategories ] = useState<PictureCategoryFromPayload[]>([]);
   const [ categorizedPictures, setCategorizedPictures ] = useState<PictureCategory[]>([]);
   const [ uncategorizedPictures, setUncategorizedPictures ] = useState<Picture[]>([]);
+  const [ showCategoryDeletionWarning, setShowCategoryDeletionWarning ] = useState<boolean>(false);
 
-  const [ showCategoryDeleteBtn, setShowCategoryDeleteBtn ] = useState(false);
+  const [ fullscreenPicture, setFullscreenPicture ] = useState<Picture | null>(null);
 
-  const [fullscreenPicture, setFullscreenPicture] = useState<Picture | null>(null);
-  const [showDeletionMenu, setShowDeletionMenu] = useState(false);
-  const [markedPictures, setMarkedPictures] = useState<number[]>([]);
   const [isLoading, setIsLoading] = useState<IsLoading>(null);
   const { t } = useTranslation(['ui', 'listing']);
   const [noImages, setNoImages] = useState(false);
   const galleryRef = useRef<HTMLDivElement | null>(null);
   const galleryHeight = useRelativeHeight(galleryRef);
   const { windowInnerWidth } = useWindowDimensions();
+  const { colors } = useTheme();
 
   // useEffect(() => { console.log('categories: ', categories) }, [categories])
 
@@ -102,6 +113,11 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
         categoryPictures, 
       }
     });
+    categorized.sort((a, b) => {
+      if (a.position < b.position) return -1;
+      if (a.position > b.position) return 1;
+      return 0
+    })
 
     const uncategorized = pictures.filter(p => !p.categoryId);
 
@@ -143,38 +159,47 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
   //   }
   // };
 
-  const toggleMark = (pictureIdToDelete: number): void => {
-    const picture = markedPictures.find(
-      (pictureId) => pictureId === pictureIdToDelete
+  const toggleMark = (currentId: number): void => {
+    const entityExists = markedItems.some(
+      (entityId) => entityId === currentId
     );
-    if (picture) {
-      const filteredPictures = markedPictures.filter(
-        (pictureId) => pictureId !== pictureIdToDelete
+
+    if (entityExists) {
+      const filteredEntities = markedItems.filter(
+        (entityId) => entityId !== currentId
       );
-      setMarkedPictures(filteredPictures);
+      setMarkedItems(filteredEntities);
       return;
     }
-    setMarkedPictures([...markedPictures, pictureIdToDelete]);
+    setMarkedItems(prev => [ ...prev, currentId ]);
   };
 
-  const submitDeletion = async (): Promise<void> => {
-    setIsLoading('delete');
+  const submitDeletion = async (entity: Exclude<MenuMode, null>): Promise<void> => {
+    setIsLoading(entity === 'pictures' ? 'deletePictures' : 'deleteCategories');
     const res = await Promise.all(
-      markedPictures.map((pictureId) => {
-        const deletedPicture = http.delete<number>(
-          `/pictures/${userId}/${listingid}/${pictureId}`
+      markedItems.map((pictureId) => {
+        const deletedEntity = http.delete<number>(
+          `/${entity}/${userId}/${listingid}/${pictureId}`
         );
-        return deletedPicture;
+        return deletedEntity;
       })
     );
-    const deletedPictures = res.map((deletedPicture) => deletedPicture.data);
-    const remaningPictures = pictures.filter(
-      (pic) => !deletedPictures.some((dPic) => dPic === pic.pictureId)
-    );
-    
-    setPictures(remaningPictures);
-    setShowDeletionMenu(false);
-    setMarkedPictures([]);
+    const deletedEntities = res.map((deletedEntity) => deletedEntity.data);
+
+    if (entity === 'pictures') {
+      setPictures(prev => {
+        return prev.filter((pic) => !deletedEntities.some((dPic) => dPic === pic.pictureId))
+      });
+    };
+
+    if (entity === 'categories') {
+      setCategories(prev => {
+        return prev.filter((cat) => !deletedEntities.some((dCat) => dCat === cat.categoryId))
+      });
+    };
+
+    setMenuMode(null);
+    setMarkedItems([]);
     setIsLoading(null);
   };
 
@@ -218,25 +243,44 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
     }
   };
 
-  const deleteCategory = async (categoryId: number) => {
-    try {
-      await http.delete(`/categories/${userId}/${listingid}/${categoryId}`);
-      const remainingCategories = categories.filter(c => c.categoryId !== categoryId);
-
-      setCategories(remainingCategories)
-    } catch (err) {
-      console.error(`there was an error trying to delete a category: ${err}`)
-    }
-  };
-
   return (
     <>
-      <DeletionPanel
-        showDeletionMenu={showDeletionMenu}
-        setShowDeletionMenu={setShowDeletionMenu}
-        setMarkedPictures={setMarkedPictures}
-        submitDeletion={submitDeletion}
-      />        
+      <InnerMenu entity='pictures' menuMode={ menuMode }>
+        <GalleryCategoryButton
+          onClick={ markedItems.length ? () => submitDeletion('pictures') : undefined }
+          icon={ TrashIcon }
+          borderColor={ colors.gray500 }
+          size={ majorScale(6) }
+        />
+        <GalleryCategoryButton
+          icon={ CrossIcon }
+          onClick={ () => {
+            setMenuMode(null);
+            setMarkedItems([]);
+          } }
+          color={ colors.red500 }
+          borderColor={ colors.gray500 }
+          size={ majorScale(6) }
+        />
+      </InnerMenu>
+      <InnerMenu entity='categories' menuMode={ menuMode }>
+        <GalleryCategoryButton
+          onClick={ markedItems.length ? () => setShowCategoryDeletionWarning(true) : undefined }
+          icon={ TrashIcon }
+          borderColor={ colors.gray500 }
+          size={ majorScale(6) }
+        />
+        <GalleryCategoryButton
+          icon={ CrossIcon }
+          onClick={ () => {
+            setMenuMode(null);
+            setMarkedItems([]);
+          } }
+          color={ colors.red500 }
+          borderColor={ colors.gray500 }
+          size={ majorScale(6) }
+        />
+      </InnerMenu>
       <Pane 
         ref={galleryRef}
         height={galleryHeight}
@@ -246,47 +290,47 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
       >
         <PopupMessage message={ t('noImages') } displayCondition={noImages}/>
         <Pane position="relative">
-          { isLoading && 
+          { isLoading ?
             <ContentSpinner
               waitMessage={
                 isLoading === 'presentation' ? t('waitForPresentation') :
                 isLoading === 'upload' ? t('waitForPictureUpload') :
-                isLoading === 'delete' ? t('waitForPictureDelete') : ''
+                isLoading === 'deletePictures' ? t('waitForPictureDelete') :
+                isLoading === 'deleteCategories' ? t('waitForCategoryDelete') : ''
               }
               zIndex={20}
-            /> 
+            /> : ''
           }
           { 
-            categorizedPictures.map((c, idx) => (
-              <GalleryCategorized 
-                key={ `category-${idx}` }
+            categorizedPictures.map((c) => (
+              <GalleryCategorized
+                key={ `category-${c.categoryId}` }
                 name={ c.name }
                 categoryId={ c.categoryId }
                 categoryPictures={ c.categoryPictures }
-                deleteCategory={ deleteCategory }
+                menuMode={ menuMode }
+                markedItems={ markedItems }
+                toggleMark={ toggleMark }
                 setPictures={ setPictures }
                 setCategories={ setCategories }
-                showCategoryDeleteBtn={ showCategoryDeleteBtn }
-                setShowCategoryDeleteBtn={ setShowCategoryDeleteBtn }
-                showDeletionMenu={ showDeletionMenu }
-                setShowDeletionMenu={ setShowDeletionMenu }
-                markedPictures={ markedPictures }
-                toggleMark={ toggleMark }
                 setFullscreenPicture={ setFullscreenPicture }
                 setIsLoading={ setIsLoading }
+                setMenuMode={ setMenuMode }
+                setMarkedItems={ setMarkedItems }
               />
             ))
           }
           { uncategorizedPictures.length ? 
             <GalleryUncategorized 
               categoryPictures={ uncategorizedPictures }
-              setPictures={ setPictures }
-              showDeletionMenu={ showDeletionMenu }
-              setShowDeletionMenu={ setShowDeletionMenu }
-              markedPictures={ markedPictures }
               toggleMark={ toggleMark }
-              setFullscreenPicture={ setFullscreenPicture }
+              menuMode={ menuMode }
+              markedItems={ markedItems }
+              setPictures={ setPictures }
               setIsLoading={ setIsLoading }
+              setFullscreenPicture={ setFullscreenPicture }
+              setMenuMode={ setMenuMode }
+              setMarkedItems={ setMarkedItems }
             /> : ''
           }
         </Pane>
@@ -303,7 +347,7 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
       </Pane>
       <GalleryMenu
         width={windowInnerWidth > DESKTOP_BREAKPOINT_VALUE ? DESKTOP_BREAKPOINT_VALUE : undefined}
-        showDeletionMenu={showDeletionMenu}
+        menuMode={menuMode}
       >
         <GalleryMenuButton 
           Icon={DocumentIcon}
@@ -314,18 +358,56 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
           fn={createNewCategory}
         />
         { windowInnerWidth > DESKTOP_BREAKPOINT_VALUE &&
-          <GalleryMenuButton Icon={TrashIcon} fn={() => setShowDeletionMenu(!showDeletionMenu)}/>
+          <GalleryMenuButton Icon={TrashIcon} fn={() => setMenuMode('pictures')}/>
         }
       </GalleryMenu>
+      { showCategoryDeletionWarning ?
+        <ModalContainer 
+          hideFn={ () => setShowCategoryDeletionWarning(false) }
+        >
+          <Pane 
+            display="flex"
+            flexDirection="column"
+            gap={ minorScale(4) }
+            padding={ minorScale(5) }
+          >
+            <Pane>
+              <Text display="flex" justifyContent="center" size={600}>{ t('categoryDeletionYerOrNo', { ns: 'ui' })}</Text>
+              <Text display="flex" justifyContent="center" size={400}>{ t('picturesWillBeRemoved', { ns: 'ui' }) }</Text>
+            </Pane>
+            <Pane
+              display="flex"
+              gap={ minorScale(4) }
+            >
+              <Button 
+                intent="success" 
+                flex={1}
+                onClick={ () => { 
+                  setMenuMode(null);
+                  setShowCategoryDeletionWarning(false);
+                  submitDeletion('categories')
+                } }
+              >
+                { t('yesDeleteIt', { ns: 'ui' }) }
+              </Button>
+              <Button 
+                intent="danger" 
+                flex={1}
+                onClick={ () => setShowCategoryDeletionWarning(false) }
+              >
+                { t('cancel', { ns: 'ui' }) }
+              </Button>
+            </Pane>
+          </Pane>
+        </ModalContainer> : ''
+      }
     </>
   );
 };
 
 const FullScreen = ({
-  userId,
   fullscreenPicture,
   setFullscreenPicture,
-  cloudinaryPicturesPath,
 }: FullScreenProps) =>
   ReactDOM.createPortal(
     <Pane

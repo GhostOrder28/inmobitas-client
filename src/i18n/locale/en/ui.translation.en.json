@@ -28,5 +28,10 @@
   "waitForGuest": "Wait a moment please, we are setting your guest account.",
   "waitForPresentation": "Wait a moment please, we are building the presentation.",
   "waitForPictureUpload": "Uploading images",
-  "waitForPictureDelete": "Deleting images"
+  "waitForPictureDelete": "Deleting images",
+  "waitForCategoryDelete": "Deleting categories",
+  "categoryDeletionYerOrNo": "Are you sure to delete these categories?",
+  "picturesWillBeRemoved": "All pictures associated will be removed.",
+  "yesDeleteIt": "Yes, delete it",
+  "cancel": "Cancel"
 }

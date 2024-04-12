@@ -4,7 +4,7 @@ import { Link, useNavigate, Outlet } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 import http from '../../utils/axios-instance';
-import { signOutStart } from "../../redux/user/user.actions";
+import { userSignOutStart } from "../../redux/user/user.actions";
 import { selectCurrentUser } from "../../redux/user/user.selectors";
 import {
   Pane,
@@ -34,7 +34,7 @@ const Navigation = () => {
   const { windowInnerWidth } = useWindowDimensions();
 
   const signOut = () => {
-    dispatch(signOutStart(http));
+    dispatch(userSignOutStart(http));
     setIsShown(false);
   };
 

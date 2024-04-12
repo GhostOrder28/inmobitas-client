@@ -1,8 +1,7 @@
-import React, { FC, ReactNode, MutableRefObject } from 'react';
+import React, { FC, ReactNode } from 'react';
 import { Pane, IconComponent } from 'evergreen-ui';
 
 type GalleryCategoryButtonProps = {
-  ref?: MutableRefObject<HTMLDivElement | undefined | null>;
   icon?: IconComponent;
   onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
   color?: string;

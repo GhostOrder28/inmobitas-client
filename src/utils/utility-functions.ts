@@ -1,4 +1,4 @@
-import { ChangeEventHandler, ChangeEvent } from "react";
+import { ChangeEventHandler, ChangeEvent, Dispatch, SetStateAction } from "react";
 import axios, { AxiosError } from 'axios';
 import http from './axios-instance';
 import { toaster } from "evergreen-ui";
@@ -37,6 +37,10 @@ export const buildRoute = (source: RouteSource, structure: string[]) => {
   }, '');
   return detailUrl;
 }
+
+export const setMode = (setters: Dispatch<SetStateAction<boolean>>[], mode: boolean) => {
+  setters.forEach(s => { s(mode) })
+};
 
 export const pictureUploader = async (
   e: ChangeEvent<HTMLInputElement>, 

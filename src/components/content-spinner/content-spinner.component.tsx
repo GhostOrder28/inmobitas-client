@@ -24,7 +24,7 @@ const ContentSpinner: FC<ContentSpinnerProps> = ({ waitMessage, zIndex }) => (
     <Paragraph
       marginTop={minorScale(5)}
       textAlign={'center'}
-      size={900}
+      size={'large'}
       fontWeight={600}
       lineHeight={1.5}
       paddingX={majorScale(5)}

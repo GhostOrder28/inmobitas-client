@@ -231,7 +231,7 @@ const AgendaPage = () => {
           {
             headerGroups.map(headerGroup => (
               headerGroup.headers.map((column, idx) => (
-                <TableHeaderCell  flex={getFlexValues(idx)} {...column.getHeaderProps()}>
+                <TableHeaderCell flex={getFlexValues(idx)} {...column.getHeaderProps()}>
                   {
                     column.render('Header')
                   }
@@ -323,7 +323,7 @@ const AgendaPage = () => {
         />
       </Pane>
       { displayEventForm &&
-        <ModalContainer displayFn={setDisplayEventForm}>
+        <ModalContainer>
           <EventForm
             date={currentDate}
             setEvents={setEvents}

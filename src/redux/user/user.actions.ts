@@ -40,14 +40,20 @@ export type SignUpFailure = ActionWithPayload<userActionTypes.SIGN_UP_FAILURE, A
 export type GenerateGuestStart = ActionWithDependency<userActionTypes.GENERATE_GUEST_START>;
 export type GenerateGuestSuccess = ActionWithDependencyAndPayload<userActionTypes.GENERATE_GUEST_SUCCESS, SignInData>;
 export type GenerateGuestFailure = ActionWithPayload<userActionTypes.GENERATE_GUEST_FAILURE, AxiosError<AxiosResponse<GenerateGuestError>>>;
+
 export type SignInStart = ActionWithDependencyAndPayload<userActionTypes.SIGN_IN_START, SignInData>;
 export type SignInSuccess = ActionWithPayload<userActionTypes.SIGN_IN_SUCCESS, UserInfo>;
 export type SignInFailure = ActionWithPayload<userActionTypes.SIGN_IN_FAILURE, AxiosError<AxiosResponse<SignInFailureError>> | Error>;
 export type SignInWithGoogleStart = ActionWithDependency<userActionTypes.SIGN_IN_WITH_GOOGLE_START>;
+
 export type SignOutStart = ActionWithDependency<userActionTypes.SIGN_OUT_START>;
 export type SignOutSuccess = Action<userActionTypes.SIGN_OUT_SUCCESS>;
 export type SignOutFailure = ActionWithPayload<userActionTypes.SIGN_OUT_FAILURE, Error>;
+export type UserSignOutStart = ActionWithDependency<userActionTypes.USER_SIGN_OUT_START>;
+export type UserSignOutSuccess = Action<userActionTypes.USER_SIGN_OUT_SUCCESS>;
+export type UserSignOutFailure = ActionWithPayload<userActionTypes.USER_SIGN_OUT_FAILURE, Error>;
 export type SignOutWithError = ActionWithPayload<userActionTypes.SIGN_OUT_WITH_ERROR, ClientError>;
+
 export type ClearErrors = Action<userActionTypes.CLEAR_ERRORS>;
 export type RequestUserInfoForSignInStart = ActionWithDependency<userActionTypes.REQUEST_USER_INFO_FOR_SIGN_IN_START>;
 export type RequestUserInfoForSignInSuccess = ActionWithPayload<userActionTypes.REQUEST_USER_INFO_FOR_SIGN_IN_SUCCESS, UserInfo>;
@@ -91,6 +97,15 @@ export const signOutSuccess = withMatcher((): SignOutSuccess =>
 
 export const signOutFailure = withMatcher((error: Error): SignOutFailure =>
   createAction(userActionTypes.SIGN_OUT_FAILURE, error));
+
+export const userSignOutStart = withMatcher((http: AxiosInstance): UserSignOutStart =>
+  createActionWithDependency(userActionTypes.USER_SIGN_OUT_START, http));
+
+export const userSignOutSuccess = withMatcher((): UserSignOutSuccess =>
+  createAction(userActionTypes.USER_SIGN_OUT_SUCCESS));
+
+export const userSignOutFailure = withMatcher((error: Error): UserSignOutFailure =>
+  createAction(userActionTypes.USER_SIGN_OUT_FAILURE, error));
 
 export const signOutWithError = withMatcher((error: ClientError): SignOutWithError =>
   createAction(userActionTypes.SIGN_OUT_WITH_ERROR, error));

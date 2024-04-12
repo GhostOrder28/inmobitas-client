@@ -9,6 +9,8 @@ import {
   signInFailure,
   signOutSuccess,
   signOutFailure,
+  userSignOutSuccess,
+  userSignOutFailure,
   signOutWithError,
   clearErrors,
   requestUserInfoForSignInSuccess,
@@ -25,12 +27,14 @@ export type UserState = {
   readonly currentUser: UserInfo | null;
   readonly guestPending: boolean;
   readonly errors: AxiosError<ResponseError> | Error | ClientError | null;
+  readonly userSignedOut: boolean;
 }
 
 const INITIAL_STATE: UserState = {
   currentUser: null,
   guestPending: false,
   errors: null,
+  userSignedOut: false,
 };
 
 const userReducer = (state = INITIAL_STATE, action = {} as AnyAction) => {
@@ -46,6 +50,7 @@ const userReducer = (state = INITIAL_STATE, action = {} as AnyAction) => {
     signUpFailure.match(action) ||
     signInFailure.match(action) || 
     signOutFailure.match(action) ||
+    userSignOutFailure.match(action) ||
     requestUserInfoForSignInFailure.match(action) ||
     generateGuestFailure.match(action)
   ) {
@@ -74,6 +79,15 @@ const userReducer = (state = INITIAL_STATE, action = {} as AnyAction) => {
       ...state,
       currentUser: null,
       errors: null,
+    } 
+  }
+
+  if (userSignOutSuccess.match(action)) {
+    return {
+      ...state,
+      currentUser: null,
+      errors: null,
+      userSignedOut: true,
     } 
   }
 

@@ -6,6 +6,7 @@ const useClickOutside = <T extends HTMLElement = HTMLElement>(
 ) => {
   useEffect(() => {
     const trigger = (e: MouseEvent) => {
+      e.stopPropagation()
       if (
         (e.target as T).isConnected && 
         !ref?.current?.contains(e.target as Node)

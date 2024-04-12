@@ -17,6 +17,7 @@ describe('user reducer', () => {
     currentUser: null,
     errors: null,
     guestPending: false,
+    userSignedOut: false,
   };
 
   it('should handle undefined args', () => {

@@ -2,17 +2,17 @@ import React  from 'react';
 import { Pane, Card, PaneOwnProps } from 'evergreen-ui';
 
 type Props = {
-  displayFn: React.Dispatch<React.SetStateAction<boolean>>;
   children: JSX.Element | JSX.Element[];
   width?: number;
+  hideFn?: () => void;
 } & PaneOwnProps;
 
-const ModalContainer: React.FC<Props> = ({ displayFn, children, ...otherProps }) => {
+const ModalContainer: React.FC<Props> = ({ children, hideFn, ...otherProps }) => {
   return (
     <Pane
       position={'fixed'}
       top={0} left={0}
-      zIndex={100}
+      zIndex={9999}
       display={'flex'}
       justifyContent={'center'}
       alignItems={'center'}
@@ -27,6 +27,7 @@ const ModalContainer: React.FC<Props> = ({ displayFn, children, ...otherProps })
         height={'100vh'}
         backgroundColor={'rgba(67, 90, 111, 0.7)'}
         zIndex={101}
+        onClick={ hideFn }
       />
       <Card
         zIndex={102}
