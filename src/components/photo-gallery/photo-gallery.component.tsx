@@ -146,28 +146,30 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
     };
 
   }, [ pictures ])
+  useEffect(() => { console.log('pictures', pictures) }, [ pictures ])
+  useEffect(() => { console.log('categorizedPictures', categorizedPictures) }, [ categorizedPictures ])
+  useEffect(() => { console.log('uncategorizedPictures', uncategorizedPictures) }, [ uncategorizedPictures ])
 
   useEffect(() => {
-    if (!categories.length || !pictures.length) return;
-
     const orderedCategories = sortEntities(categories, 'position');
 
-    const categoriesPositionsCorrect = checkEntitiesPositions(orderedCategories, 'position');
+    if (categories.length) {
+      const categoriesPositionsCorrect = checkEntitiesPositions(orderedCategories, 'position');
 
-    if (!categoriesPositionsCorrect) {
-      (async function () {
-        const updatedCategories = await updateCategoriesPosition()
-        setCategories(updatedCategories);
-      })();
-    } else {
-      const categorized = attachPicturesToCategory(orderedCategories, pictures);
+      if (!categoriesPositionsCorrect) {
+        (async function () {
+          const updatedCategories = await updateCategoriesPosition()
+          setCategories(updatedCategories);
+        })();
+      };
+    } 
 
-      const uncategorized = pictures.filter(p => !p.categoryId);
+    const categorized = attachPicturesToCategory(orderedCategories, pictures);
 
-      setCategorizedPictures(categorized)
-      setUncategorizedPictures(uncategorized)
-    }
+    const uncategorized = pictures.filter(p => !p.categoryId);
 
+    setCategorizedPictures(categorized)
+    setUncategorizedPictures(uncategorized)
   }, [ categories, pictures ])
 
   const toggleMark = (currentId: number): void => {
@@ -188,9 +190,9 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
   const submitDeletion = async (entity: Exclude<MenuMode, null>): Promise<void> => {
     setIsLoading(entity === 'pictures' ? 'deletePictures' : 'deleteCategories');
     const res = await Promise.all(
-      markedItems.map((pictureId) => {
+      markedItems.map(id => {
         const deletedEntity = http.delete<number>(
-          `/${entity}/${userId}/${listingid}/${pictureId}`
+          `/${entity}/${userId}/${listingid}/${id}`
         );
         return deletedEntity;
       })
@@ -369,18 +371,16 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
               />
             ))
           }
-          { uncategorizedPictures.length ? 
-            <GalleryUncategorized 
-              categoryPictures={ uncategorizedPictures }
-              toggleMark={ toggleMark }
-              menuMode={ menuMode }
-              markedItems={ markedItems }
-              setPictures={ setPictures }
-              setIsLoading={ setIsLoading }
-              setFullscreenPicture={ setFullscreenPicture }
-              setMenuMode={ setMenuMode }
-            /> : ''
-          }
+          <GalleryUncategorized 
+            categoryPictures={ uncategorizedPictures }
+            toggleMark={ toggleMark }
+            menuMode={ menuMode }
+            markedItems={ markedItems }
+            setPictures={ setPictures }
+            setIsLoading={ setIsLoading }
+            setFullscreenPicture={ setFullscreenPicture }
+            setMenuMode={ setMenuMode }
+          />
         </Pane>
         {fullscreenPicture && globalContainer ? (
           <FullScreen

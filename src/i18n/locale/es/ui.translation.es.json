@@ -30,6 +30,8 @@
   "waitForPictureUpload": "Subiendo imágenes",
   "waitForPictureDelete": "Borrando imágenes",
   "waitForCategoryDelete": "Borrando categorías",
+  "waitForListingDelete": "Borrando propiedad",
+  "waitForClientDelete": "Borrando cliente",
   "categoryDeletionYerOrNo": "¿Seguro de borrar estas categorías?",
   "picturesWillBeRemoved": "Todas las imágenes asociadas serán borradas.",
   "yesDeleteIt": "Sí, bórrala",

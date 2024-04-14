@@ -15,8 +15,10 @@ const ContentSpinner: FC<ContentSpinnerProps> = ({ waitMessage, zIndex }) => (
     paddingTop="3rem"
     backgroundColor="white"
     opacity=".85"
-    position="absolute"
-    zIndex={zIndex || undefined}
+    position="fixed"
+    zIndex={999999}
+    top={0}
+    left={0}
     width="100%"
     height="100%"
   >

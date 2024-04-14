@@ -62,6 +62,7 @@ const ListingsPage = () => {
           detailRouteStructure={['listingdetail', 'clientId', 'estateId']}
           editRouteStructure={['editlisting', 'clientId', 'estateId']}
           deleteBaseUrl={'/listings'}
+          deleteMessage={ t('waitForListingDelete', { ns: 'ui' }) }
         /> : ''
       }
     </Pane>

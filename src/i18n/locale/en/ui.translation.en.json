@@ -30,6 +30,8 @@
   "waitForPictureUpload": "Uploading images",
   "waitForPictureDelete": "Deleting images",
   "waitForCategoryDelete": "Deleting categories",
+  "waitForListingDelete": "Deleting estate",
+  "waitForClientDelete": "Deleting client",
   "categoryDeletionYerOrNo": "Are you sure to delete these categories?",
   "picturesWillBeRemoved": "All pictures associated will be removed.",
   "yesDeleteIt": "Yes, delete it",

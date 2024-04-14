@@ -27,8 +27,18 @@ import CustomTableOption from './custom-table-option';
 import http from '../../utils/axios-instance';
 import Pagination from '../pagination/pagination.component';
 import { getPageSize } from "./custom-table.utils";
+import ContentSpinner from "../content-spinner/content-spinner.component";
+import { useTranslation } from "react-i18next";
 
-const CustomTable: FC<CustomTableProps> = ({ source, setSource, labels, detailRouteStructure, editRouteStructure, deleteBaseUrl }) => {
+const CustomTable: FC<CustomTableProps> = ({ 
+  source, 
+  setSource, 
+  labels, 
+  detailRouteStructure, 
+  editRouteStructure, 
+  deleteBaseUrl,
+  deleteMessage,
+}) => {
   const navigate = useNavigate();
   const sourceListRef = useRef<HTMLDivElement | null>(null);
   const tableRelativeHeight = useRelativeHeight(sourceListRef);
@@ -38,6 +48,8 @@ const CustomTable: FC<CustomTableProps> = ({ source, setSource, labels, detailRo
   const buttonsRef = useRef(null);
   useClickOutside(buttonsRef, () => setHighlightedRow(null));
   const clientDevice = useClientDevice();
+  const [ isLoading, setIsLoading ] = useState<boolean>(false);
+  const { t } = useTranslation(['ui']);
 
   const data = useMemo(() => source.map(item => {
     const itemKeys = Object.keys(item);
@@ -89,10 +101,14 @@ const CustomTable: FC<CustomTableProps> = ({ source, setSource, labels, detailRo
   } = tableInstance;
 
   const onDelete = async (userId: number, entityId: number, entityIdentifier: string) => {
+    setIsLoading(true)
+
     const deletedEntity = await http.delete(`${deleteBaseUrl}/${userId}/${entityId}`);
     const remainingEntities = source.filter(item => item[entityIdentifier] !== deletedEntity.data)
     setSource(remainingEntities);
     setHighlightedRow(null);
+
+    setIsLoading(false);
   }
 
   useEffect(() => {
@@ -105,7 +121,10 @@ const CustomTable: FC<CustomTableProps> = ({ source, setSource, labels, detailRo
   const getFlexValues = (idx: number) => idx === columns.length - 1 ? .4 : .45;
 
   return (
-    <Pane>
+    <Pane position='relative'>
+      { isLoading ?
+        <ContentSpinner waitMessage={ deleteMessage } /> : ''
+      }
       <Table flex={1} {...getTableProps()}>
         <TableHead display={'flex'} userSelect={'none'}>
           {

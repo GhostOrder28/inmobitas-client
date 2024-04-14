@@ -10,6 +10,7 @@ export type CustomTableProps = {
   detailRouteStructure: string[];
   editRouteStructure: string[];
   deleteBaseUrl: string;
+  deleteMessage?: string;
 };
 
 export type ItemIds = {

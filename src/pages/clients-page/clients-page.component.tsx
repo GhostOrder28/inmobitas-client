@@ -57,6 +57,7 @@ const ClientsPage = () => {
           detailRouteStructure={['clientdetail', 'clientId']}
           editRouteStructure={['editclient', 'clientId']}
           deleteBaseUrl={'/clients'}
+          deleteMessage={ t('waitForClientDelete', { ns: 'ui' }) }
         /> : ''
       }
     </Pane>
