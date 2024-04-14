@@ -8,6 +8,7 @@ import { AnyAction } from 'redux';
 import { ItemIds } from '../components/custom-table/custom-table.types';
 import { RouteSource } from './utility-types';
 import { Picture } from "../components/listing-detail/listing-detail.types";
+import { PictureCategoryFromPayload } from "../components/listing-detail/listing-detail.types";
 
 export const strParseIn = (str: string) => {
   return str.replaceAll(' ', '-').toLowerCase();
@@ -49,7 +50,6 @@ export const pictureUploader = async (
   currentPicturesLength: number,
   categoryId?: number, 
 ) => {
-  // setIsLoading('upload');
   const filesToUpload = e.target.files ? [...e.target.files] : [];
   try {
     await http.get(`/checkverified/${userId}/${listingId}/${filesToUpload.length}`);
@@ -69,21 +69,31 @@ export const pictureUploader = async (
     return newPictures
   } catch (err) {
     if (axios.isAxiosError(err)) throw err;
-    // setIsLoading(null);
-    // if (err instanceof Error) {
-    //   function isAxiosError (err: Error | AxiosError): err is AxiosError {
-    //     return (err as AxiosError).isAxiosError !== undefined;
-    //   }
-    //   if (isAxiosError(err) && err.response) {
-    //     toaster.warning(err.response.data.unverifiedUserError.errorMessage, {
-    //       description: err.response.data.unverifiedUserError.errorMessageDescription,
-    //       duration: 7
-    //     });
-    //   }
-    // } else {
-    //   console.error(err);
-    // }
   }
+};
+
+export const checkEntitiesPositions = <O extends { [key: string]: any }>(orderedEntities: O[], key: string) => {
+  try {
+    if (!orderedEntities.length) throw new Error('this function need a non empty array');
+    const checkedEntities = orderedEntities.map((ent, idx) => {
+      return ent[key] === idx + 1 ? true : false;
+    })
+
+    const positionsAreCorrect = !checkedEntities.some(ent => ent === false);
+    return positionsAreCorrect;
+  } catch (err) {
+    console.error(err)
+  }
+};
+
+export function sortEntities <O extends { [key: string]: any }>(arr: O[], key: string) {
+  const clonedArr = [ ...arr ];
+  clonedArr.sort((a, b) => {
+    if (a[key] < b[key]) return -1;
+    if (a[key] > b[key]) return 1;
+    return 0
+  })
+  return clonedArr;
 };
 
 // Non redux 'selectors'

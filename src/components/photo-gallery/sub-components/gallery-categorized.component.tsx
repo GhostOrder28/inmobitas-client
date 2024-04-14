@@ -30,17 +30,20 @@ import GalleryCategoryButton from './gallery-category-button.component';
 import { strParseOut } from '../../../utils/utility-functions';
 
 const GalleryCategorized = ({ 
-    name, 
     categoryId,
+    name, 
+    position,
     categoryPictures, 
-    markedItems,
+
     menuMode,
+    markedItems,
     toggleMark, 
+
+    setMenuMode,
     setPictures,
     setCategories,
     setFullscreenPicture, 
     setIsLoading,
-    setMenuMode,
   }: Categorized) => {
   const [ editableName, setEditableName ] = useState<string>('');
   const [ editMode, setEditMode ] = useState<boolean>(false);

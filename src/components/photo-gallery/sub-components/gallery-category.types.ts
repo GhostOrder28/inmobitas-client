@@ -12,12 +12,12 @@ type CommonProps = {
   toggleMark: (currentId: number) => void;
   setFullscreenPicture: Dispatch<SetStateAction<Picture | null>>;
   setIsLoading: Dispatch<SetStateAction<IsLoading>>;
-  setMarkedItems: Dispatch<SetStateAction<number[]>>;
 }
 
 export type Categorized = {
   name: string;
   categoryId: number;
+  position: number;
   setCategories: Dispatch<SetStateAction<PictureCategoryFromPayload[]>>
 } & CommonProps;
 

@@ -17,7 +17,7 @@ const GalleryMenu = ({
     <Pane
       position={"fixed"}
       display={"flex"}
-      bottom={menuMode === 'pictures' ? -50 : 0}
+      bottom={menuMode ? -50 : 0}
       width={width || '100%'}
       height={50}
       zIndex={20}

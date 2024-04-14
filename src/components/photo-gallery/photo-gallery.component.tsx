@@ -33,6 +33,8 @@ import GalleryUncategorized from "./sub-components/gallery-uncategorized.compone
 import ContentSpinner from '../content-spinner/content-spinner.component';
 import GalleryCategoryButton from './sub-components/gallery-category-button.component';
 import ModalContainer from '../modal-container/modal-container.component';
+import { checkEntitiesPositions, sortEntities } from '../../utils/utility-functions';
+import { isLastDayOfMonth } from "date-fns";
 
 type PhotoGalleryProps = {
   generatePresentationFilename: () => string;
@@ -53,6 +55,17 @@ const globalContainer = document.getElementById(
   "globalContainer"
 ) as HTMLElement;
 
+const attachPicturesToCategory = (categories: PictureCategoryFromPayload[], pictures: Picture[]) => {
+  return categories.map(c => {
+    const categoryPictures = pictures.filter(p => p.categoryId === c.categoryId)
+    return { 
+      categoryId: c.categoryId, 
+      name: c.name,
+      position: c.position, 
+      categoryPictures, 
+    }
+  });
+};
 
 const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryProps) => {
   const userId = useSelector(selectCurrentUserId);
@@ -92,7 +105,6 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
         const { data: categoriesData } = await http.get<PictureCategoryFromPayload[]>(
           `/categories/${userId}/${listingid}`
         );
-        // console.log('categoriesData payload: ', categoriesData);
 
         setPictures(picturesData)
         setCategories(categoriesData)
@@ -104,60 +116,59 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
   }, []);
 
   useEffect(() => {
-    const categorized = categories.map(c => {
-      const categoryPictures = pictures.filter(p => p.categoryId === c.categoryId)
-      return { 
-        categoryId: c.categoryId, 
-        name: c.name,
-        position: c.position, 
-        categoryPictures, 
-      }
+    if (!pictures.length) return;
+
+    const orderedPictures = sortEntities(pictures, 'categoryId');
+
+    const groupedCategories = groupCategories(orderedPictures);
+
+    const orderedPicturesInsideCategories = groupedCategories.map(cat => {
+      const ordered = sortEntities(cat.pictures, 'position');
+      return { ...cat, pictures: ordered }
     });
-    categorized.sort((a, b) => {
-      if (a.position < b.position) return -1;
-      if (a.position > b.position) return 1;
-      return 0
-    })
 
-    const uncategorized = pictures.filter(p => !p.categoryId);
+    const categoriesWithBadPicturesPositions = orderedPicturesInsideCategories.filter(cat => {
+      const positionsCorrect = checkEntitiesPositions(cat.pictures, 'position');
+      return !positionsCorrect;
+    }).map(c => c.categoryId);
 
-    setCategorizedPictures(categorized)
-    setUncategorizedPictures(uncategorized)
-  }, [ pictures, categories ])
+    if (categoriesWithBadPicturesPositions.length) {
+      (async function () {
+        const updatedPictures = await updatePicturesPosition(categoriesWithBadPicturesPositions)
 
-  // const onUploadFile: ChangeEventHandler<HTMLInputElement> = async (e) => {
-  //   setIsLoading('upload');
-  //   const filesToUpload = e.target.files ? [...e.target.files] : [];
-  //   try {
-  //     await http.get(`/checkverified/${userId}/${listingid}/${filesToUpload.length}`);
-  //     const uploadedFiles = await Promise.all(
-  //       filesToUpload.map((file: File) => {
-  //         let formData = new FormData();
-  //         formData.append("file", file);
-  //         return http.post(`/pictures/${userId}/${listingid}`, formData);
-  //       })
-  //     );
-  //     console.log(uploadedFiles);      
-  //     setFiles([...files, ...uploadedFiles.map((file) => file.data)]);
-  //     setNoImages(false)
-  //     setIsLoading(null);
-  //   } catch (err) {
-  //     setIsLoading(null);
-  //     if (err instanceof Error) {
-  //       function isAxiosError (err: Error | AxiosError): err is AxiosError {
-  //         return (err as AxiosError).isAxiosError !== undefined;
-  //       }
-  //       if (isAxiosError(err) && err.response) {
-  //         toaster.warning(err.response.data.unverifiedUserError.errorMessage, {
-  //           description: err.response.data.unverifiedUserError.errorMessageDescription,
-  //           duration: 7
-  //         });
-  //       }
-  //     } else {
-  //       console.error(err);
-  //     }
-  //   }
-  // };
+        const stateNewPictures = pictures.map(p => {
+          const updatedPicture = updatedPictures.find(up => p.pictureId === up.pictureId);
+          return updatedPicture || p
+        });
+
+        setPictures(stateNewPictures);
+      })();
+    };
+
+  }, [ pictures ])
+
+  useEffect(() => {
+    if (!categories.length || !pictures.length) return;
+
+    const orderedCategories = sortEntities(categories, 'position');
+
+    const categoriesPositionsCorrect = checkEntitiesPositions(orderedCategories, 'position');
+
+    if (!categoriesPositionsCorrect) {
+      (async function () {
+        const updatedCategories = await updateCategoriesPosition()
+        setCategories(updatedCategories);
+      })();
+    } else {
+      const categorized = attachPicturesToCategory(orderedCategories, pictures);
+
+      const uncategorized = pictures.filter(p => !p.categoryId);
+
+      setCategorizedPictures(categorized)
+      setUncategorizedPictures(uncategorized)
+    }
+
+  }, [ categories, pictures ])
 
   const toggleMark = (currentId: number): void => {
     const entityExists = markedItems.some(
@@ -184,23 +195,59 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
         return deletedEntity;
       })
     );
+
     const deletedEntities = res.map((deletedEntity) => deletedEntity.data);
 
     if (entity === 'pictures') {
-      setPictures(prev => {
-        return prev.filter((pic) => !deletedEntities.some((dPic) => dPic === pic.pictureId))
-      });
+      const picturesWithoutDeleted = pictures.filter(p => !deletedEntities.some(de => p.pictureId === de));
+      setPictures(picturesWithoutDeleted);
     };
 
     if (entity === 'categories') {
-      setCategories(prev => {
-        return prev.filter((cat) => !deletedEntities.some((dCat) => dCat === cat.categoryId))
-      });
+      const categoriesWithoutDeleted = categories.filter(c => !deletedEntities.some(de => c.categoryId === de));
+      setCategories(categoriesWithoutDeleted);
     };
 
     setMenuMode(null);
     setMarkedItems([]);
     setIsLoading(null);
+  };
+
+  const groupCategories = (orderedEntities: Picture[]) => {
+    return orderedEntities.reduce<({categoryId: number | undefined, pictures: Picture[]})[]>((acc, curr, idx, arr) => {
+      const isFirst = idx === 0;
+      if (isFirst) return [ ...acc, { categoryId: curr.categoryId, pictures: [ curr ] } ];
+
+      const lastCat = acc[ acc.length - 1 ];
+      const lastCatLastItem = lastCat.pictures[lastCat.pictures.length - 1];
+      if (lastCatLastItem.categoryId === curr.categoryId) {
+        const withoutLastCat = acc.slice(0, acc.length - 1)
+        lastCat.pictures.push(curr)
+        return [ ...withoutLastCat, lastCat ]
+      };
+
+      return [ ...acc, { categoryId: curr.categoryId, pictures: [ curr ] } ];
+
+    }, []);
+  };
+
+  const updateCategoriesPosition = async () => {
+    const { data: { updatedCategories } } = await http.patch(`/categories/${listingid}?update=true`);
+    return updatedCategories;
+  };
+
+  const updatePicturesPosition = async (categoriesToUpdate: (number | undefined)[]) => {
+    const queryString = categoriesToUpdate.map(cid => {
+      return `categories=${cid}`
+    }).join('&');
+
+    const {
+      data: {
+        updatedPictures 
+      } 
+    } = await http.patch<{ updatedPictures: Picture[] }>(`/pictures/${userId}/${listingid}?${queryString}`);
+
+    return updatedPictures;
   };
 
   const generatePresentation = async () => {
@@ -229,7 +276,7 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
     try {
       const categoryObj = {
         name: '',
-        position: categories.length
+        position: categories.length + 1
       };
 
       const { data: newCategory } = await http.post<PictureCategoryFromPayload>(
@@ -302,21 +349,23 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
             /> : ''
           }
           { 
-            categorizedPictures.map((c) => (
+            categorizedPictures.map((c, idx) => (
               <GalleryCategorized
                 key={ `category-${c.categoryId}` }
-                name={ c.name }
                 categoryId={ c.categoryId }
+                name={ c.name }
+                position={ idx + 1 } // index is zero-based, position is one-based
                 categoryPictures={ c.categoryPictures }
+
                 menuMode={ menuMode }
                 markedItems={ markedItems }
                 toggleMark={ toggleMark }
+
+                setMenuMode={ setMenuMode }
                 setPictures={ setPictures }
                 setCategories={ setCategories }
                 setFullscreenPicture={ setFullscreenPicture }
                 setIsLoading={ setIsLoading }
-                setMenuMode={ setMenuMode }
-                setMarkedItems={ setMarkedItems }
               />
             ))
           }
@@ -330,7 +379,6 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
               setIsLoading={ setIsLoading }
               setFullscreenPicture={ setFullscreenPicture }
               setMenuMode={ setMenuMode }
-              setMarkedItems={ setMarkedItems }
             /> : ''
           }
         </Pane>
