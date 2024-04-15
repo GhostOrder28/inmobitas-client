@@ -32,7 +32,7 @@ import { strParseOut } from '../../../utils/utility-functions';
 const GalleryCategorized = ({ 
     categoryId,
     name, 
-    position,
+    isNew,
     categoryPictures, 
 
     menuMode,
@@ -47,7 +47,9 @@ const GalleryCategorized = ({
   }: Categorized) => {
   const [ editableName, setEditableName ] = useState<string>('');
   const [ editMode, setEditMode ] = useState<boolean>(false);
+  const [ userInteraction, setUserInteraction ] = useState(false);
 
+  console.log('interaction: ', isNew, userInteraction);
   const timeout = useRef<NodeJS.Timeout>();
   const categoryTouchTimeout = useRef<NodeJS.Timeout>();
 
@@ -66,6 +68,9 @@ const GalleryCategorized = ({
 
   useEffect(() => {
     setEditableName(name)
+    if (isNew && !userInteraction && inputRef.current) {
+      inputRef.current.focus();
+    };
   }, [])
 
   const updateName = async () => {
@@ -84,11 +89,13 @@ const GalleryCategorized = ({
     }))
 
     setEditMode(false);
+    setUserInteraction(true);
   };
 
   const cancelUpdateName = () => {
     setEditableName(name)
     setEditMode(false);
+    setUserInteraction(true);
   };
 
   const onUpload: ChangeEventHandler<HTMLInputElement> = async (e) => {
@@ -102,6 +109,8 @@ const GalleryCategorized = ({
       setPictures(prev => [ ...prev, ...newPictures ])
       setIsLoading(null)
     } catch (err) {
+      setIsLoading(null);
+
       if (err instanceof AuthenticationError) {
         return dispatch(signOutWithError({ clientError: err })) 
       };
@@ -137,7 +146,7 @@ const GalleryCategorized = ({
         }, 500)} }
         onTouchEnd={ () => clearTimeout(categoryTouchTimeout.current) }
         onTouchMove={ () => clearTimeout(categoryTouchTimeout.current) }
-        onClick={ () => toggleMark(categoryId) }
+        onClick={ menuMode === 'categories' ? () => toggleMark(categoryId) : undefined }
         paddingRight={ menuMode === 'categories' ? minorScale(3) : 0 }
         cursor={ menuMode === 'categories' ? 'pointer' : 'default' }
       >
@@ -146,7 +155,7 @@ const GalleryCategorized = ({
           width="100%" 
           paddingX={ minorScale(3) }
         >
-          { editMode ? 
+          { editMode || ( isNew && !userInteraction ) ? 
             <>
               <TextInput 
                 ref={ inputRef }
@@ -163,7 +172,7 @@ const GalleryCategorized = ({
           }
         </Pane>
         <Pane display="flex">
-          { !editMode && menuMode === null ? 
+          { !editMode && menuMode === null && ( !isNew || userInteraction ) ? 
             <>
               <GalleryCategoryButton
                 icon={ EditIcon }
@@ -196,7 +205,7 @@ const GalleryCategorized = ({
             </>
             : ''
           }
-          { editMode ?
+          { editMode || ( isNew && !userInteraction )?
             <>
               <GalleryCategoryButton
                 icon={ TickIcon }

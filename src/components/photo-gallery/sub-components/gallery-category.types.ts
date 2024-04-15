@@ -18,7 +18,8 @@ export type Categorized = {
   name: string;
   categoryId: number;
   position: number;
-  setCategories: Dispatch<SetStateAction<PictureCategoryFromPayload[]>>
+  setCategories: Dispatch<SetStateAction<PictureCategoryFromPayload[]>>;
+  isNew?: boolean;
 } & CommonProps;
 
 export type Uncategorized = {} & CommonProps

@@ -49,6 +49,8 @@ const GalleryUncategorized = ({
       setPictures(prev => [ ...prev, ...newPictures ])
       setIsLoading(null)
     } catch (err) {
+      setIsLoading(null);
+
       if (err instanceof AuthenticationError) {
         return dispatch(signOutWithError({ clientError: err })) 
       };

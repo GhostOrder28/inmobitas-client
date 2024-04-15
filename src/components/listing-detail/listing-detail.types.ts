@@ -12,6 +12,7 @@ export type PictureCategory = {
   name: string;
   position: number;
   categoryPictures: Picture[];
+  isNew?: boolean;
 }
 
 export type PictureCategoryUpdatedNamePayload = {

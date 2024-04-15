@@ -59,9 +59,7 @@ const attachPicturesToCategory = (categories: PictureCategoryFromPayload[], pict
   return categories.map(c => {
     const categoryPictures = pictures.filter(p => p.categoryId === c.categoryId)
     return { 
-      categoryId: c.categoryId, 
-      name: c.name,
-      position: c.position, 
+      ...c,
       categoryPictures, 
     }
   });
@@ -146,15 +144,17 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
     };
 
   }, [ pictures ])
-  useEffect(() => { console.log('pictures', pictures) }, [ pictures ])
-  useEffect(() => { console.log('categorizedPictures', categorizedPictures) }, [ categorizedPictures ])
-  useEffect(() => { console.log('uncategorizedPictures', uncategorizedPictures) }, [ uncategorizedPictures ])
+  // useEffect(() => { console.log('pictures', pictures) }, [ pictures ])
+  // useEffect(() => { console.log('categorizedPictures', categorizedPictures) }, [ categorizedPictures ])
+  // useEffect(() => { console.log('uncategorizedPictures', uncategorizedPictures) }, [ uncategorizedPictures ])
 
   useEffect(() => {
     const orderedCategories = sortEntities(categories, 'position');
+    console.log('orderedCategories: ', orderedCategories);
 
     if (categories.length) {
       const categoriesPositionsCorrect = checkEntitiesPositions(orderedCategories, 'position');
+      console.log('categoriesPositionsCorrect: ', categoriesPositionsCorrect);
 
       if (!categoriesPositionsCorrect) {
         (async function () {
@@ -165,6 +165,7 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
     } 
 
     const categorized = attachPicturesToCategory(orderedCategories, pictures);
+    console.log('categorized: ', categorized);
 
     const uncategorized = pictures.filter(p => !p.categoryId);
 
@@ -286,7 +287,7 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
         categoryObj
       );
 
-      setCategories(prev => [ ...prev, { ...newCategory, categoryPictures: [] } ])
+      setCategories(prev => [ ...prev, { ...newCategory, categoryPictures: [], isNew: true } ])
     } catch (err) {
       console.error(`there was an error trying to create a category: ${err}`)
     }
@@ -358,6 +359,7 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
                 name={ c.name }
                 position={ idx + 1 } // index is zero-based, position is one-based
                 categoryPictures={ c.categoryPictures }
+                isNew={ c.isNew }
 
                 menuMode={ menuMode }
                 markedItems={ markedItems }
