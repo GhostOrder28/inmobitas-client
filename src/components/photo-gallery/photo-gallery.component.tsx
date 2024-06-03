@@ -121,12 +121,12 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
     const groupedCategories = groupCategories(orderedPictures);
 
     const orderedPicturesInsideCategories = groupedCategories.map(cat => {
-      const ordered = sortEntities(cat.pictures, 'position');
+      const ordered = sortEntities(cat.pictures, 'picturePosition');
       return { ...cat, pictures: ordered }
     });
 
     const categoriesWithBadPicturesPositions = orderedPicturesInsideCategories.filter(cat => {
-      const positionsCorrect = checkEntitiesPositions(cat.pictures, 'position');
+      const positionsCorrect = checkEntitiesPositions(cat.pictures, 'picturePosition');
       return !positionsCorrect;
     }).map(c => c.categoryId);
 
@@ -149,11 +149,11 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
   // useEffect(() => { console.log('uncategorizedPictures', uncategorizedPictures) }, [ uncategorizedPictures ])
 
   useEffect(() => {
-    const orderedCategories = sortEntities(categories, 'position');
+    const orderedCategories = sortEntities(categories, 'categoryPosition');
     console.log('orderedCategories: ', orderedCategories);
 
     if (categories.length) {
-      const categoriesPositionsCorrect = checkEntitiesPositions(orderedCategories, 'position');
+      const categoriesPositionsCorrect = checkEntitiesPositions(orderedCategories, 'categoryPosition');
       console.log('categoriesPositionsCorrect: ', categoriesPositionsCorrect);
 
       if (!categoriesPositionsCorrect) {
@@ -254,24 +254,28 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
   };
 
   const generatePresentation = async () => {
-    if (pictures.length || generatePresentationFilename !== undefined) {
-      setIsLoading('presentation');
-      const res = await http.get(`/presentations/${userId}/${listingid}`, {
-        responseType: 'blob',
-        headers: {
-          'Content-Type': 'application/pdf'
-        }
-      });
-      const url = window.URL.createObjectURL(new Blob([res.data], { type: 'application/pdf' }));
-      cloudRef.current.setAttribute('href', url);
-      cloudRef.current.setAttribute('download', generatePresentationFilename());
-      cloudRef.current.click()
-      setIsLoading(null);      
-    } else {
-      setNoImages(true);
-      setTimeout(() => {
-        setNoImages(false);
-      }, 2000);
+    try {
+      if (pictures.length || generatePresentationFilename !== undefined) {
+        setIsLoading('presentation');
+        const res = await http.get(`/presentations/${userId}/${listingid}`, {
+          responseType: 'blob',
+          headers: {
+            'Content-Type': 'application/pdf'
+          }
+        });
+        const url = window.URL.createObjectURL(new Blob([res.data], { type: 'application/pdf' }));
+        cloudRef.current.setAttribute('href', url);
+        cloudRef.current.setAttribute('download', generatePresentationFilename());
+        cloudRef.current.click()
+        setIsLoading(null);      
+      } else {
+        setNoImages(true);
+        setTimeout(() => {
+          setNoImages(false);
+        }, 2000);
+      }
+    } catch (err) {
+      console.error(err)
     }
   }
 
@@ -279,7 +283,7 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
     try {
       const categoryObj = {
         name: '',
-        position: categories.length + 1
+        categoryPosition: categories.length + 1
       };
 
       const { data: newCategory } = await http.post<PictureCategoryFromPayload>(
