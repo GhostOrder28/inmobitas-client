@@ -59,10 +59,10 @@ const Signin = () => {
     dispatch(generateGuestStart(http))
   }
 
-  useEffect(() => {
-    console.log('userSignedOut: ', userSignedOut);
-    if (!userSignedOut) dispatch(requestUserInfoForSignInStart(http));
-  }, [])
+  // useEffect(() => {
+  //   console.log('userSignedOut: ', userSignedOut);
+  //   if (!userSignedOut) dispatch(requestUserInfoForSignInStart(http));
+  // }, [])
 
   return (
     <div>
@@ -109,9 +109,9 @@ const Signin = () => {
                       <Button width={"100%"} type="submit" appearance="primary">
                         { t('signin') } 
                       </Button>
-                      <Button iconBefore={GoogleIcon} width={'100%'} type='button' appearance="default" onClick={signinWithGoogle}>
-                      { t('signinWithGoogle') }
-                      </Button>
+                      {/* <Button iconBefore={GoogleIcon} width={'100%'} type='button' appearance="default" onClick={signinWithGoogle}> */}
+                      {/* { t('signinWithGoogle') } */}
+                      {/* </Button> */}
                       <Button
                         width={"100%"}
                         type="button"
