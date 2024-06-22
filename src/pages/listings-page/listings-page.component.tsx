@@ -11,7 +11,7 @@ import { selectCurrentUserId } from '../../redux/user/user.selectors';
 import CustomTable from '../../components/custom-table/custom-table.component';
 import '../../global-styles/listings-page-scroll.styles.css';
 import { MOBILE_BREAKPOINT_VALUE } from '../../constants/breakpoints.constants';
-import { filterListingsProps } from './listings-page.utils';
+import { getSummarizedListingProps } from './listings-page.utils';
 import NoDataMessage from '../../components/no-data-message/no-data-message.component';
 
 const ListingsPage = () => {
@@ -49,7 +49,7 @@ const ListingsPage = () => {
       {
         listings.length ?
         <CustomTable 
-          source={windowInnerWidth > MOBILE_BREAKPOINT_VALUE ? listings : filterListingsProps(listings)}
+          source={windowInnerWidth > MOBILE_BREAKPOINT_VALUE ? listings : getSummarizedListingProps(listings)}
           setSource={setListings}
           labels={[
             t('district'),

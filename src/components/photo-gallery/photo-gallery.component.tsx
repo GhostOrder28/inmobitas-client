@@ -33,7 +33,7 @@ import GalleryUncategorized from "./sub-components/gallery-uncategorized.compone
 import ContentSpinner from '../content-spinner/content-spinner.component';
 import GalleryCategoryButton from './sub-components/gallery-category-button.component';
 import ModalContainer from '../modal-container/modal-container.component';
-import { checkEntitiesPositions, sortEntities } from '../../utils/utility-functions';
+import { checkPositions, sortEntities } from '../../utils/utility-functions';
 import { isLastDayOfMonth } from "date-fns";
 
 type PhotoGalleryProps = {
@@ -126,7 +126,7 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
     });
 
     const categoriesWithBadPicturesPositions = orderedPicturesInsideCategories.filter(cat => {
-      const positionsCorrect = checkEntitiesPositions(cat.pictures, 'picturePosition');
+      const positionsCorrect = checkPositions(cat.pictures, 'picturePosition');
       return !positionsCorrect;
     }).map(c => c.categoryId);
 
@@ -153,7 +153,7 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
     console.log('orderedCategories: ', orderedCategories);
 
     if (categories.length) {
-      const categoriesPositionsCorrect = checkEntitiesPositions(orderedCategories, 'categoryPosition');
+      const categoriesPositionsCorrect = checkPositions(orderedCategories, 'categoryPosition');
       console.log('categoriesPositionsCorrect: ', categoriesPositionsCorrect);
 
       if (!categoriesPositionsCorrect) {

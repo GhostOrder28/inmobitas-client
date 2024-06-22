@@ -106,5 +106,5 @@ dist
 # ghost custom ignores
 
 build/
-Dockerfile
+Dockerfile.caddy
 src/security/

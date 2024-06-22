@@ -1,7 +1,7 @@
-import * as userActions from './user.actions';
-import userActionTypes from './user.types';
-import { AxiosError } from '../../../node_modules/axios';
-import mockAxiosInstance from '../../../__mocks__/axios';
+import * as userActions from '../../../redux/user/user.actions';
+import userActionTypes from '../../../redux/user/user.types';
+import { AxiosError } from 'axios';
+import mockAxiosInstance from '../../../../__mocks__/axios';
 
 describe('user actions', () => {
 

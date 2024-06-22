@@ -3,7 +3,7 @@ import {
   strParseOut,
   presetSelector,
   selectValidationErrMsg,
-} from "./utility-functions";
+} from "../../utils/utility-functions";
 import { AxiosError } from 'axios';
 
 jest.mock('react-i18next', () => ({
@@ -29,7 +29,7 @@ describe('text parsing functions', () => {
 })
 
 describe('post request operations', () => {
-  it('select a present from an array of presets', () => {
+  it('should select the second preset from the given array of presets', () => {
     const presets = [
       {
         currencyTypeId: 1,

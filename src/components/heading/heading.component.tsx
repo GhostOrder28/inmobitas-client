@@ -23,7 +23,7 @@ type CustomHeadingProps = {
 const Heading = ({ type, children }: CustomHeadingProps) => {
   return (
     <EvergreenHeading
-      is={type as ElementType} // why a simple string is typed as ElementType?
+      is={type as ElementType}
       size={800}
       margin={20}
       fontWeight={getFontWeight(type)}

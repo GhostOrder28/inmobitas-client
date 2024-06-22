@@ -5,10 +5,10 @@ import {
   signOutSuccess,
   signOutFailure,
   clearErrors,
-} from './user.actions';
+} from '../../../redux/user/user.actions';
 import axios, { AxiosError } from 'axios';
-import userReducer from "./user.reducer";
-import { UserState } from './user.reducer';
+import userReducer from "../../../redux/user/user.reducer";
+import { UserState } from '../../../redux/user/user.reducer';
 
 
 describe('user reducer', () => {

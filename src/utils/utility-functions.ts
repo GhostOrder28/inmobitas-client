@@ -39,9 +39,10 @@ export const buildRoute = (source: RouteSource, structure: string[]) => {
   return detailUrl;
 }
 
-export const setMode = (setters: Dispatch<SetStateAction<boolean>>[], mode: boolean) => {
-  setters.forEach(s => { s(mode) })
-};
+// this is not being used anywhere
+// export const setMode = (setters: Dispatch<SetStateAction<boolean>>[], mode: boolean) => {
+//   setters.forEach(s => { s(mode) })
+// };
 
 export const pictureUploader = async (
   e: ChangeEvent<HTMLInputElement>, 
@@ -72,7 +73,7 @@ export const pictureUploader = async (
   }
 };
 
-export const checkEntitiesPositions = <O extends { [key: string]: any }>(orderedEntities: O[], key: string) => {
+export const checkPositions = <O extends { [key: string]: any }>(orderedEntities: O[], key: string) => {
   try {
     if (!orderedEntities.length) throw new Error('this function need a non empty array');
     const checkedEntities = orderedEntities.map((ent, idx) => {

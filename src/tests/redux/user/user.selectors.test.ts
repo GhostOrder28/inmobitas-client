@@ -1,6 +1,6 @@
-import * as userSelectors from './user.selectors';
-import { RootState } from "../root-reducer";
-import { UserState } from './user.reducer';
+import * as userSelectors from '../../../redux/user/user.selectors';
+import { RootState } from "../../../redux/root-reducer";
+import { UserState } from '../../../redux/user/user.reducer';
 import { AxiosError } from 'axios';
 
 describe('user selectors', () => {

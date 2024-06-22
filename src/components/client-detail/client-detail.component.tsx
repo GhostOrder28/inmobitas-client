@@ -1,15 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { useTranslation } from "react-i18next";
+import { t } from 'i18next';
 import { useParams } from "react-router-dom";
 import { Pane } from "evergreen-ui";
+import { formatClientData } from "./client-detail.utils";
 
 import useWindowDimensions from "../../hooks/use-window-dimensions";
+import useGetClientListings from "../../hooks/use-get-client-listings";
 
-import http from "../../utils/axios-instance";
-import { ListingItem } from "../../pages/listings-page/listings-page.types";
 import { Client } from "../../pages/client-page/client-page.types";
-import { selectCurrentUserId } from "../../redux/user/user.selectors";
 import { strParseOut } from "../../utils/utility-functions";
 import {
   Table,
@@ -20,47 +17,27 @@ import {
 import CustomTable from '../custom-table/custom-table.component';
 import Heading from "../heading/heading.component";
 import { MOBILE_BREAKPOINT_VALUE } from '../../constants/breakpoints.constants';
-import { filterListingsProps } from '../../pages/listings-page/listings-page.utils';
+import { getSummarizedListingProps } from '../../pages/listings-page/listings-page.utils';
 
 type ClientDetailProps = {
   clientData: Client | undefined;
 };
 
 const ClientDetail = ({ clientData }: ClientDetailProps) => {
-  const { t } = useTranslation(['client', 'listing']);
-  const [clientListings, setClientListings] = useState<ListingItem[]>([]);
-  const [ clientPersonalData ] = useState([
-    {
-      label: t('contactPhone', { ns: 'client' }),
-      content: clientData?.clientContactPhone || ''
-    },
-    {
-      label: t('clientAge', { ns: 'client' }),
-      content: clientData?.clientAge || ''
-    },
-    {
-      label: t('clientDetails', { ns: 'client' }),
-      content: clientData?.clientDetails || ''
-    },
-  ]);
-
-  const userId = useSelector(selectCurrentUserId);
-  const params = useParams();
+  const clientPersonalData = formatClientData(clientData);
+  const { clientid: clientId } = useParams();
+  const [ clientListings, setClientListings ] = useGetClientListings(clientId);
   const { windowInnerWidth } = useWindowDimensions();
 
-  useEffect(() => {
-    (async function () {
-      try {
-        const clientListingsData = await http.get<ListingItem[]>(
-          `/listings/${userId}/${params.clientid}`
-        );
-        setClientListings(clientListingsData.data);
-      } catch (err) {
-        throw new Error(`there was an error, ${err}`)
-      }
-    })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const tableSource = windowInnerWidth > MOBILE_BREAKPOINT_VALUE ?
+    clientListings :
+    getSummarizedListingProps(clientListings)
+
+  const tableAreaLabels = windowInnerWidth > MOBILE_BREAKPOINT_VALUE ? 
+    [
+      t('listing:totalArea') + ' ' + 'm²', 
+      t('listing:builtArea') + ' ' + 'm²' 
+    ] : [];
 
   return (
     <div>
@@ -89,20 +66,17 @@ const ClientDetail = ({ clientData }: ClientDetailProps) => {
       )}
       <Pane overflow={"scroll"} borderColor={"black"}>
         <Heading type={"h2"}>
-          { t('estates', { ns: 'listing' }) }
+          { t<string>('listing:estates') }
         </Heading>
           {
             clientListings &&
               <CustomTable 
-                source={windowInnerWidth > MOBILE_BREAKPOINT_VALUE ? clientListings : filterListingsProps(clientListings)}
+                source={ tableSource }
                 setSource={setClientListings}
                 labels={[
-                  t('district', { ns: 'listing' }),
-                  t('neighborhood', { ns: 'listing' }),
-                  ...(windowInnerWidth > MOBILE_BREAKPOINT_VALUE ? [
-                    t('totalArea', { ns: 'listing' }) + ' ' + 'm²',
-                    t('builtArea', { ns: 'listing' }) + ' ' + 'm²'
-                  ] : [])
+                  t('listing:district'),
+                  t('listing:neighborhood'),
+                  ...tableAreaLabels
                 ]}
                 detailRouteStructure={['listingdetail', 'clientId', 'estateId']}
                 editRouteStructure={['editlisting', 'clientId', 'estateId']}

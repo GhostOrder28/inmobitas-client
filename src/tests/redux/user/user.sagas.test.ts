@@ -1,8 +1,8 @@
-import * as userSagas from './user.sagas';
-import * as userActions from './user.actions';
-import userActionTypes from './user.types';
+import * as userSagas from '../../../redux/user/user.sagas';
+import * as userActions from '../../../redux/user/user.actions';
+import userActionTypes from '../../../redux/user/user.types';
 import { takeLatest, put, call } from 'typed-redux-saga/macro';
-import { createPostRequest } from '../redux-utils/create-request';
+import { createPostRequest } from '../../../redux/redux-utils/create-request';
 import mockAxiosInstance from 'axios';
 import { AxiosError } from 'axios';
 
