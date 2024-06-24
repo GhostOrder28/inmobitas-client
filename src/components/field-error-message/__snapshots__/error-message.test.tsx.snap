@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ErrorMessage should render with message 1`] = `
+exports[`FieldErrorMessage should render with message 1`] = `
 Object {
   "asFragment": [Function],
   "baseElement": <body>

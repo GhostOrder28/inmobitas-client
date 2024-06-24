@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Form, Field } from 'react-final-form';
-import ErrorMessage from '../../error-message/error-message.component';
+import FieldErrorMessage from '../../field-error-message/field-error-message.component';
 import { selectErrorMessage } from '../../../redux/user/user.selectors';
 import {
   Button,
@@ -48,7 +48,7 @@ const Signup = () => {
                   <TextInput {...props.input} placeholder={ t('names') } width={'100%'} />
                 )}
               </Field>
-              <ErrorMessage fieldErrorMsg={namesErrMsg}/>
+              <FieldErrorMessage message={namesErrMsg}/>
             </div>
             <div>
               <Field name="email" component="input">
@@ -56,7 +56,7 @@ const Signup = () => {
                   <TextInput {...props.input} placeholder={ t('email') } width={'100%'} />
                 )}
               </Field>
-              <ErrorMessage fieldErrorMsg={emailErrMsg}/>
+              <FieldErrorMessage message={emailErrMsg}/>
             </div>
             <div>
               <Field name="contactPhone" component="input" parse={ (value) => parseInt(value) || null }>
@@ -64,7 +64,7 @@ const Signup = () => {
                   <TextInput {...props.input} type='number' placeholder={ t('contactPhone') } width={'100%'} />
                 )}
               </Field>
-              <ErrorMessage fieldErrorMsg={contactPhoneErrMsg}/>
+              <FieldErrorMessage message={contactPhoneErrMsg}/>
             </div>
             <div>
               <Field name="password" component="input">
@@ -72,7 +72,7 @@ const Signup = () => {
                   <TextInput {...props.input} type='password' placeholder={ t('password') } width={'100%'} />
                 )}
               </Field>
-              <ErrorMessage fieldErrorMsg={passwordErrMsg}/>
+              <FieldErrorMessage message={passwordErrMsg}/>
             </div>
             <div>
               <Field name="confirmPassword" component="input">
@@ -80,9 +80,9 @@ const Signup = () => {
                   <TextInput {...props.input} type='password' placeholder={ t('confirmPassword') } width={'100%'} />
                 )}
               </Field>
-              <ErrorMessage fieldErrorMsg={confirmPasswordErrMsg}/>
+              <FieldErrorMessage message={confirmPasswordErrMsg}/>
             </div>
-            <ErrorMessage fieldErrorMsg={signupErrMsg}/>
+            <FieldErrorMessage message={signupErrMsg}/>
             <Button width={'100%'} type='submit' appearance="primary" >
               { t('signup') }
             </Button>

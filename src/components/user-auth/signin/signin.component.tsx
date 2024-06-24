@@ -17,7 +17,7 @@ import { SignInData } from "../user-auth.types";
 import http from '../../../utils/axios-instance';
 import axios from 'axios';
 import { options } from '../../../utils/axios-instance';
-import ErrorMessage from "../../error-message/error-message.component";
+import FieldErrorMessage from "../../field-error-message/field-error-message.component";
 import { selectErrorMessage, selectUserSignedOut } from "../../../redux/user/user.selectors";
 import useWindowDimensions from '../../../hooks/use-window-dimensions';
 import GoogleIcon from "../../../icons/social-media-icons/google.icon";
@@ -87,7 +87,7 @@ const Signin = () => {
                           />
                         )}
                       </Field>
-                      <ErrorMessage fieldErrorMsg={emailErrMsg} />
+                      <FieldErrorMessage message={emailErrMsg} />
                     </div>
                     <div>
                       <Field name="password" component="input">
@@ -100,11 +100,11 @@ const Signin = () => {
                           />
                         )}
                       </Field>
-                      <ErrorMessage fieldErrorMsg={passwordErrMsg} />
+                      <FieldErrorMessage message={passwordErrMsg} />
                     </div>
-                    <ErrorMessage fieldErrorMsg={authErrMsg} />
-                    <ErrorMessage fieldErrorMsg={dbConnectionError} />
-                    <ErrorMessage fieldErrorMsg={clientError} />
+                    <FieldErrorMessage message={authErrMsg} />
+                    <FieldErrorMessage message={dbConnectionError} />
+                    <FieldErrorMessage message={clientError} />
                     <Pane display="flex" flexDirection={ windowInnerWidth > TABLET_BREAKPOINT_VALUE ? 'row' : 'column' }>
                       <Button width={"100%"} type="submit" appearance="primary">
                         { t('signin') } 
@@ -156,7 +156,7 @@ const Signin = () => {
                   >
                     { t('signinAsGuestMessage') }
                   </Text>
-                  <ErrorMessage fieldErrorMsg={rateLimitErrMsg} />
+                  <FieldErrorMessage message={rateLimitErrMsg} />
                 </Card>
               </Pane>
             </>

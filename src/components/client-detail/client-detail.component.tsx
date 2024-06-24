@@ -1,33 +1,40 @@
-import { t } from 'i18next';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import { useParams } from "react-router-dom";
-import { Pane } from "evergreen-ui";
-import { formatClientData } from "./client-detail.utils";
-
-import useWindowDimensions from "../../hooks/use-window-dimensions";
-import useGetClientListings from "../../hooks/use-get-client-listings";
-
-import { Client } from "../../pages/client-page/client-page.types";
-import { strParseOut } from "../../utils/utility-functions";
 import {
+  Pane,
   Table,
   TableBody,
   TableRow, 
   TableCell,
 } from "evergreen-ui";
+
+import { selectCurrentUserId } from "../../redux/user/user.selectors";
+import { formatClientData } from "./client-detail.utils";
+import { strParseOut } from "../../utils/utility-functions";
 import CustomTable from '../custom-table/custom-table.component';
 import Heading from "../heading/heading.component";
 import { MOBILE_BREAKPOINT_VALUE } from '../../constants/breakpoints.constants';
 import { getSummarizedListingProps } from '../../pages/listings-page/listings-page.utils';
+import { getClientListings } from './client-detail.api';
+
+import useWindowDimensions from "../../hooks/use-window-dimensions";
+import useGetRequest from "../../hooks/use-get-request";
+
+import { Client } from "../../pages/client-page/client-page.types";
+import { ListingItem } from "../../pages/listings-page/listings-page.types";
 
 type ClientDetailProps = {
   clientData: Client | undefined;
 };
 
 const ClientDetail = ({ clientData }: ClientDetailProps) => {
-  const clientPersonalData = formatClientData(clientData);
+  const { t } = useTranslation('listing');
   const { clientid: clientId } = useParams();
-  const [ clientListings, setClientListings ] = useGetClientListings(clientId);
+  const userId = useSelector(selectCurrentUserId);
+  const [ clientListings, setClientListings ] = useGetRequest<ListingItem[]>(() => getClientListings(`/listings/${userId}/${clientId}`));
   const { windowInnerWidth } = useWindowDimensions();
+  const clientPersonalData = formatClientData(clientData);
 
   const tableSource = windowInnerWidth > MOBILE_BREAKPOINT_VALUE ?
     clientListings :
@@ -35,8 +42,8 @@ const ClientDetail = ({ clientData }: ClientDetailProps) => {
 
   const tableAreaLabels = windowInnerWidth > MOBILE_BREAKPOINT_VALUE ? 
     [
-      t('listing:totalArea') + ' ' + 'm²', 
-      t('listing:builtArea') + ' ' + 'm²' 
+      t('totalArea') + ' ' + 'm²', 
+      t('builtArea') + ' ' + 'm²' 
     ] : [];
 
   return (
@@ -66,7 +73,7 @@ const ClientDetail = ({ clientData }: ClientDetailProps) => {
       )}
       <Pane overflow={"scroll"} borderColor={"black"}>
         <Heading type={"h2"}>
-          { t<string>('listing:estates') }
+          { t<string>('estates') }
         </Heading>
           {
             clientListings &&
@@ -74,8 +81,8 @@ const ClientDetail = ({ clientData }: ClientDetailProps) => {
                 source={ tableSource }
                 setSource={setClientListings}
                 labels={[
-                  t('listing:district'),
-                  t('listing:neighborhood'),
+                  t('district'),
+                  t('neighborhood'),
                   ...tableAreaLabels
                 ]}
                 detailRouteStructure={['listingdetail', 'clientId', 'estateId']}

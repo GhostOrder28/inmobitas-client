@@ -2,12 +2,12 @@ import React from 'react';
 import { Pane, Text, BanCircleIcon, minorScale } from 'evergreen-ui';
 
 type ErrorMessageProps = {
-  fieldErrorMsg: string | undefined;
+  message: string | undefined;
 }
 
-const ErrorMessage = ({ fieldErrorMsg }: ErrorMessageProps) => {
+const FieldErrorMessage = ({ message }: ErrorMessageProps) => {
   return (
-    fieldErrorMsg ?
+    message ?
     <Pane
       marginTop={minorScale(1)}
       display={'flex'}
@@ -20,10 +20,10 @@ const ErrorMessage = ({ fieldErrorMsg }: ErrorMessageProps) => {
         size={minorScale(3)}
       />
       <Text size={300} width={'100%'}>
-        { fieldErrorMsg }
+        { message }
       </Text>
     </Pane> : null
   )
 };
 
-export default ErrorMessage;
+export default FieldErrorMessage;

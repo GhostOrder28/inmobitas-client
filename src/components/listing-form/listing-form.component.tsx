@@ -23,7 +23,7 @@ import useWindowDimensions from '../../hooks/use-window-dimensions';
 import http from "../../utils/axios-instance";
 import { selectCurrentUserId } from "../../redux/user/user.selectors";
 import { selectValidationErrMsg } from "../../utils/utility-functions";
-import ErrorMessage from "../error-message/error-message.component";
+import FieldErrorMessage from "../field-error-message/field-error-message.component";
 import "./listing-form.styles.css";
 import { Presets, Listing } from "../../pages/listing-page/listing-page.types";
 import { ValidationError } from "../../redux/redux.types";
@@ -148,8 +148,8 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                       className="form-field"
                     />
                     </div>
-                      <ErrorMessage
-                        fieldErrorMsg={selectValidationErrMsg(
+                      <FieldErrorMessage
+                        message={selectValidationErrMsg(
                           errors,
                           "clientName"
                         )}
@@ -169,8 +169,8 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                             className="form-field"
                           />
                         </div>
-                        <ErrorMessage
-                        fieldErrorMsg={selectValidationErrMsg(
+                        <FieldErrorMessage
+                        message={selectValidationErrMsg(
                           errors,
                           "clientContactPhone"
                         )}
@@ -195,7 +195,7 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                           <Text width={"9rem"}>{ t('district', { ns: 'listing' }) + ' *' }</Text>
                           <TextInput {...props.input} placeholder={ t('district', { ns: 'listing' }) } width={"100%"} className="form-field" />
                         </div>
-                        <ErrorMessage fieldErrorMsg={selectValidationErrMsg(errors, "district")} />
+                        <FieldErrorMessage message={selectValidationErrMsg(errors, "district")} />
                       </>
                         )}
                   </Field>
@@ -213,7 +213,7 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                               className="form-field"
                             />
                           </div>
-                          <ErrorMessage fieldErrorMsg={selectValidationErrMsg(errors, "neighborhood")}
+                          <FieldErrorMessage message={selectValidationErrMsg(errors, "neighborhood")}
                           />
                         </>
                       )}
@@ -230,8 +230,8 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                               className="form-field"
                             />
                           </div>
-                          <ErrorMessage
-                            fieldErrorMsg={selectValidationErrMsg(
+                          <FieldErrorMessage
+                            message={selectValidationErrMsg(
                               errors,
                               "addressDetails"
                             )}
@@ -293,8 +293,8 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                     </div>
                   </div>
 
-                  <ErrorMessage
-                    fieldErrorMsg={selectValidationErrMsg(errors, "contractTypeId")}
+                  <FieldErrorMessage
+                    message={selectValidationErrMsg(errors, "contractTypeId")}
                   />
                   {/*{ selectedMode === 1 &&
                   <>
@@ -361,8 +361,8 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                                       flex={9}
                                     />
                                   </div>
-                                  <ErrorMessage
-                                    fieldErrorMsg={selectValidationErrMsg(
+                                  <FieldErrorMessage
+                                    message={selectValidationErrMsg(
                                       errors,
                                       "price"
                                     )}
@@ -467,8 +467,8 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                         </Field>
                       </div>
                     </div>
-                    <ErrorMessage
-                      fieldErrorMsg={selectValidationErrMsg(errors, "fee")}
+                    <FieldErrorMessage
+                      message={selectValidationErrMsg(errors, "fee")}
                     />
                     [><Field name="signedDate" component="input">
                     {(props) => (
@@ -483,8 +483,8 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                       </div>
                     )}
                     </Field>
-                    <ErrorMessage
-                      fieldErrorMsg={selectValidationErrMsg(errors, "signedDate")}
+                    <FieldErrorMessage
+                      message={selectValidationErrMsg(errors, "signedDate")}
                     />
                     <Field name="startDate" component="input">
                       {(props) => (
@@ -499,8 +499,8 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                         </div>
                       )}
                     </Field>
-                    <ErrorMessage
-                      fieldErrorMsg={selectValidationErrMsg(errors, "startDate")}
+                    <FieldErrorMessage
+                      message={selectValidationErrMsg(errors, "startDate")}
                     />
                     <Field name="endDate" component="input">
                       {(props) => (
@@ -513,8 +513,8 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                         </div>
                       )}
                     </Field>
-                    <ErrorMessage
-                      fieldErrorMsg={selectValidationErrMsg(errors, "endDate")}
+                    <FieldErrorMessage
+                      message={selectValidationErrMsg(errors, "endDate")}
                     /><]
                   </>
                   }*/}
@@ -561,8 +561,8 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                                   { t('no', { ns: 'listing' }) }
                                 </option>
                               </Select>
-                              <ErrorMessage
-                                fieldErrorMsg={selectValidationErrMsg(
+                              <FieldErrorMessage
+                                message={selectValidationErrMsg(
                                   errors,
                                   "petsAllowed"
                                 )}
@@ -600,8 +600,8 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                                   { t('no', { ns: 'listing' }) }
                                 </option>
                               </Select>
-                              <ErrorMessage
-                                fieldErrorMsg={selectValidationErrMsg(
+                              <FieldErrorMessage
+                                message={selectValidationErrMsg(
                                   errors,
                                   "childrenAllowed"
                                 )}
@@ -618,8 +618,8 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                                 width={"100%"}
                                 className="form-field"
                               />
-                                <ErrorMessage
-                                  fieldErrorMsg={selectValidationErrMsg(
+                                <FieldErrorMessage
+                                  message={selectValidationErrMsg(
                                     errors,
                                     "ownerPreferencesDetails"
                                   )}
@@ -664,8 +664,8 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                       ))}
                     </Select>
                     </div>
-                      <ErrorMessage
-                        fieldErrorMsg={selectValidationErrMsg(
+                      <FieldErrorMessage
+                        message={selectValidationErrMsg(
                           errors,
                           "estateTypeId"
                         )}
@@ -691,8 +691,8 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                                   placeholder={ t('numberOfFloors', { ns: 'listing' }) }
                                 />
                               </div>
-                              <ErrorMessage
-                                fieldErrorMsg={selectValidationErrMsg(
+                              <FieldErrorMessage
+                                message={selectValidationErrMsg(
                                   errors,
                                   "numberOfFloors"
                                 )}
@@ -716,8 +716,8 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                                 placeholder={ t('floorLocation', { ns: 'listing' }) }
                             />
                               </div>
-                          <ErrorMessage
-                            fieldErrorMsg={selectValidationErrMsg(
+                          <FieldErrorMessage
+                            message={selectValidationErrMsg(
                               errors,
                               "floorLocation"
                             )}
@@ -745,8 +745,8 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                         placeholder={"m²"}
                       />
                       </div>
-                        <ErrorMessage
-                          fieldErrorMsg={selectValidationErrMsg(
+                        <FieldErrorMessage
+                          message={selectValidationErrMsg(
                             errors,
                             "totalArea"
                           )}
@@ -769,8 +769,8 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                               placeholder={"m²"}
                             />
                           </div>
-                          <ErrorMessage
-                          fieldErrorMsg={selectValidationErrMsg(
+                          <FieldErrorMessage
+                          message={selectValidationErrMsg(
                             errors,
                             "builtArea"
                           )}
@@ -793,8 +793,8 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                             placeholder={ t('numberOfBedrooms', { ns: 'listing' }) }
                         />
                           </div>
-                      <ErrorMessage
-                        fieldErrorMsg={selectValidationErrMsg(
+                      <FieldErrorMessage
+                        message={selectValidationErrMsg(
                           errors,
                           "numberOfBedrooms"
                         )}
@@ -817,8 +817,8 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                               placeholder={ t('numberOfBathrooms', { ns: 'listing' }) }
                             />
                           </div>
-                          <ErrorMessage
-                            fieldErrorMsg={selectValidationErrMsg(
+                          <FieldErrorMessage
+                            message={selectValidationErrMsg(
                               errors,
                               "numberOfBathrooms"
                             )}
@@ -841,8 +841,8 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                               placeholder={ t('numberOfGarages', { ns: 'listing' }) }
                             />
                           </div>
-                          <ErrorMessage
-                            fieldErrorMsg={selectValidationErrMsg(
+                          <FieldErrorMessage
+                            message={selectValidationErrMsg(
                               errors,
                               "numberOfGarages"
                             )}
@@ -865,8 +865,8 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                               placeholder={ t('numberOfKitchens', { ns: 'listing' }) }
                             />
                           </div>
-                          <ErrorMessage
-                            fieldErrorMsg={selectValidationErrMsg(
+                          <FieldErrorMessage
+                            message={selectValidationErrMsg(
                               errors,
                               "numberOfKitchens"
                             )}
@@ -894,8 +894,8 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                               <option value={"false"}>{ t('no', { ns: 'listing' }) }</option>
                             </Select>
                           </div>
-                          <ErrorMessage
-                            fieldErrorMsg={selectValidationErrMsg(
+                          <FieldErrorMessage
+                            message={selectValidationErrMsg(
                               errors,
                               "haveNaturalGas"
                             )}
@@ -914,8 +914,8 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                             }
                             className="form-field"
                           />
-                          <ErrorMessage
-                            fieldErrorMsg={selectValidationErrMsg(
+                          <FieldErrorMessage
+                            message={selectValidationErrMsg(
                               errors,
                               "estateDetails"
                             )}
@@ -927,7 +927,7 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                   }
                 </Pane>
                 {
-                  errors && <ErrorMessage fieldErrorMsg={t('errorGenericMessage')} />
+                  errors && <FieldErrorMessage message={t('errorGenericMessage')} />
                 }
                 <Pane
                   position={'absolute'}

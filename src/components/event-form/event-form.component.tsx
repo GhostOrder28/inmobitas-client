@@ -19,7 +19,7 @@ import TimePicker from '../time-picker/time-picker.component';
 import DatePicker from '../date-picker/date-picker.component';
 import { css } from 'glamor';
 import { compareAsc } from 'date-fns';
-import ErrorMessage from '../error-message/error-message.component';
+import FieldErrorMessage from '../field-error-message/field-error-message.component';
 import { selectValidationErrMsg } from '../../utils/utility-functions';
 import useClickOutside from '../../hooks/use-click-outside';
 import './event-form.styles.scss';
@@ -116,7 +116,7 @@ const EventForm: FC<EventFormProps> = ({ currentEvent, setCurrentEvent, date, se
                   />
               )}
             </Field>
-            <ErrorMessage fieldErrorMsg={selectValidationErrMsg(errors, 'title')} />
+            <FieldErrorMessage message={selectValidationErrMsg(errors, 'title')} />
             </Pane>
           <Pane>
           <Text display={'block'}>{ t('date') }</Text>
@@ -128,7 +128,7 @@ const EventForm: FC<EventFormProps> = ({ currentEvent, setCurrentEvent, date, se
                 />
             )}
               </Field>
-          <ErrorMessage fieldErrorMsg={selectValidationErrMsg(errors, 'startDate')} />
+          <FieldErrorMessage message={selectValidationErrMsg(errors, 'startDate')} />
             </Pane>
           <Pane>
           <Text display={'block'}>{ displayEndDate ? t('startTime') : t('time') }</Text>
@@ -140,7 +140,7 @@ const EventForm: FC<EventFormProps> = ({ currentEvent, setCurrentEvent, date, se
                 />
             )}
               </Field>
-          <ErrorMessage fieldErrorMsg={selectValidationErrMsg(errors, 'startDate')} />
+          <FieldErrorMessage message={selectValidationErrMsg(errors, 'startDate')} />
             </Pane>
             { displayEndDate &&
           <Pane>
@@ -153,7 +153,7 @@ const EventForm: FC<EventFormProps> = ({ currentEvent, setCurrentEvent, date, se
                 />
             )}
               </Field>
-          <ErrorMessage fieldErrorMsg={selectValidationErrMsg(errors, 'endDate')} />
+          <FieldErrorMessage message={selectValidationErrMsg(errors, 'endDate')} />
           </Pane>
         }
         <Button
