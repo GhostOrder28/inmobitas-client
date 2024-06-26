@@ -1,14 +1,12 @@
-import { ChangeEventHandler, ChangeEvent, Dispatch, SetStateAction } from "react";
+import { ChangeEvent } from "react";
 import axios, { AxiosError } from 'axios';
 import http from './axios-instance';
-import { toaster } from "evergreen-ui";
-import { ContractPreset, CurrencyPreset, EstatePreset } from '../pages/listing-page/listing-page.types';
 import { ValidationError } from '../redux/redux.types';
 import { AnyAction } from 'redux';
 import { ItemIds } from '../components/custom-table/custom-table.types';
 import { RouteSource } from './utility-types';
 import { Picture } from "../components/listing-detail/listing-detail.types";
-import { PictureCategoryFromPayload } from "../components/listing-detail/listing-detail.types";
+import { ContractPreset, EstatePreset } from "../pages/listing-page/listing-page.types";
 
 export const strParseIn = (str: string) => {
   return str.replaceAll(' ', '-').toLowerCase();
@@ -106,14 +104,18 @@ export const selectValidationErrMsg = (errObj: AxiosError<{ validationErrors: Va
   return error?.message;
 };
 
-type PresetSlice = (ContractPreset | CurrencyPreset | EstatePreset)[];
+type Preset = ContractPreset | EstatePreset;
 
-export const presetSelector = (presetSlice: PresetSlice, target: number): ContractPreset | CurrencyPreset | EstatePreset | undefined => {
+export const presetSelector = <P extends Preset>(preset: P[], presetId: number): P => {
+  const selection = preset.find(item => {
+    const keys = Object.keys(item) as (keyof (ContractPreset | EstatePreset))[]
+    const idKey = keys.find(key => (key as string).includes('Id'));    
+    if (!idKey) throw Error(`object doesn't have an id property`);
 
-  const selection = presetSlice.find(item => {
-    const id = Object.keys(item).find(key => key.includes('Id'));    
-    return id ? item[id] === target : new Error(`object doesn't have an id property`);
+    return item[idKey] === presetId;
   });
+
+  if (!selection) throw Error(`preset not found`);
 
   return selection;
 }

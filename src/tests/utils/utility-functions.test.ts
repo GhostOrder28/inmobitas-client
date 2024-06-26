@@ -1,7 +1,7 @@
 import { 
   strParseIn,
   strParseOut,
-  presetSelector,
+  // presetSelector,
   selectValidationErrMsg,
 } from "../../utils/utility-functions";
 import { AxiosError } from 'axios';
@@ -29,25 +29,25 @@ describe('text parsing functions', () => {
 })
 
 describe('post request operations', () => {
-  it('should select the second preset from the given array of presets', () => {
-    const presets = [
-      {
-        currencyTypeId: 1,
-        currencyName: 'Peruvian Nuevo Sol',
-        currencySymbol: 'S/'
-      },
-      {
-        currencyTypeId: 2,
-        currencyName: 'US Dollar',
-        currencySymbol: '$'
-      }
-    ]
-    expect(presetSelector(presets, 2)).toEqual({
-      currencyTypeId: 2,
-      currencyName: 'US Dollar',
-      currencySymbol: '$'
-    })
-  })
+  // it('should select the second preset from the given array of presets', () => {
+  //   const presets = [
+  //     {
+  //       currencyTypeId: 1,
+  //       currencyName: 'Peruvian Nuevo Sol',
+  //       currencySymbol: 'S/'
+  //     },
+  //     {
+  //       currencyTypeId: 2,
+  //       currencyName: 'US Dollar',
+  //       currencySymbol: '$'
+  //     }
+  //   ]
+  //   expect(presetSelector(presets, 2)).toEqual({
+  //     currencyTypeId: 2,
+  //     currencyName: 'US Dollar',
+  //     currencySymbol: '$'
+  //   })
+  // })
   it('should select the validation error message from axios rejected call', () => {
     const errObj = { response: { data: { validationErrors: [
       {

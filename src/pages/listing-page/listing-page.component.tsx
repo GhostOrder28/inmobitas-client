@@ -13,11 +13,18 @@ import { SpecificationTable } from '../../components/specification-table/specifi
 const ListingForm = lazy(() => import('../../components/listing-form/listing-form.component'));
 const ListingDetail = lazy(() => import('../../components/listing-detail/listing-detail.component'));
 
+// function isSpecificationTable (data: Listing | SpecificationTable | undefined): data is SpecificationTable{
+//   return (data as SpecificationTable).data.length !== undefined;
+// }
+//
+// function isListingForm (data: ListingForm | SpecificationTable | undefined): data is ListingForm {
+//   return Object.keys(data as ListingForm).length > 0;
+// }
 const ListingPage = () => {
 
   const location = useLocation();
   const { clientid, listingid } = useParams();
-  const [listing, setListing] = useState<Listing | SpecificationTable>();
+  const [listing, setListing] = useState<Listing>();
   const [presets, setPresets] = useState<Presets>();
   const [error, setError] = useState<Error | null>(null);
   const userId = useSelector(selectCurrentUserId);
@@ -61,6 +68,7 @@ const ListingPage = () => {
         </Suspense>
       )
     case `/listingdetail/${clientid}/${listingid}`:
+      // if (!isSpecificationTable(listing)) return;
       return (
         <Suspense fallback={<Spinner />}>
           <ListingDetail dataPresets={presets} listing={listing} />

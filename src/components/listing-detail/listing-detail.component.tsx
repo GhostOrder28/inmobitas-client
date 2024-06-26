@@ -19,7 +19,7 @@ import { Listing } from '../../pages/listing-page/listing-page.types';
 
 export type ListingDetailProps = {
   dataPresets: Presets | undefined;
-  listing: Listing | SpecificationTableType | undefined; //I need to find a better way to narrow the this type because in this component 'listing' is never a Listing.
+  listing: Listing | undefined; //I need to find a better way to narrow the this type because in this component 'listing' is never a Listing.
 };
 
 const ListingDetail = ({ dataPresets, listing }: ListingDetailProps) => {

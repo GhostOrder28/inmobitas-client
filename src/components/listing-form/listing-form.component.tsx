@@ -1,18 +1,16 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, Dispatch, SetStateAction } from "react";
 import { useTranslation } from "react-i18next";
 import { AxiosError } from "axios";
 import { useSelector } from "react-redux";
-import { Form, Field, FormSpy } from "react-final-form";
+
 import { FormApi } from "final-form";
+import { useForm } from "react-hook-form";
+
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   Button,
   Pane,
-  TextInput,
-  Checkbox,
   Text,
-  Textarea,
-  Select,
   Tablist,
   Tab,
 } from "evergreen-ui";
@@ -20,81 +18,59 @@ import {
 import useRelativeHeight from '../../hooks/use-relative-height';
 import useWindowDimensions from '../../hooks/use-window-dimensions';
 
-import http from "../../utils/axios-instance";
+import Input from "../input/input.component";
+import ContractTypeBlock from "./contract-type-block.subcomponent";
+
 import { selectCurrentUserId } from "../../redux/user/user.selectors";
-import { selectValidationErrMsg } from "../../utils/utility-functions";
 import FieldErrorMessage from "../field-error-message/field-error-message.component";
 import "./listing-form.styles.css";
-import { Presets, Listing } from "../../pages/listing-page/listing-page.types";
+import { Presets, Listing, ListingWithoutIds } from "../../pages/listing-page/listing-page.types";
 import { ValidationError } from "../../redux/redux.types";
 import { DESKTOP_BREAKPOINT_VALUE } from "../../constants/breakpoints.constants";
-import { SpecificationTable } from '../specification-table/specification-table.types';
-
-const formInitialState = {
-  contractTypeId: 1,
-  //currencyTypeId: 1,
-  estateTypeId: 1,
-  //isPercentage: false,
-  isExclusive: false,
-};
+import { LISTING_FORM_INITIAL_STATE } from "./listing-form.consts";
+import useCalculateAppWidth from "../../hooks/use-calculate-app-width";
+import { onSubmitListingData } from './listing-form.api';
 
 type ListingFormProps = {
   dataPresets: Presets | undefined;
-  listing?: Listing | SpecificationTable | undefined;
-  setListing: React.Dispatch<React.SetStateAction<Listing | SpecificationTable | undefined>>;
+  listing?: Listing | undefined;
+  setListing: Dispatch<SetStateAction<Listing | undefined>>;
 };
 
 const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => {
   
-  const userId = useSelector(selectCurrentUserId);
-  const { clientid, listingid } = useParams();
   const location = useLocation();
-  const navigate = useNavigate();
   const formRef = useRef<FormApi>();
   const { t } = useTranslation(['listing', 'client', 'ui']);
   const [errors, setErrors] = useState<AxiosError<{ validationErrors: ValidationError[] }>>();
-  const [selectedMode, setSelectedMode] = useState<number>(0);
+  const [selectedMode, setSelectedMode] = useState<number>(1);
   const formWrapperRef = useRef<HTMLDivElement | null>(null);
   const formHeight = useRelativeHeight(formWrapperRef, { extraSpace: 60 });
   const { windowInnerWidth } = useWindowDimensions();
+  const appWidth = useCalculateAppWidth();
+
+  const { register, handleSubmit, watch, control } = useForm<Listing>({
+    defaultValues: LISTING_FORM_INITIAL_STATE,
+    values: listing
+  });
+
+  const inputCommonProps = { register, errors };
+
+  const checkboxCommonProps = {
+    ...inputCommonProps,
+    control,
+  };
 
   useEffect(() => {
     if (location.pathname === "/newlisting" && formRef.current) {
-      formRef.current.reset(formInitialState);
+      formRef.current.reset(LISTING_FORM_INITIAL_STATE);
     }
   }, [location.pathname]);
 
-  const onSubmit = async (values: Partial<Listing>): Promise<void> => {
-    console.log("submitting values: ", values);
-
-    const { clientId, estateId, contractId } = values;
-    const formKeys: string[] = Object.keys(values);
-
-    const remainingProps: Omit<Listing, "clientId" | "estateId" | "contractId"> = formKeys.reduce((acc, current) => {
-      if (!(current === "clientId" || current === "estateId" || current === "contractId")) {
-        return { ...acc, [current]: values[current] };
-      } else {
-        return acc;
-      }
-    }, {});
-
-    try {
-      const res = location.pathname === `/newlisting`
-        ? await http.post<SpecificationTable>(`/listings/${userId}`, remainingProps)
-        : await http.put<SpecificationTable>(`/listings/${userId}/${clientId}/${estateId}/${contractId}`, remainingProps);
-      
-      setListing(res.data);      
-      navigate(`/listingdetail/${res.data.clientId}/${res.data.estateId}`);
-    } catch (err) {
-      setErrors(err as AxiosError<{ validationErrors: ValidationError[] }>);
-    }
-  };
+  const onSubmit = (values: any) => { console.log(values); };
 
   return (
-    <Pane 
-      width={windowInnerWidth > DESKTOP_BREAKPOINT_VALUE ? 600 : '100%'}
-      marginX={'auto'}
-    >
+    <Pane width={ appWidth } marginX={ 'auto' }>
       <Tablist width={"100%"} marginBottom={'.5rem'} display={"flex"} className="tablist">
         {[t('basic', { ns: 'listing' }), t('detailed', { ns: 'listing' })].map((tab, index) => (
           <Tab
@@ -116,840 +92,131 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
         overflow={'scroll'}
         height={formHeight}
       >
-        <Form
-          initialValues={listing || formInitialState}
-          onSubmit={onSubmit}
-          subscription={{ submitting: true, pristine: true }}
-          render={({ handleSubmit, form, values }) => {
-            formRef.current = form;
-            return (
-              <form
-                className="form flex flex-column pa3"
-                onSubmit={handleSubmit}
-                encType="multipart/form-data"
-                method="post"
+        <form
+          className="form flex flex-column pa3"
+          onSubmit={handleSubmit((listingData) => onSubmitListingData(listingData, setListing, setErrors))}
+          /* onSubmit={handleSubmit(onSubmit)} */
+          encType="multipart/form-data"
+          method="post"
+        >
+          <Pane
+            position={"relative"}
+            elevation={0}
+            padding={20}
+            className="form-category"
+          >
+            <Text size={600} className="form-category-header">{ t('owner', { ns: 'client' }) }</Text>
+            <Input name='clientName' type='text' label={ t('clientName', { ns: 'client' }) } { ...inputCommonProps }/>
+            <Input name='clientContactPhone' type="text" label={ t('contactPhone', { ns: 'client' }) } { ...inputCommonProps } />
+          </Pane>
+          <Pane
+            position={"relative"}
+            elevation={0}
+            padding={20}
+            className="form-category"
+          >
+            <Text size={600} className="form-category-header">
+              { t('location', { ns: 'listing' }) } 
+            </Text>
+            <Input name="district" type="text" label={ t('district') } { ...inputCommonProps } />
+            { selectedMode === 1 &&
+            <>
+              <Input name="neighborhood" type="text" label={ t('neighborhood') } { ...inputCommonProps } />
+              <Input name="addressDetails" type="text" label={ t('addressDetails') } { ...inputCommonProps } />
+            </>
+            }
+          </Pane>
+          <Pane
+            position={"relative"}
+            elevation={0}
+            padding={20}
+            className="form-category"
+          >
+            <Text size={600} className="form-category-header">
+              { t('contract') } 
+            </Text>
+            <ContractTypeBlock 
+              selectOptions={ dataPresets?.contractTypes }
+              { ...checkboxCommonProps }
+            />
+          </Pane>
+          {
+            watch("contractTypeId") === 2 && selectedMode === 1 && (
+              <Pane
+                position={"relative"}
+                elevation={0}
+                padding={20}
+                className="form-category"
               >
-                <Pane
-                  position={"relative"}
-                  elevation={0}
-                  padding={20}
-                  className="form-category"
-                >
-                  <Text size={600} className="form-category-header">{ t('owner', { ns: 'client' }) }</Text>
-                  <Field name="clientName" component="input">
-                  {(props) => (
-                    <>
-                    <div className="flex items-center form-field">
-                    <Text width={"9rem"}>{ t('name', { ns: 'client' }) + ' *' }</Text>
-                    <TextInput
-                      {...props.input}
-                      placeholder={ t('ownerName', { ns: 'client' }) }
-                      width={"100%"}
-                      className="form-field"
-                    />
-                    </div>
-                      <FieldErrorMessage
-                        message={selectValidationErrMsg(
-                          errors,
-                          "clientName"
-                        )}
-                      />
-                    </>
-                  )}
-                  </Field>
-                  <Field name="clientContactPhone" component="input" parse={ (value) => parseInt(value) || null }>
-                    {(props) => (
-                      <>
-                        <div className="flex items-center form-field">
-                          <Text width={"9rem"}>{ t('phone', { ns: 'client' }) + ' *' }</Text>
-                          <TextInput
-                            {...props.input}
-                            placeholder={ t('ownerContactPhone', { ns: 'client' }) }
-                            width={"100%"}
-                            className="form-field"
-                          />
-                        </div>
-                        <FieldErrorMessage
-                        message={selectValidationErrMsg(
-                          errors,
-                          "clientContactPhone"
-                        )}
-                        />
-                        </>
-                    )}
-                        </Field>
-                      </Pane>
-                <Pane
-                  position={"relative"}
-                  elevation={0}
-                  padding={20}
-                  className="form-category"
-                >
-                  <Text size={600} className="form-category-header">
-                    { t('location', { ns: 'listing' }) } 
-                  </Text>
-                  <Field name="district" component="input">
-                    {(props) => (
-                      <>
-                        <div className="flex items-center form-field">
-                          <Text width={"9rem"}>{ t('district', { ns: 'listing' }) + ' *' }</Text>
-                          <TextInput {...props.input} placeholder={ t('district', { ns: 'listing' }) } width={"100%"} className="form-field" />
-                        </div>
-                        <FieldErrorMessage message={selectValidationErrMsg(errors, "district")} />
-                      </>
-                        )}
-                  </Field>
-                  { selectedMode === 1 &&
-                  <>
-                    <Field name="neighborhood" component="input">
-                      {(props) => (
-                        <>
-                          <div className="flex items-center form-field">
-                            <Text width={"9rem"}>{ t('neighborhood', { ns: 'listing' }) }</Text>
-                            <TextInput
-                              {...props.input}
-                              placeholder={ t('neighborhood', { ns: 'listing' }) }
-                              width={"100%"}
-                              className="form-field"
-                            />
-                          </div>
-                          <FieldErrorMessage message={selectValidationErrMsg(errors, "neighborhood")}
-                          />
-                        </>
-                      )}
-                    </Field>
-                    <Field name="addressDetails" component="input">
-                      {(props) => (
-                        <>
-                          <div className="flex items-center form-field">
-                            <Text width={"9rem"}>{ t('details', { ns: 'listing' }) }</Text>
-                            <TextInput
-                              {...props.input}
-                              placeholder={ t('addressDetails', { ns: 'listing' }) }
-                              width={"100%"}
-                              className="form-field"
-                            />
-                          </div>
-                          <FieldErrorMessage
-                            message={selectValidationErrMsg(
-                              errors,
-                              "addressDetails"
-                            )}
-                          />
-                        </>
-                      )}
-                    </Field>
-                  </>
-                  }
+                <Text size={600} className="form-category-header">
+                  { t('preferenceDetails') }
+                </Text>
+                <Pane display="flex">
+                  <Input name="petsAllowed" type="checkbox" label={ t('petsAllowed') } { ...checkboxCommonProps } />
+                  <Input name="childrenAllowed" type="checkbox" label={ t('childrenAllowed') } { ...checkboxCommonProps } />
                 </Pane>
-                <Pane
-                  position={"relative"}
-                  elevation={0}
-                  padding={20}
-                  className="form-category"
-                >
-                  <Text size={600} className="form-category-header">
-                    { t('contract', { ns: 'listing' }) }
-                  </Text>
-                  <div className="flex items-center form-field">
-                    <Text width={"9rem"}>{ t('contractType', { ns: 'listing' }) }</Text>
-                    <div className="flex w-100">
-                      <Field
-                        name="contractTypeId"
-                        component="input"
-                        parse={(value) => parseInt(value) || null}
-                      >
-                        {(props) => (
-                          <Select
-                            value={props.input.value}
-                            onChange={(e) => props.input.onChange(e.target.value)}
-                            width={"100%"}
-                            flex={"initial"}
-                          >
-                            {dataPresets?.contractTypes.map((contract, idx) => (
-                              <option key={idx} value={contract.contractTypeId}>
-                                {contract.contractName}
-                              </option>
-                            ))}
-                          </Select>
-                        )}
-                      </Field>
-                      <Field name="isExclusive" type={"checkbox"}>
-                        {(props) => (
-                          <Checkbox
-                            flex={1}
-                            width={"100%"}
-                            whiteSpace={"nowrap"}
-                            margin={0}
-                            marginLeft={"1rem"}
-                            display={"flex"}
-                            alignItems={"center"}
-                            label={t('exclusive', { ns: 'listing' })}
-                            checked={props.input.checked}
-                            onChange={(e) => props.input.onChange(e.target.checked)}
-                          />
-                        )}
-                      </Field>
-                    </div>
-                  </div>
-
-                  <FieldErrorMessage
-                    message={selectValidationErrMsg(errors, "contractTypeId")}
-                  />
-                  {/*{ selectedMode === 1 &&
-                  <>
-                    <Field
-                      name="currencyTypeId"
-                      component="input"
-                      parse={(value) => parseInt(value)}
-                    >
-                    {(props) => (
-                      <div className="flex items-center form-field">
-                      <Text width={"9rem"}>{ t('currency', { ns: 'listing' }) }</Text>
-                      <Select
-                        value={props.input.value}
-                        onChange={(e) => props.input.onChange(e.target.value)}
-                        width={"100%"}
-                        flex={"initial"}
-                      >
-                        {dataPresets?.currencyTypes.map((currency, idx) => (
-                          <option key={idx} value={currency.currencyTypeId}>
-                            {currency.currencyName}
-                          </option>
-                        ))}
-                      </Select>
-                      </div>
-                    )}
-                    </Field>
-                    <div className="flex items-center form-field">
-                      <FormSpy subscription={{ values: true }}>
-                        {({ values }) => {
-                          console.log(values);                    
-                          return (
-                            <Field
-                              name="estatePrice"
-                              component="input"
-                              parse={(value) => parseInt(value) || null}
-                            >
-                              {(props) => (
-                                <>
-                                  <Text width={"9rem"}>
-                                    {values.contractTypeId === 1
-                                      ? t('estatePrice', { ns: 'listing' }) 
-                                    : t('rent', { ns: 'listing' })}
-                                  </Text>
-                                  <div className="flex items-center w-100">
-                                    <Text
-                                      flex={1}
-                                      width={"100%"}
-                                      marginRight={"0.3rem"}
-                                    >
-                                      {dataPresets &&
-                                        presetSelector(
-                                          dataPresets.currencyTypes,
-                                          values.currencyTypeId as number,
-                                      )?.currencySymbol}
-                                    </Text>
-                                    <TextInput
-                                      {...props.input}
-                                      placeholder={
-                                        values.contractTypeId === 1
-                                          ? t('estatePrice', { ns: 'listing' }) 
-                                          : t('rentCost', { ns: 'listing' }) 
-                                      }
-                                      width={"100%"}
-                                      flex={9}
-                                    />
-                                  </div>
-                                  <FieldErrorMessage
-                                    message={selectValidationErrMsg(
-                                      errors,
-                                      "price"
-                                    )}
-                                  />
-                                </>
-                              )}
-                            </Field>
-                          )}}
-                      </FormSpy>
-                    </div>
-                    <FormSpy subscription={{ values: true }}>
-                      {({ values }) =>
-                        values.contractTypeId === 2 && (
-                          <Field
-                            name="utilitiesIncluded"
-                            component="input"
-                            parse={(value) =>
-                              value === "null" ? null : value === "true"
-                            }
-                          >
-                            {(props) => (
-                              <div className="flex items-center form-field">
-                                <Text width={"9rem"}>{ t('utilities', { ns: 'listing' }) }</Text>
-                                <Select
-                                  value={props.input.value}
-                                  onChange={(e) =>
-                                    props.input.onChange(e.target.value)
-                                  }
-                                  width={"100%"}
-                                  flex={"initial"}
-                                >
-                                  <option value={"null"}>
-                                    {
-                                      t('noInfo', { ns: 'listing' }) 
-                                    }
-                                  </option>
-                                    <option value={"true"}>
-                                      { t('yes', { ns: 'listing' }) }
-                                    </option>
-                                  <option value={"false"}>
-                                    { t('no', { ns: 'listing' }) }
-                                  </option>
-                                </Select>
-                              </div>
-                            )}
-                          </Field>
-                        )
-                      }
-                    </FormSpy>
-                    <div className="flex items-center form-field">
-                      <Text width={"9rem"}>{ t('fee', { ns: 'listing' }) }</Text>
-                      <div className="flex items-center w-100">
-                        <FormSpy subscription={{ values: true }}>
-                          {({ values }) => (
-                            <Field
-                              name="fee"
-                              component="input"
-                              parse={(value) => parseInt(value) || null}
-                            >
-                            {(props) => (
-                              <>
-                              <Text
-                              flex={1}
-                                width={"100%"}
-                                marginRight={"0.3rem"}
-                              >
-                              {values.isPercentage
-                                ? "%"
-                                : dataPresets &&
-                                  presetSelector(
-                                    dataPresets.currencyTypes,
-                                    values.currencyTypeId as number,
-                                )?.currencySymbol}
-                              </Text>
-                                <TextInput
-                                  {...props.input}
-                                  placeholder={ t('fee', { ns: 'listing' }) }
-                                  flex={4}
-                                  width={"100%"}
-                                />
-                                </>
-                            )}
-                            </Field>
-                          )}
-                        </FormSpy>
-                        <Field name="isPercentage" type={"checkbox"}>
-                          {(props) => (
-                            <Checkbox
-                              flex={5}
-                              width={"100%"}
-                              whiteSpace={"nowrap"}
-                              margin={0}
-                              marginLeft={"1rem"}
-                              display={"flex"}
-                              justifyContent={"end"}
-                              alignItems={"center"}
-                              label={t('percentage', { ns: 'listing' })}
-                              checked={props.input.checked}
-                              onChange={(e) => props.input.onChange(e.target.checked)}
-                            />
-                          )}
-                        </Field>
-                      </div>
-                    </div>
-                    <FieldErrorMessage
-                      message={selectValidationErrMsg(errors, "fee")}
-                    />
-                    [><Field name="signedDate" component="input">
-                    {(props) => (
-                      <div className="flex items-center form-field">
-                      <Text
-                      width={"9rem"}
-                      >{`${t('signedDate', { ns: 'listing' })}:`}</Text>
-                        <DatePicker
-                          value={props.input.value}
-                          onChange={props.input.onChange}
-                        />
-                      </div>
-                    )}
-                    </Field>
-                    <FieldErrorMessage
-                      message={selectValidationErrMsg(errors, "signedDate")}
-                    />
-                    <Field name="startDate" component="input">
-                      {(props) => (
-                        <div className="flex items-center form-field">
-                          <Text
-                            width={"9rem"}
-                          >{`${t('startDate', { ns: 'listing' })}:`}</Text>
-                          <DatePicker
-                            value={props.input.value}
-                            onChange={props.input.onChange}
-                          />
-                        </div>
-                      )}
-                    </Field>
-                    <FieldErrorMessage
-                      message={selectValidationErrMsg(errors, "startDate")}
-                    />
-                    <Field name="endDate" component="input">
-                      {(props) => (
-                        <div className="flex items-center form-field">
-                          <Text width={"9rem"}>{`${t('endDate', { ns: 'listing' })}:`}</Text>
-                          <DatePicker
-                            value={props.input.value}
-                            onChange={props.input.onChange}
-                          />
-                        </div>
-                      )}
-                    </Field>
-                    <FieldErrorMessage
-                      message={selectValidationErrMsg(errors, "endDate")}
-                    /><]
-                  </>
-                  }*/}
-                </Pane>
-                <FormSpy subscription={{ values: true }}>
-                  {({ values }) =>
-                    values.contractTypeId === 2 && selectedMode === 1 && (
-                      <Pane
-                        position={"relative"}
-                        elevation={0}
-                        padding={20}
-                        className="form-category"
-                      >
-                        <Text size={600} className="form-category-header">
-                          { t('preferenceDetails', { ns: 'listing' }) }
-                        </Text>
-                        <Field
-                          name="petsAllowed"
-                          component="input"
-                          parse={(value) =>
-                            value === "null" ? null : value === "true"
-                          }
-                        >
-                          {(props) => (
-                            <div className="flex items-center form-field">
-                              <Text width={"9rem"}>
-                                { t('petsAllowed', { ns: 'listing' }) }
-                              </Text>
-                              <Select
-                                value={props.input.value}
-                                onChange={(e) =>
-                                  props.input.onChange(e.target.value)
-                              }
-                              width={"100%"}
-                              flex={"initial"}
-                              >
-                              <option value={"null"}>
-                                { t('noInfo', { ns: 'listing' }) }
-                              </option>
-                                <option value={"true"}>
-                                  { t('yes', { ns: 'listing' }) }
-                                </option>
-                                <option value={"false"}>
-                                  { t('no', { ns: 'listing' }) }
-                                </option>
-                              </Select>
-                              <FieldErrorMessage
-                                message={selectValidationErrMsg(
-                                  errors,
-                                  "petsAllowed"
-                                )}
-                              />
-                            </div>
-                                  )}
-                        </Field>
-                                  <Field
-                                    name="childrenAllowed"
-                                    component="input"
-                                    parse={(value) =>
-                                      value === "null" ? null : value === "true"
-                          }
-                                  >
-                          {(props) => (
-                            <div className="flex items-center form-field">
-                              <Text width={"9rem"}>
-                                { t('childrenAllowed', { ns: 'listing' }) }
-                              </Text>
-                              <Select
-                                value={props.input.value}
-                                onChange={(e) =>
-                                  props.input.onChange(e.target.value)
-                                }
-                                width={"100%"}
-                                flex={"initial"}
-                              >
-                                <option value={"null"}>
-                                  { t('noInfo', { ns: 'listing' }) }
-                                </option>
-                                <option value={"true"}>
-                                  { t('yes', { ns: 'listing' }) }
-                                </option>
-                                <option value={"false"}>
-                                  { t('no', { ns: 'listing' }) }
-                                </option>
-                              </Select>
-                              <FieldErrorMessage
-                                message={selectValidationErrMsg(
-                                  errors,
-                                  "childrenAllowed"
-                                )}
-                              />
-                            </div>
-                          )}
-                                  </Field>
-                        <Field name="ownerPreferencesDetails" component="input">
-                          {(props) => (
-                            <>
-                              <Textarea
-                                {...props.input}
-                                placeholder={ t('preferenceDetails', { ns: 'listing' }) }
-                                width={"100%"}
-                                className="form-field"
-                              />
-                                <FieldErrorMessage
-                                  message={selectValidationErrMsg(
-                                    errors,
-                                    "ownerPreferencesDetails"
-                                  )}
-                                />
-                                </>
-                          )}
-                        </Field>
-                      </Pane>
-                    )
-                  }
-                </FormSpy>
-                <Pane
-                  position={"relative"}
-                  elevation={0}
-                  padding={20}
-                  className="form-category"
-                >
-                  <Text size={600} className="form-category-header">
-                    { t('estate', { ns: 'listing' }) }
-                  </Text>
-                  <Field
-                    name="estateTypeId"
-                    component="input"
-                    parse={(value) => parseInt(value) || null}
-                  >
-                  {(props) => (
-                    <>
-                    <div className="flex items-center form-field">
-                    <Text width={"9rem"}>{ t('estateType', { ns: 'listing' }) }</Text>
-                    <Select
-                      {...props.input}
-                      value={props.input.value}
-                      onChange={(e) => props.input.onChange(e.target.value)}
-                      width={"100%"}
-                      flex={"initial"}
-                    >
-                      {dataPresets &&
-                        dataPresets.estateTypes.map((estate, idx) => (
-                          <option key={idx} value={estate.estateTypeId}>
-                            {estate.estateName}
-                          </option>
-                      ))}
-                    </Select>
-                    </div>
-                      <FieldErrorMessage
-                        message={selectValidationErrMsg(
-                          errors,
-                          "estateTypeId"
-                        )}
-                      />
-                    </>
-                  )}
-                  </Field>
-                  <FormSpy subscription={{ values: true }}>
-                    {({ values }) =>
-                      values.estateTypeId === 1 ? (
-                        <Field
-                          name="numberOfFloors"
-                          component="input"
-                          parse={(value) => parseInt(value) || null}
-                        >
-                          {(props) => (
-                            <>
-                              <div className="flex items-center form-field">
-                                <Text width={"9rem"}>{ t('floors', { ns: 'listing' }) }</Text>
-                                <TextInput
-                                  {...props.input}
-                                  width={"100%"}
-                                  placeholder={ t('numberOfFloors', { ns: 'listing' }) }
-                                />
-                              </div>
-                              <FieldErrorMessage
-                                message={selectValidationErrMsg(
-                                  errors,
-                                  "numberOfFloors"
-                                )}
-                              />
-                            </>
-                          )}
-                        </Field>
-                      ) : (
-                        <Field
-                          name="floorLocation"
-                          component="input"
-                          parse={(value) => parseInt(value) || null}
-                        >
-                          {(props) => (
-                          <>
-                            <div className="flex items-center form-field">
-                              <Text width={"9rem"}>{ t('floor', { ns: 'listing' }) }</Text>
-                              <TextInput
-                                {...props.input}
-                                width={"100%"}
-                                placeholder={ t('floorLocation', { ns: 'listing' }) }
-                            />
-                              </div>
-                          <FieldErrorMessage
-                            message={selectValidationErrMsg(
-                              errors,
-                              "floorLocation"
-                            )}
-                          />
-                          </>
-                          )}
-                        </Field>
-                      )
-                    }
-                  </FormSpy>
-                  { selectedMode === 1 &&
-                  <>
-                    <Field
-                      name="totalArea"
-                      component="input"
-                      parse={(value) => parseInt(value) || null}
-                    >
-                    {(props) => (
-                      <>
-                      <div className="flex items-center form-field">
-                      <Text width={"9rem"}>{ t('totalArea', { ns: 'listing' }) }</Text>
-                      <TextInput
-                        {...props.input}
-                        width={"100%"}
-                        placeholder={"m²"}
-                      />
-                      </div>
-                        <FieldErrorMessage
-                          message={selectValidationErrMsg(
-                            errors,
-                            "totalArea"
-                          )}
-                        />
-                      </>
-                    )}
-                      </Field>
-                    <Field
-                      name="builtArea"
-                      component="input"
-                      parse={(value) => parseInt(value) || null}
-                    >
-                      {(props) => (
-                        <>
-                          <div className="flex items-center form-field">
-                            <Text width={"9rem"}>{ t('builtArea', { ns: 'listing' }) }</Text>
-                            <TextInput
-                              {...props.input}
-                              width={"100%"}
-                              placeholder={"m²"}
-                            />
-                          </div>
-                          <FieldErrorMessage
-                          message={selectValidationErrMsg(
-                            errors,
-                            "builtArea"
-                          )}
-                          />
-                        </>
-                      )}
-                    </Field>
-                    <Field
-                      name="numberOfBedrooms"
-                      component="input"
-                      parse={(value) => parseInt(value) || null}
-                    >
-                      {(props) => (
-                      <>
-                        <div className="flex items-center form-field">
-                          <Text width={"9rem"}>{ t('bedrooms', { ns: 'listing' }) }</Text>
-                          <TextInput
-                            {...props.input}
-                            width={"100%"}
-                            placeholder={ t('numberOfBedrooms', { ns: 'listing' }) }
-                        />
-                          </div>
-                      <FieldErrorMessage
-                        message={selectValidationErrMsg(
-                          errors,
-                          "numberOfBedrooms"
-                        )}
-                      />
-                      </>
-                      )}
-                    </Field>
-                    <Field
-                      name="numberOfBathrooms"
-                      component="input"
-                      parse={(value) => parseInt(value) || null}
-                    >
-                      {(props) => (
-                        <>
-                          <div className="flex items-center form-field">
-                            <Text width={"9rem"}>{ t('bathrooms', { ns: 'listing' }) }</Text>
-                            <TextInput
-                              {...props.input}
-                              width={"100%"}
-                              placeholder={ t('numberOfBathrooms', { ns: 'listing' }) }
-                            />
-                          </div>
-                          <FieldErrorMessage
-                            message={selectValidationErrMsg(
-                              errors,
-                              "numberOfBathrooms"
-                            )}
-                          />
-                        </>
-                      )}
-                    </Field>
-                    <Field
-                      name="numberOfGarages"
-                      component="input"
-                      parse={(value) => parseInt(value) || null}
-                    >
-                      {(props) => (
-                        <>
-                          <div className="flex items-center form-field">
-                            <Text width={"9rem"}>{ t('garages', { ns: 'listing' }) }</Text>
-                            <TextInput
-                              {...props.input}
-                              width={"100%"}
-                              placeholder={ t('numberOfGarages', { ns: 'listing' }) }
-                            />
-                          </div>
-                          <FieldErrorMessage
-                            message={selectValidationErrMsg(
-                              errors,
-                              "numberOfGarages"
-                            )}
-                          />
-                        </>
-                      )}
-                    </Field>
-                    <Field
-                      name="numberOfKitchens"
-                      component="input"
-                      parse={(value) => parseInt(value) || null}
-                    >
-                      {(props) => (
-                        <>
-                          <div className="flex items-center form-field">
-                            <Text width={"9rem"}>{ t('kitchens', { ns: 'listing' }) }</Text>
-                            <TextInput
-                              {...props.input}
-                              width={"100%"}
-                              placeholder={ t('numberOfKitchens', { ns: 'listing' }) }
-                            />
-                          </div>
-                          <FieldErrorMessage
-                            message={selectValidationErrMsg(
-                              errors,
-                              "numberOfKitchens"
-                            )}
-                          />
-                        </>
-                      )}
-                    </Field>
-                    <Field
-                      name="haveNaturalGas"
-                      component="select"
-                      parse={(value) => (value === "null" ? null : value === "true")}
-                    >
-                      {(props) => (
-                        <>
-                          <div className="flex items-center form-field radio-group">
-                            <Text width={"9rem"}>{ t('naturalGas', { ns: 'listing' }) }</Text>
-                            <Select
-                              value={props.input.value}
-                              onChange={(e) => props.input.onChange(e.target.value)}
-                              width={"100%"}
-                              flex={"initial"}
-                            >
-                              <option value={"null"}>{ t('noInfo', { ns: 'listing' }) }</option>
-                              <option value={"true"}>{ t('yes', { ns: 'listing' }) }</option>
-                              <option value={"false"}>{ t('no', { ns: 'listing' }) }</option>
-                            </Select>
-                          </div>
-                          <FieldErrorMessage
-                            message={selectValidationErrMsg(
-                              errors,
-                              "haveNaturalGas"
-                            )}
-                          />
-                        </>
-                      )}
-                    </Field>
-                    <Field name="estateDetails" component="input">
-                      {(props) => (
-                        <>
-                          <Textarea
-                            placeholder={ t('estateDetails', { ns: 'listing' }) }
-                            value={props.input.value}
-                            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                              props.input.onChange(e.target.value)
-                            }
-                            className="form-field"
-                          />
-                          <FieldErrorMessage
-                            message={selectValidationErrMsg(
-                              errors,
-                              "estateDetails"
-                            )}
-                          />
-                        </>
-                      )}
-                    </Field>
-                    </>
-                  }
-                </Pane>
-                {
-                  errors && <FieldErrorMessage message={t('errorGenericMessage')} />
-                }
-                <Pane
-                  position={'absolute'}
-                  display={'flex'}
-                  justifyContent={'center'}
-                  width={'100%'}
-                  bottom={10} left={0}
-                >
-                  <Button
-                    width={windowInnerWidth > DESKTOP_BREAKPOINT_VALUE ? 400 : '90%'}
-                    height={40}
-                    type="submit"
-                    appearance="primary"
-                    id="submit-btn"
-                  >
-                    { listing ? t('commitChanges', { ns: 'listing' }) : t('addNewListing', { ns: 'listing' }) }
-                  </Button>
-                </Pane>
-                </form>
-            );
-          }}
-        />
+                <Input name='ownerPreferencesDetails' type="textarea" label={ t('preferenceDetails') } { ...inputCommonProps } />
+              </Pane>
+            )
+          }
+          <Pane
+            position={"relative"}
+            elevation={0}
+            padding={20}
+            className="form-category"
+          >
+            <Text size={600} className="form-category-header">
+              { t('estate', { ns: 'listing' }) }
+            </Text>
+            <Input 
+              name="estateTypeId" 
+              type="select" 
+              label={ t('estateType') } 
+              selectOptions={ dataPresets?.estateTypes } 
+              optionLabelKey="estateName" 
+              optionValueKey="estateTypeId"
+              { ...inputCommonProps }
+            />
+            { watch('estateTypeId') === 1 ? (
+                <Input name='numberOfFloors' type='number' label={ t('floors') } { ...inputCommonProps }/>
+              ) : (
+                <Input name='floorLocation' type='number' label={ t('floor') } { ...inputCommonProps }/>
+              )
+            }
+            { selectedMode === 1 &&
+              <>
+                <Input name='totalArea' type='number' label={ t('totalArea') } placeholder={ 'm²' } { ...inputCommonProps }/>
+                <Input name='builtArea' type='number' label={ t('builtArea') } placeholder={ 'm²' } { ...inputCommonProps }/>
+                <Input name='numberOfBedrooms' type='number' label={ t('numberOfBedrooms') } { ...inputCommonProps }/>
+                <Input name='numberOfBathrooms' type='number' label={ t('numberOfBathrooms') } { ...inputCommonProps }/>
+                <Input name='numberOfGarages' type='number' label={ t('numberOfGarages') } { ...inputCommonProps }/>
+                <Input name='numberOfKitchens' type='number' label={ t('numberOfKitchens') } { ...inputCommonProps }/>
+                <Input name="haveNaturalGas" type="checkbox" label={ t('naturalGas') } { ...checkboxCommonProps } />
+                <Input name='estateDetails' type="textarea" label={ t('estateDetails') } { ...inputCommonProps } />
+              </>
+            }
+          </Pane>
+          {
+            errors && <FieldErrorMessage message={t('errorGenericMessage')} />
+          }
+          <Pane
+            position={'absolute'}
+            display={'flex'}
+            justifyContent={'center'}
+            width={'100%'}
+            bottom={10} left={0}
+          >
+            <Button
+              width={windowInnerWidth > DESKTOP_BREAKPOINT_VALUE ? 400 : '90%'}
+              height={40}
+              type="submit"
+              appearance="primary"
+              id="submit-btn"
+            >
+              { listing ? t('commitChanges', { ns: 'listing' }) : t('addNewListing', { ns: 'listing' }) }
+            </Button>
+          </Pane>
+          </form>
       </Pane>
     </Pane>
   );

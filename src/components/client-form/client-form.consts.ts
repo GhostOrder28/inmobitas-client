@@ -1,7 +1,7 @@
 const CLIENT_FORM_INITIAL_STATE = {
   clientId: NaN,
   clientName: '',
-  clientContactPhone: NaN,
+  clientContactPhone: '',
   clientAge: NaN,
   clientDetails: ''
 };

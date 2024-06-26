@@ -25,7 +25,7 @@ const ClientForm: FC<ClientFormProps> = ({ clientData, setClient }) => {
   });
 
   return (
-    <Pane width={appWidth} marginX={'auto'}>
+    <Pane width={ appWidth } marginX={'auto'}>
       <form
         className="form flex flex-column pa3"
         onSubmit={handleSubmit((formData: Client) => onSubmitClientData(formData, setClient, setErrors))}

@@ -1,8 +1,7 @@
 export type Client = {
-  [index: string]: number | string | null | undefined;
   clientId: number;
   clientName: string;
-  clientContactPhone: number;
+  clientContactPhone: string;
   clientAge?: number | null;
   clientDetails?: string | null;
 }
