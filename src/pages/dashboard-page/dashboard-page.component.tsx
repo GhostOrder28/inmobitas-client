@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Card, Pane, Text, Heading, Strong } from 'evergreen-ui';
-import http from '../../utils/axios-instance';
+import http from '../../http/http';
 import { useSelector } from "react-redux";
 import { selectCurrentUser, selectCurrentUserId } from "../../redux/user/user.selectors";
 import { AgendaEvent } from '../agenda-page/agenda-page.types';
@@ -8,7 +8,7 @@ import { format } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import ContentSpinner from '../../components/content-spinner/content-spinner.component';
 import useRelativeHeight from '../../hooks/use-relative-height';
-import { strParseOut } from '../../utils/utility-functions';
+import { strParseOut } from '../../utils/utility-functions/utility-functions';
 
 const DashboardPage = () => {
   const userId = useSelector(selectCurrentUserId);

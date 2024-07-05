@@ -8,7 +8,7 @@ The idea of the App is to facilitate the tasks of a real estate agent helping hi
 
 ## Main dependencies.
 * **API consuming:** Axios.
-* **Form handling:** React-final-form.
+* **Form handling:** React-hook-form.
 * **UI Library:** Evergreen(CSS in JS).
 * **Tables handling:** React-table.
 * **Unit tests:** JEST.

@@ -11,7 +11,7 @@ import {
 
 import { selectCurrentUserId } from "../../redux/user/user.selectors";
 import { formatClientData } from "./client-detail.utils";
-import { strParseOut } from "../../utils/utility-functions";
+import { strParseOut } from "../../utils/utility-functions/utility-functions";
 import CustomTable from '../custom-table/custom-table.component';
 import Heading from "../heading/heading.component";
 import { MOBILE_BREAKPOINT_VALUE } from '../../constants/breakpoints.constants';

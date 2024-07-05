@@ -1,6 +1,6 @@
 import { takeLatest, put, all, call } from 'typed-redux-saga/macro';
 import userActionTypes from './user.types';
-import { AxiosError, AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosResponse } from 'axios';
 import {
   // actions
   signInStart,
@@ -28,7 +28,7 @@ import {
   SignInFailureError,
   SignUpFailureError,
   RequestUserInfoFailureError,
-  GenerateGuestError,
+  GenerateGuestUserError,
 } from '../redux.types';
 import { createGetRequest, createPostRequest } from '../redux-utils/create-request';
 
@@ -54,9 +54,9 @@ export function* generateGuest ({ http }: GenerateGuestStart) {
     yield* put(generateGuestSuccess(res.data, http));
   } catch (err: any) {
     if (err.response.data.limitReachedError) {
-      yield* put(generateGuestFailure(err as AxiosError<AxiosResponse<GenerateGuestError>>)); 
+      yield* put(generateGuestFailure(err as AxiosError<AxiosResponse<GenerateGuestUserError>>)); 
     }
-    yield* put(generateGuestFailure(err as AxiosError<AxiosResponse<GenerateGuestError>>)); 
+    yield* put(generateGuestFailure(err as AxiosError<AxiosResponse<GenerateGuestUserError>>)); 
   }
 }
 
@@ -76,15 +76,15 @@ export function* signIn ({ payload, http }: SignInStart) {
   }
 }
 
-export function* requestUserInfoForSignIn ({ http }: RequestUserInfoForSignInStart) {
-  try {
-    const requestSignInWithGoogle = createGetRequest(http);
-    const res: AxiosResponse = yield* call(requestSignInWithGoogle, '/auth/getuser');
-    yield* put(requestUserInfoForSignInSuccess(res.data));
-  } catch (err) {
-    yield* put(requestUserInfoForSignInFailure(err as AxiosError<AxiosResponse<RequestUserInfoFailureError>>));
-  }
-}
+// export function* requestUserInfoForSignIn ({ http }: RequestUserInfoForSignInStart) {
+//   try {
+//     const requestSignInWithGoogle = createGetRequest(http);
+//     const res: AxiosResponse = yield* call(requestSignInWithGoogle, '/auth/getuser');
+//     yield* put(requestUserInfoForSignInSuccess(res.data));
+//   } catch (err) {
+//     yield* put(requestUserInfoForSignInFailure(err as AxiosError<AxiosResponse<RequestUserInfoFailureError>>));
+//   }
+// }
 
 export function* signOut ({ http }: SignOutStart) {
   try {
@@ -107,7 +107,6 @@ export function* userSignOut ({ http }: UserSignOutStart) {
 }
 
 export function* signInAfterSignUp ({ payload, http }: SignInStart) {
-  console.log(payload);
   try {
     yield* put(signInStart(payload, http));
   } catch (err) {
@@ -140,9 +139,9 @@ export function* onSignUpSuccess () {
 export function* onGenerateGuestSuccess () {
   yield* takeLatest(userActionTypes.GENERATE_GUEST_SUCCESS, signInAfterSignUp)
 }
-export function* onRequestUserInfoForSignInStart () {
-  yield* takeLatest(userActionTypes.REQUEST_USER_INFO_FOR_SIGN_IN_START, requestUserInfoForSignIn)
-}
+// export function* onRequestUserInfoForSignInStart () {
+//   yield* takeLatest(userActionTypes.REQUEST_USER_INFO_FOR_SIGN_IN_START, requestUserInfoForSignIn)
+// }
 export function* onRequestUserInfoForSignInSuccess () {
   yield* takeLatest(userActionTypes.REQUEST_USER_INFO_FOR_SIGN_IN_SUCCESS, signInWithUserInfo)
 }
@@ -154,7 +153,7 @@ export function* userSagas () {
     call(onSignOutStart),
     call(onUserSignOutStart),
     call(onSignUpSuccess),
-    call(onRequestUserInfoForSignInStart),
+    // call(onRequestUserInfoForSignInStart),
     call(onRequestUserInfoForSignInSuccess),
     call(onGenerateGuestStart),
     call(onGenerateGuestSuccess),

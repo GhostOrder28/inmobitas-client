@@ -1,22 +1,12 @@
-export type ValidationError = {
-  context: { key: string; label: string; };
-  message: string;
-  path: string[];
-  type: string;
-}
+import { 
+  AuthenticationErrorData,
+  DuplicateEntityErrorData,
+  ValidationErrorData,
+  DbConnectionErrorData
+} from "../http/http.types";
+import { Expand } from "../utils/utility-types";
 
-export type GenerateGuestError = {
-  guestUserError: string;
-}
-
-export type SignUpFailureError = 
-  | { validationErrors: ValidationError[]; }
-  | { duplicateEntityError: string; };
-
-export type SignInFailureError = 
-  | { validationErrors: ValidationError[]; } 
-  | { authenticationError: string; };
-
-export type RequestUserInfoFailureError = {
-  authenticationError: string; 
-};
+export type RequestUserInfoFailureError = AuthenticationErrorData | DbConnectionErrorData; // this is not redundant bc there can be other error types when requesting user info
+export type SignUpFailureError =  ValidationErrorData | DuplicateEntityErrorData | DbConnectionErrorData;
+export type SignInFailureError = Expand<ValidationErrorData | AuthenticationErrorData | DbConnectionErrorData>;
+export type GenerateGuestUserError = SignInFailureError | DbConnectionErrorData;

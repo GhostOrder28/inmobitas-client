@@ -25,11 +25,9 @@ export enum userActionTypes {
 };
 
 export type UserError = 
-  | 'validationErrors' 
   | 'authenticationError' 
   | 'duplicateEntityError' 
   | 'limitReachedError'
   | 'dbConnectionError'
-  | 'clientError';
 
 export default userActionTypes;

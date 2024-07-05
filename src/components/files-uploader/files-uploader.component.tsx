@@ -4,7 +4,7 @@ import { ArrowUpIcon, toaster } from "evergreen-ui";
 import { useSelector } from "react-redux";
 import { selectCurrentUserId } from "../../redux/user/user.selectors";
 import "./files-uploader.styles.css";
-import http from "../../utils/axios-instance";
+import http from "../../http/http";
 import { Picture } from "../listing-detail/listing-detail.types";
 import {AxiosError} from "axios";
 import { IsLoading } from '../photo-gallery/photo-gallery.component';

@@ -8,7 +8,7 @@ describe('user actions', () => {
   const signUpData = {
     email: 'test@test.com',
     names: 'test',
-    contactPhone: 321654987,
+    contactPhone: '321654987',
     password: 'mypassword',
     confirmPassword: 'mypassword'
   }

@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate, Outlet } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-import http from '../../utils/axios-instance';
+import http from '../../http/http';
 import { userSignOutStart } from "../../redux/user/user.actions";
 import { selectCurrentUser } from "../../redux/user/user.selectors";
 import {

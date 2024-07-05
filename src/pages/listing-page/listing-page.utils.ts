@@ -1,9 +1,9 @@
 import i18next from "i18next";
 import { initReactI18next } from 'react-i18next';
 
-import { strParseOut } from "../../utils/utility-functions";
+import { strParseOut } from "../../utils/utility-functions/utility-functions";
 import { EstatePreset, Listing, Presets } from "./listing-page.types";
-import { presetSelector } from "../../utils/utility-functions";
+import { presetSelector } from "../../utils/utility-functions/utility-functions";
 import { ContractPreset } from "../../pages/listing-page/listing-page.types";
 
 i18next.use(initReactI18next).init()

@@ -1,12 +1,14 @@
 import { ChangeEvent } from "react";
 import axios, { AxiosError } from 'axios';
-import http from './axios-instance';
-import { ValidationError } from '../redux/redux.types';
+import http from '../../http/http';
+import { ValidationError } from "../../http/http.types";
 import { AnyAction } from 'redux';
-import { ItemIds } from '../components/custom-table/custom-table.types';
-import { RouteSource } from './utility-types';
-import { Picture } from "../components/listing-detail/listing-detail.types";
-import { ContractPreset, EstatePreset } from "../pages/listing-page/listing-page.types";
+import { ItemIds } from '../../components/custom-table/custom-table.types';
+import { RouteSource, Uncertain } from '../utility-types';
+import { Picture } from "../../components/listing-detail/listing-detail.types";
+import { ContractPreset, EstatePreset } from "../../pages/listing-page/listing-page.types";
+import { FormState, UseFormSetError, FieldErrors } from "react-hook-form";
+import { Matchable, FormattedError, Preset } from "./utility-functions.type";
 
 export const strParseIn = (str: string) => {
   return str.replaceAll(' ', '-').toLowerCase();
@@ -97,14 +99,37 @@ export function sortEntities <O extends { [key: string]: any }>(arr: O[], key: s
 
 // Non redux 'selectors'
 
-export const selectValidationErrMsg = (errObj: AxiosError<{ validationErrors: ValidationError[] }> | undefined, field: string): string | undefined => {  
-  const error = errObj?.response?.data.validationErrors.find (
-    validationError => validationError.context.key === field
-  );
-  return error?.message;
-};
+// export const selectValidationErrMsg = (errObj: AxiosError<{ validationErrors: ValidationError[] }> | undefined, field: string): string | undefined => {  
+//   const error = errObj?.response?.data.validationErrors.find (
+//     validationError => validationError.context.key === field
+//   );
+//   return error?.message;
+// };
 
-type Preset = ContractPreset | EstatePreset;
+export function handleValidationErrors <F>(formData: Uncertain<F>, rawErrors: ValidationError[], setter: UseFormSetError<F>): void 
+export function handleValidationErrors <F>(formData: Uncertain<F>, rawErrors: ValidationError[]): FormattedError[]
+export function handleValidationErrors <F>(formData: Uncertain<F>, rawErrors: ValidationError[], setter?: UseFormSetError<F>): FormattedError[] | void {
+  const errors = rawErrors.map(r => ({
+    name: r.context.key,
+    error: r.message
+  }));
+
+  if (setter) {
+    const formKeys = Object.keys(formData) as (keyof F)[];
+
+    for (const key of formKeys) {
+      const currentError = errors!!.find(r => r.name === key);
+
+      if (currentError) {
+        setter(`root.${key}`, { message: currentError.error })
+      };
+    }
+  } else {
+    console.log(errors);
+    return errors;
+  };
+}
+
 
 export const presetSelector = <P extends Preset>(preset: P[], presetId: number): P => {
   const selection = preset.find(item => {
@@ -118,11 +143,6 @@ export const presetSelector = <P extends Preset>(preset: P[], presetId: number):
   if (!selection) throw Error(`preset not found`);
 
   return selection;
-}
-
-type Matchable<AC extends () => AnyAction> = AC & {
-  type: ReturnType<AC>['type'];
-  match(action: AnyAction): action is ReturnType<AC>;
 }
 
 export function withMatcher<AC extends () => AnyAction & { type: string }>(actionCreator: AC): Matchable<AC>

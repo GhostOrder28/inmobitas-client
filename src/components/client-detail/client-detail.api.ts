@@ -1,4 +1,4 @@
-import http from "../../utils/axios-instance";
+import http from "../../http/http";
 import { ListingItem } from "../../pages/listings-page/listings-page.types";
 
 const getClientListings = async (route: string) => {

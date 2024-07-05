@@ -15,7 +15,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { selectCurrentUserId } from '../../../redux/user/user.selectors';
 import { AuthenticationError } from '../../../errors/auth.errors';
-import { pictureUploader } from '../../../utils/utility-functions';
+import { pictureUploader } from '../../../utils/utility-functions/utility-functions';
 import { signOutWithError } from '../../../redux/user/user.actions';
 import axios, { AxiosError } from 'axios';
 import GalleryCategoryButton from './gallery-category-button.component';
@@ -61,6 +61,7 @@ const GalleryUncategorized = ({
             description: ( err as AxiosError ).response?.data.unverifiedUserError.errorMessageDescription,
             duration: 7
           });
+          return;
         } else {
           console.error(err)
         };

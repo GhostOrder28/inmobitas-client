@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import useWindowDimensions from '../../hooks/use-window-dimensions';
 
-import http from '../../utils/axios-instance';
+import http from '../../http/http';
 import { ListingItem } from './listings-page.types';
 import { selectCurrentUserId } from '../../redux/user/user.selectors';
 import CustomTable from '../../components/custom-table/custom-table.component';

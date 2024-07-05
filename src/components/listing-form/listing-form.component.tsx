@@ -1,35 +1,23 @@
 import React, { useState, useEffect, useRef, Dispatch, SetStateAction } from "react";
 import { useTranslation } from "react-i18next";
-import { AxiosError } from "axios";
-import { useSelector } from "react-redux";
-
-import { FormApi } from "final-form";
 import { useForm } from "react-hook-form";
-
-import { useLocation, useNavigate, useParams } from "react-router-dom";
-import {
-  Button,
-  Pane,
-  Text,
-  Tablist,
-  Tab,
-} from "evergreen-ui";
-
-import useRelativeHeight from '../../hooks/use-relative-height';
-import useWindowDimensions from '../../hooks/use-window-dimensions';
+import { useLocation } from "react-router-dom";
+import { Pane, Tablist, Tab } from "evergreen-ui";
 
 import Input from "../input/input.component";
-import ContractTypeBlock from "./contract-type-block.subcomponent";
-
-import { selectCurrentUserId } from "../../redux/user/user.selectors";
+import ContractTypeBlock from "./subcomponents/contract-type-block.subcomponent";
+import FormBlock from "./subcomponents/form-block.subcomponent";
+import FormSubmit from "../form-submit/form-submit.component";
 import FieldErrorMessage from "../field-error-message/field-error-message.component";
-import "./listing-form.styles.css";
-import { Presets, Listing, ListingWithoutIds } from "../../pages/listing-page/listing-page.types";
-import { ValidationError } from "../../redux/redux.types";
-import { DESKTOP_BREAKPOINT_VALUE } from "../../constants/breakpoints.constants";
+
+import { Presets, Listing } from "../../pages/listing-page/listing-page.types";
+
 import { LISTING_FORM_INITIAL_STATE } from "./listing-form.consts";
-import useCalculateAppWidth from "../../hooks/use-calculate-app-width";
 import { onSubmitListingData } from './listing-form.api';
+import "./listing-form.styles.css";
+
+import useRelativeHeight from '../../hooks/use-relative-height';
+import useCalculateAppWidth from "../../hooks/use-calculate-app-width";
 
 type ListingFormProps = {
   dataPresets: Presets | undefined;
@@ -40,16 +28,14 @@ type ListingFormProps = {
 const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => {
   
   const location = useLocation();
-  const formRef = useRef<FormApi>();
   const { t } = useTranslation(['listing', 'client', 'ui']);
-  const [errors, setErrors] = useState<AxiosError<{ validationErrors: ValidationError[] }>>();
+  // const [errors, setErrors] = useState<AxiosError<{ validationErrors: ValidationError[] }>>();
   const [selectedMode, setSelectedMode] = useState<number>(1);
   const formWrapperRef = useRef<HTMLDivElement | null>(null);
   const formHeight = useRelativeHeight(formWrapperRef, { extraSpace: 60 });
-  const { windowInnerWidth } = useWindowDimensions();
   const appWidth = useCalculateAppWidth();
 
-  const { register, handleSubmit, watch, control } = useForm<Listing>({
+  const { register, handleSubmit, watch, control, reset, setError, formState: { errors } } = useForm<Listing>({
     defaultValues: LISTING_FORM_INITIAL_STATE,
     values: listing
   });
@@ -62,8 +48,9 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
   };
 
   useEffect(() => {
-    if (location.pathname === "/newlisting" && formRef.current) {
-      formRef.current.reset(LISTING_FORM_INITIAL_STATE);
+    if (location.pathname === "/newlisting") {
+      console.log('is new listing');
+      reset(LISTING_FORM_INITIAL_STATE)
     }
   }, [location.pathname]);
 
@@ -94,30 +81,16 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
       >
         <form
           className="form flex flex-column pa3"
-          onSubmit={handleSubmit((listingData) => onSubmitListingData(listingData, setListing, setErrors))}
+          onSubmit={handleSubmit((listingData) => onSubmitListingData(listingData, setListing, setError))}
           /* onSubmit={handleSubmit(onSubmit)} */
           encType="multipart/form-data"
           method="post"
         >
-          <Pane
-            position={"relative"}
-            elevation={0}
-            padding={20}
-            className="form-category"
-          >
-            <Text size={600} className="form-category-header">{ t('owner', { ns: 'client' }) }</Text>
+          <FormBlock title={ t('owner', { ns: 'client' }) }>
             <Input name='clientName' type='text' label={ t('clientName', { ns: 'client' }) } { ...inputCommonProps }/>
             <Input name='clientContactPhone' type="text" label={ t('contactPhone', { ns: 'client' }) } { ...inputCommonProps } />
-          </Pane>
-          <Pane
-            position={"relative"}
-            elevation={0}
-            padding={20}
-            className="form-category"
-          >
-            <Text size={600} className="form-category-header">
-              { t('location', { ns: 'listing' }) } 
-            </Text>
+          </FormBlock>
+          <FormBlock title={ t('location') }>
             <Input name="district" type="text" label={ t('district') } { ...inputCommonProps } />
             { selectedMode === 1 &&
             <>
@@ -125,49 +98,23 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
               <Input name="addressDetails" type="text" label={ t('addressDetails') } { ...inputCommonProps } />
             </>
             }
-          </Pane>
-          <Pane
-            position={"relative"}
-            elevation={0}
-            padding={20}
-            className="form-category"
-          >
-            <Text size={600} className="form-category-header">
-              { t('contract') } 
-            </Text>
+          </FormBlock>
+          <FormBlock title={ t('contract') }>
             <ContractTypeBlock 
               selectOptions={ dataPresets?.contractTypes }
               { ...checkboxCommonProps }
             />
-          </Pane>
+          </FormBlock>
           {
             watch("contractTypeId") === 2 && selectedMode === 1 && (
-              <Pane
-                position={"relative"}
-                elevation={0}
-                padding={20}
-                className="form-category"
-              >
-                <Text size={600} className="form-category-header">
-                  { t('preferenceDetails') }
-                </Text>
-                <Pane display="flex">
-                  <Input name="petsAllowed" type="checkbox" label={ t('petsAllowed') } { ...checkboxCommonProps } />
-                  <Input name="childrenAllowed" type="checkbox" label={ t('childrenAllowed') } { ...checkboxCommonProps } />
-                </Pane>
-                <Input name='ownerPreferencesDetails' type="textarea" label={ t('preferenceDetails') } { ...inputCommonProps } />
-              </Pane>
+            <FormBlock title={ t('preferenceDetails') }>
+              <Input name="petsAllowed" type="checkbox" label={ t('petsAllowed') } { ...checkboxCommonProps } />
+              <Input name="childrenAllowed" type="checkbox" label={ t('childrenAllowed') } { ...checkboxCommonProps } />
+              <Input name='ownerPreferencesDetails' type="textarea" label={ t('preferenceDetails') } { ...inputCommonProps } />
+            </FormBlock>
             )
           }
-          <Pane
-            position={"relative"}
-            elevation={0}
-            padding={20}
-            className="form-category"
-          >
-            <Text size={600} className="form-category-header">
-              { t('estate', { ns: 'listing' }) }
-            </Text>
+          <FormBlock title={ t('estate') }>
             <Input 
               name="estateTypeId" 
               type="select" 
@@ -178,8 +125,8 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
               { ...inputCommonProps }
             />
             { watch('estateTypeId') === 1 ? (
-                <Input name='numberOfFloors' type='number' label={ t('floors') } { ...inputCommonProps }/>
-              ) : (
+              <Input name='numberOfFloors' type='number' label={ t('floors') } { ...inputCommonProps }/>
+            ) : (
                 <Input name='floorLocation' type='number' label={ t('floor') } { ...inputCommonProps }/>
               )
             }
@@ -195,28 +142,14 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                 <Input name='estateDetails' type="textarea" label={ t('estateDetails') } { ...inputCommonProps } />
               </>
             }
-          </Pane>
+          </FormBlock>
           {
             errors && <FieldErrorMessage message={t('errorGenericMessage')} />
           }
-          <Pane
-            position={'absolute'}
-            display={'flex'}
-            justifyContent={'center'}
-            width={'100%'}
-            bottom={10} left={0}
-          >
-            <Button
-              width={windowInnerWidth > DESKTOP_BREAKPOINT_VALUE ? 400 : '90%'}
-              height={40}
-              type="submit"
-              appearance="primary"
-              id="submit-btn"
-            >
-              { listing ? t('commitChanges', { ns: 'listing' }) : t('addNewListing', { ns: 'listing' }) }
-            </Button>
-          </Pane>
-          </form>
+          <FormSubmit
+            text={ location.pathname === "/newlisting" ? t('addNewListing') : t('commitChanges')  } 
+          />
+        </form>
       </Pane>
     </Pane>
   );

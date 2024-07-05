@@ -6,7 +6,9 @@ export type SignInData = {
 
 export type SignUpData = Omit<SignInData, 'userType'> & {
   names: string;
-  contactPhone: number;
+  email: string;
+  contactPhone: string;
+  password: string;
   confirmPassword: string;
 }
 

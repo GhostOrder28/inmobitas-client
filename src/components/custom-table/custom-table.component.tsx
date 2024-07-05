@@ -21,10 +21,10 @@ import useRelativeHeight from '../../hooks/use-relative-height';
 import useClientDevice from "../../hooks/use-client-device";
 import useClickOutside from "../../hooks/use-click-outside";
 
-import { buildRoute } from "../../utils/utility-functions";
+import { buildRoute } from "../../utils/utility-functions/utility-functions";
 import { CustomTableProps, CustomTableColumn, CustomTableRow } from './custom-table.types';
 import CustomTableOption from './custom-table-option';
-import http from '../../utils/axios-instance';
+import http from '../../http/http';
 import Pagination from '../pagination/pagination.component';
 import { getPageSize } from "./custom-table.utils";
 import ContentSpinner from "../content-spinner/content-spinner.component";

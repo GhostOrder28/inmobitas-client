@@ -1,4 +1,4 @@
-import http from '../utils/axios-instance';
+import http from '../http/http';
 import { AxiosResponse, AxiosError } from 'axios';
 
 export const fetchUserInfo = async (email: string, password: string): Promise<AxiosResponse | AxiosError> => {

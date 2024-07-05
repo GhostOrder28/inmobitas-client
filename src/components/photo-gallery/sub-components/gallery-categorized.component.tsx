@@ -15,8 +15,8 @@ import {
 } from 'evergreen-ui';
 import { PictureCategoryUpdatedNamePayload } from "../../listing-detail/listing-detail.types";
 import { Categorized } from './gallery-category.types';
-import http from '../../../utils/axios-instance';
-import { pictureUploader } from '../../../utils/utility-functions';
+import http from '../../../http/http';
+import { pictureUploader } from '../../../utils/utility-functions/utility-functions';
 import { useSelector } from 'react-redux';
 import { selectCurrentUserId } from '../../../redux/user/user.selectors';
 import { useParams } from 'react-router-dom';
@@ -27,7 +27,7 @@ import { AuthenticationError } from '../../../errors/auth.errors';
 import axios, { AxiosError } from 'axios';
 import "./gallery-category.styles.css";
 import GalleryCategoryButton from './gallery-category-button.component';
-import { strParseOut } from '../../../utils/utility-functions';
+import { strParseOut } from '../../../utils/utility-functions/utility-functions';
 
 const GalleryCategorized = ({ 
     categoryId,

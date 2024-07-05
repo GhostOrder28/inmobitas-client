@@ -2,7 +2,7 @@ import { createSelector } from "reselect";
 import { RootState } from "../root-reducer";
 import { UserState } from "./user.reducer";
 import { UserError } from "./user.types";
-import { ValidationError } from "../redux.types";
+import { ValidationError } from "../../http/http.types";
 import { AxiosError } from "axios";
 import { ClientError } from "../../errors/errors.types";
 
@@ -40,31 +40,43 @@ function isValidationError(err: string | ValidationError[]): err is ValidationEr
   return (err as ValidationError[]).find !== undefined;
 }
 
-export const selectErrorMessage = (errorType: UserError, field?: string) =>
+export const selectClientError = createSelector(
+  [selectErrorObj], 
+  (errorObj) => {
+    console.log('errorObj: ', errorObj);
+    if (errorObj === null) return;
+    if (!isClientError(errorObj)) return;
+    if (!errorObj.clientError) return;
+
+    return errorObj.clientError.message;
+  }
+)
+
+export const selectServerError = (errorType: UserError) =>
   createSelector([selectErrorObj], (errorObj) => {
     if (errorObj === null) return;
+    if (!isAxiosError(errorObj)) return;
 
-    if (errorType === 'clientError') {
-      if (!isClientError(errorObj)) return;
-      if (!errorObj.clientError) return;
-      return errorObj.clientError.message 
-    } else {
-      if (!isAxiosError(errorObj)) return;
-      const data = errorObj?.response?.data;
-      const errorData = data?.[errorType];
+    const data = errorObj?.response?.data?.[errorType];
 
-      if (errorData) {
-        if (isValidationError(errorData)) {
-          const validationError = errorData.find(
-            (err) => err.context.key === field
-          );
-          return validationError?.message;
-        }
-        return errorData;
-      }
+    return data;
+  }
+)
+
+export const selectValidationError = (field: string) =>
+  createSelector([selectErrorObj], (errorObj) => {
+    if (errorObj === null) return;
+    if (!isAxiosError(errorObj)) return;
+
+    const validationErrors = errorObj?.response?.data?.validationErrors;
+
+    if (validationErrors) {
+      const error = validationErrors.find(
+        (err) => err.context.key === field
+      );
+      return error?.message;
     };
-
-  });
+  })
 
 export const selectCurrentUserId = createSelector(
   [selectCurrentUser],

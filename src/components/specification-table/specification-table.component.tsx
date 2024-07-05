@@ -13,7 +13,7 @@ import {
 
 import useRelativeHeight from '../../hooks/use-relative-height';
 
-import { parseCamellCase } from '../../utils/utility-functions';
+import { parseCamellCase } from '../../utils/utility-functions/utility-functions';
 import { SpecificationTable as SpecificationTableType } from './specification-table.types';
  
 type SpecificationtTableProps = {

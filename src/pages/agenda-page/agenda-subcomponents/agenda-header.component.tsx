@@ -14,7 +14,7 @@ import { useTranslation } from "react-i18next";
 import { format, startOfWeek, endOfWeek,} from 'date-fns';
 import enUS from 'date-fns/locale/en-US';
 import es from 'date-fns/locale/es';
-import { strParseOut } from '../../../utils/utility-functions';
+import { strParseOut } from '../../../utils/utility-functions/utility-functions';
 
 type AgendaHeaderProps = {
   currentDate: Date;

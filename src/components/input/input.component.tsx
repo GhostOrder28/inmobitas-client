@@ -1,35 +1,18 @@
-import React, { FC, ReactElement } from "react";
 import { Pane, minorScale, Text, TextInput, Textarea, Select, Checkbox } from "evergreen-ui"
-import { selectValidationErrMsg } from "../../utils/utility-functions";
 import FieldErrorMessage from "../field-error-message/field-error-message.component";
-import { UseFormRegister, Control, Controller } from 'react-hook-form';
-import { Client } from '../../pages/client-page/client-page.types';
-import { AxiosError } from 'axios';
-import { ValidationError } from "../../redux/redux.types";
-import { Listing } from "../../pages/listing-page/listing-page.types";
-
-type InputProps = {
-  name: keyof ( Client & Listing );
-  type: string;
-  label?: string;
-  placeholder?: string;
-  register: UseFormRegister<any>;
-  errors: AxiosError<{ validationErrors: ValidationError[] }> | undefined;
-  selectOptions?: any[];
-  optionLabelKey?: string;
-  optionValueKey?: string;
-  control?: Control<any, any>;
-  valueAsNumber?: boolean;
-}
+import { Controller } from 'react-hook-form';
+import { FieldNameWithoutAuth, InputProps } from "./input.types";
+import DatePicker from "../date-picker/date-picker.component";
+import TimePicker from "../time-picker/time-picker.component";
 
 const Input = ({ name, type, label, placeholder, register, errors, selectOptions, control, optionLabelKey, optionValueKey }: InputProps) => {
   return (
-    <Pane marginTop={minorScale(5)} width={'100%'}>
+    <Pane width={'100%'}>
       <div className={ label ? 'flex items-center form-field' : 'w-100'}>
         { label ?
           <Text width={"9rem"}>{ label }</Text> : ''
         }
-        { [ 'text', 'number' ].includes(type) ?
+        { [ 'text', 'number', 'password' ].includes(type) ?
           <TextInput
             { ...register(name, { valueAsNumber: type === "number" ? true : false }) }
             defaultValue=""
@@ -69,11 +52,37 @@ const Input = ({ name, type, label, placeholder, register, errors, selectOptions
                 />
               )
             }
+          /> : type === "date" ? 
+          <Controller 
+            name={ name }
+            control={ control }
+            render={
+              ({ field: props }) => (
+                <DatePicker
+                  value={props.value}
+                  onChange={(newDate) => props.onChange(newDate)}
+                />
+              )
+            }
+          /> : type === "time" ?
+          <Controller 
+            name={ name }
+            control={ control }
+            render={
+              ({ field: props }) => (
+                <TimePicker
+                  value={props.value}
+                  onChange={(newDate) => props.onChange(newDate)}
+                />
+              )
+            }
           /> : "input type is empty or doesn't exist"
         }
       </div>
-      <FieldErrorMessage message={selectValidationErrMsg(errors, name)}
-      />
+      { errors ?
+          <FieldErrorMessage message={ errors[name as FieldNameWithoutAuth]?.message } />
+        : ""
+      }
     </Pane>
   )
 }

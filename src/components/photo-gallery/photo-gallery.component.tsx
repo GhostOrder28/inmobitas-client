@@ -20,7 +20,7 @@ import useRelativeHeight from '../../hooks/use-relative-height';
 import useWindowDimensions from "../../hooks/use-window-dimensions";
 
 import { DESKTOP_BREAKPOINT_VALUE } from '../../constants/breakpoints.constants';
-import http from "../../utils/axios-instance";
+import http from "../../http/http";
 import { selectCurrentUserId } from "../../redux/user/user.selectors";
 import GalleryMenu from "../gallery-menu/gallery-menu.component";
 import InnerMenu from "../inner-menu/inner-menu.component";
@@ -33,7 +33,7 @@ import GalleryUncategorized from "./sub-components/gallery-uncategorized.compone
 import ContentSpinner from '../content-spinner/content-spinner.component';
 import GalleryCategoryButton from './sub-components/gallery-category-button.component';
 import ModalContainer from '../modal-container/modal-container.component';
-import { checkPositions, sortEntities } from '../../utils/utility-functions';
+import { checkPositions, sortEntities } from '../../utils/utility-functions/utility-functions';
 import { isLastDayOfMonth } from "date-fns";
 
 type PhotoGalleryProps = {

@@ -4,7 +4,7 @@ import { useLocation, useParams } from 'react-router-dom';
 import { Spinner } from 'evergreen-ui'
 import { AxiosError } from 'axios';
 
-import http from '../../utils/axios-instance';
+import http from '../../http/http';
 import { selectCurrentUserId } from '../../redux/user/user.selectors';
 
 import { Presets, Listing } from './listing-page.types';

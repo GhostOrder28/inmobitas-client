@@ -1,16 +1,18 @@
 import { Dispatch, SetStateAction } from "react";
+import { UseFormSetError } from "react-hook-form";
 import { Listing, ListingWithoutIds } from "../../pages/listing-page/listing-page.types";
-import http from "../../utils/axios-instance";
+import http from "../../http/http";
 import { store } from "../../redux/redux-store";
 import { selectCurrentUserId } from "../../redux/user/user.selectors";
-import { AxiosError } from "axios";
-import { ValidationError } from "../../redux/redux.types";
+import axios  from 'axios';
 import { history } from "../..";
+import { handleValidationErrors } from "../../utils/utility-functions/utility-functions";
+import { HTTPErrorData } from "../../http/http.types";
 
 const onSubmitListingData = async (
   listingData: Partial<Listing>, 
   setListing: Dispatch<SetStateAction<Listing | undefined>>, 
-  setErrors: Dispatch<SetStateAction<AxiosError<{ validationErrors: ValidationError[] }> | undefined>>
+  setError: UseFormSetError<Listing>,
 ): Promise<void> => {
   const userId = selectCurrentUserId(store.getState());
   console.log("submitting listingData: ", listingData);
@@ -34,7 +36,19 @@ const onSubmitListingData = async (
     setListing(res.data);      
     history.push(`/listingdetail/${res.data.clientId}/${res.data.estateId}`);
   } catch (err) {
-    setErrors(err as AxiosError<{ validationErrors: ValidationError[] }>);
+    if (axios.isAxiosError(err)) {
+      if (!err.response) throw new Error(`there is an error but it doesn't have a response: ${err}`);
+
+      const errorData: HTTPErrorData = err.response.data;
+
+      if (errorData.validationErrors) {
+        handleValidationErrors<Listing>(listingData, errorData.validationErrors, setError); 
+      } else {
+        throw errorData;
+      }
+    } else {
+      console.error(err)
+    };
   }
 };
 

@@ -2,8 +2,8 @@ import {
   strParseIn,
   strParseOut,
   // presetSelector,
-  selectValidationErrMsg,
-} from "../../utils/utility-functions";
+  handleValidationErrors,
+} from "../../utils/utility-functions/utility-functions";
 import { AxiosError } from 'axios';
 
 jest.mock('react-i18next', () => ({
@@ -48,17 +48,17 @@ describe('post request operations', () => {
   //     currencySymbol: '$'
   //   })
   // })
-  it('should select the validation error message from axios rejected call', () => {
-    const errObj = { response: { data: { validationErrors: [
-      {
-        context: { key: 'fieldA' },
-        message: 'abc'
-      },
-      { 
-        context: { key: 'fieldB' },
-        message: 'xyz'
-      }
-    ]}}}
-    expect(selectValidationErrMsg(errObj as AxiosError, 'fieldA')).toEqual('abc')
-  })
+  // it('should select the validation error message from axios rejected call', () => {
+  //   const errObj = { response: { data: { validationErrors: [
+  //     {
+  //       context: { key: 'fieldA' },
+  //       message: 'abc'
+  //     },
+  //     { 
+  //       context: { key: 'fieldB' },
+  //       message: 'xyz'
+  //     }
+  //   ]}}}
+  //   expect(formatErrorsAndSet(errObj as AxiosError, 'fieldA')).toEqual('abc')
+  // })
 })

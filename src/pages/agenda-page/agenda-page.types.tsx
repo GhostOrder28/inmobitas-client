@@ -1,5 +1,5 @@
 export type AgendaEvent = {
-  eventId: number;
+  eventId?: number;
   title: string;
   startDate: Date;
   endDate: Date | null;

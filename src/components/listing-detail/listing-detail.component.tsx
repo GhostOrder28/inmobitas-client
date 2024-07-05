@@ -6,9 +6,9 @@ import { Spinner } from "evergreen-ui";
 import { format } from "date-fns";
 import { Tablist, Tab } from "evergreen-ui";
 
-import http from "../../utils/axios-instance";
+import http from "../../http/http";
 import { selectCurrentUserId } from "../../redux/user/user.selectors";
-import { strParseIn } from "../../utils/utility-functions";
+import { strParseIn } from "../../utils/utility-functions/utility-functions";
 import PhotoGallery from "../photo-gallery/photo-gallery.component";
 import "./listing-detail-gallery.styles.css";
 import { Presets } from "../../pages/listing-page/listing-page.types";

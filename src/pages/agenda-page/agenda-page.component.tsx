@@ -33,10 +33,10 @@ import AgendaViewOptions from './agenda-subcomponents/agenda-view-options.compon
 import ModalContainer from '../../components/modal-container/modal-container.component';
 import Pagination from '../../components/pagination/pagination.component';
 
-import http from '../../utils/axios-instance';
+import http from '../../http/http';
 import { AgendaEvent, AgendaTableColumns } from './agenda-page.types';
 import { selectCurrentUserId } from '../../redux/user/user.selectors';
-import { strParseOut } from '../../utils/utility-functions';
+import { strParseOut } from '../../utils/utility-functions/utility-functions';
 import CustomTableOption from '../../components/custom-table/custom-table-option';
 import useOrientation from '../../hooks/use-orientation';
 import { getPageSize } from '../../components/custom-table/custom-table.utils';
@@ -53,7 +53,7 @@ const AgendaPage = () => {
   const prevDate = usePrevious(currentDate);
   const [currentView, setCurrentView] = useState<string>('month');
   const [events, setEvents] = useState<AgendaEvent[]>([]);
-  const [currentEvent, setCurrentEvent] = useState<AgendaEvent | null>(null);
+  const [currentEvent, setCurrentEvent] = useState<AgendaEvent>();
   const [selectedEvent, setSelectedEvent] = useState<number | null>(null);
   const [filteredEvents, setFilteredEvents] = useState<AgendaEvent[]>([]);
   const [displayEventForm, setDisplayEventForm] = useState<boolean>(false);
@@ -286,8 +286,8 @@ const AgendaPage = () => {
                           <CustomTableOption
                             icon={EditIcon}
                             onClick={() => {
-                              const eventId = page[rowIdx].original.eventId;
-                              setCurrentEvent(events.find(evt => evt.eventId === eventId) as AgendaEvent); // this can't be undefined
+                              const { original: { eventId } } = page[rowIdx]
+                              setCurrentEvent(events.find(e => e.eventId === eventId) as AgendaEvent); // this can't be undefined
                               setDisplayEventForm(true);
                               setSelectedEvent(null);
                             }}
@@ -297,7 +297,7 @@ const AgendaPage = () => {
                             color={'danger'}
                             onClick={() => {
                               const eventId = page[rowIdx].original.eventId;
-                              deleteEvent((events.find(evt => evt.eventId === eventId) as AgendaEvent).eventId)} // this can't be undefined
+                              deleteEvent((events.find(e => e.eventId === eventId) as AgendaEvent)?.eventId as number)} // this can't be undefined
                             }
                           />
                         </Pane>

@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { Spinner } from 'evergreen-ui';
 
-import http from '../../utils/axios-instance';
+import http from '../../http/http';
 import { selectCurrentUserId } from '../../redux/user/user.selectors';
 import { useParams } from 'react-router-dom';
 import { Client } from './client-page.types';

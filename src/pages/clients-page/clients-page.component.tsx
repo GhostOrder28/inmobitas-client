@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { useTranslation } from "react-i18next";
 import React, { useState, useEffect, useRef } from 'react';
 
-import http from '../../utils/axios-instance';
+import http from '../../http/http';
 import { selectCurrentUserId } from '../../redux/user/user.selectors';
 
 import '../../global-styles/listings-page-scroll.styles.css';

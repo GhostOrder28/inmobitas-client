@@ -1,12 +1,10 @@
-import React, { FC, useState } from "react";
-import { AxiosError } from "axios";
+import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import { Pane } from "evergreen-ui";
 
 import useCalculateAppWidth from "../../hooks/use-calculate-app-width";
 
-import { ValidationError } from "../../redux/redux.types";
 import { Client } from '../../pages/client-page/client-page.types';
 import { onSubmitClientData } from './client-form.api';
 import { CLIENT_FORM_INITIAL_STATE } from './client-form.consts';
@@ -16,10 +14,9 @@ import { ClientFormProps } from "./client-form.types";
 
 const ClientForm: FC<ClientFormProps> = ({ clientData, setClient }) => {
   const appWidth = useCalculateAppWidth();
-  const [errors, setErrors] = useState<AxiosError<{ validationErrors: ValidationError[] }>>();
   const { t } = useTranslation([ 'client', 'listing' ])
 
-  const { register, handleSubmit } = useForm<Client>({
+  const { register, handleSubmit, setError, formState: { errors } } = useForm<Client>({
     defaultValues: CLIENT_FORM_INITIAL_STATE,
     values: clientData
   });
@@ -28,7 +25,7 @@ const ClientForm: FC<ClientFormProps> = ({ clientData, setClient }) => {
     <Pane width={ appWidth } marginX={'auto'}>
       <form
         className="form flex flex-column pa3"
-        onSubmit={handleSubmit((formData: Client) => onSubmitClientData(formData, setClient, setErrors))}
+        onSubmit={handleSubmit((formData: Client) => onSubmitClientData(formData, setClient, setError))}
         encType="multipart/form-data"
         method="post"
       >
