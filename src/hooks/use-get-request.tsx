@@ -7,8 +7,12 @@ function useGetRequest <T>(fn: () => Promise<AxiosResponse<T, any>>) {
 
   useEffect(() => {
     (async function () {
-      const { data: payload } = await fn();
-      setData(payload)
+      try {
+        const { data: payload } = await fn();
+        setData(payload)
+      } catch (err) {
+        console.error(`there is an eror ${err}`)
+      }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

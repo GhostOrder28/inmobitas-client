@@ -17,7 +17,6 @@ const ClientPage = () => {
   const { clientid } = useParams();
   const location = useLocation();
   const userId = useSelector(selectCurrentUserId);
-  console.log(location.pathname)
   useEffect(() => {
 
     (async function () {
@@ -31,7 +30,7 @@ const ClientPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  useEffect(() => console.log(clientData))
+  useEffect(() => { console.log('clientData: ', clientData); }, [ clientData ])
 
   switch (location.pathname) {
     case `/editclient/${clientid}`:

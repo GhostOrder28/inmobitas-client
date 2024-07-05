@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { useParams } from "react-router-dom";
@@ -36,9 +37,11 @@ const ClientDetail = ({ clientData }: ClientDetailProps) => {
   const { windowInnerWidth } = useWindowDimensions();
   const clientPersonalData = formatClientData(clientData);
 
-  const tableSource = windowInnerWidth > MOBILE_BREAKPOINT_VALUE ?
-    clientListings :
-    getSummarizedListingProps(clientListings)
+  const tableSource = clientListings ? (
+    windowInnerWidth > MOBILE_BREAKPOINT_VALUE ?
+      clientListings :
+      getSummarizedListingProps(clientListings)
+  ) : []
 
   const tableAreaLabels = windowInnerWidth > MOBILE_BREAKPOINT_VALUE ? 
     [

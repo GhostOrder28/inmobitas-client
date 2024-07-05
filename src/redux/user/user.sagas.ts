@@ -89,10 +89,11 @@ export function* signIn ({ payload, http }: SignInStart) {
 export function* signOut ({ http }: SignOutStart) {
   try {
     const requestSignOut = createGetRequest(http);
-    const order = yield* call(requestSignOut, '/auth/signout');
+    yield* call(requestSignOut, '/auth/signout');
     yield* put(signOutSuccess());
   } catch (error) {
     console.log(error) 
+    yield* put(signOutSuccess());
   }
 }
 
