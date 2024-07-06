@@ -15,11 +15,9 @@ import { formatClientData } from "./client-detail.utils";
 import { strParseOut } from "../../utils/utility-functions/utility-functions";
 import CustomTable from '../custom-table/custom-table.component';
 import Heading from "../heading/heading.component";
-import { MOBILE_BREAKPOINT_VALUE } from '../../constants/breakpoints.constants';
-import { getSummarizedListingProps } from '../../pages/listings-page/listings-page.utils';
 import { getClientListings } from './client-detail.api';
+import { LABELS } from '../../pages/listings-page/listings-page.consts';
 
-import useWindowDimensions from "../../hooks/use-window-dimensions";
 import useGetRequest from "../../hooks/use-get-request";
 
 import { Client } from "../../pages/client-page/client-page.types";
@@ -34,20 +32,7 @@ const ClientDetail = ({ clientData }: ClientDetailProps) => {
   const { clientid: clientId } = useParams();
   const userId = useSelector(selectCurrentUserId);
   const [ clientListings, setClientListings ] = useGetRequest<ListingItem[]>(() => getClientListings(`/listings/${userId}/${clientId}`));
-  const { windowInnerWidth } = useWindowDimensions();
   const clientPersonalData = formatClientData(clientData);
-
-  const tableSource = clientListings ? (
-    windowInnerWidth > MOBILE_BREAKPOINT_VALUE ?
-      clientListings :
-      getSummarizedListingProps(clientListings)
-  ) : []
-
-  const tableAreaLabels = windowInnerWidth > MOBILE_BREAKPOINT_VALUE ? 
-    [
-      t('totalArea') + ' ' + 'm²', 
-      t('builtArea') + ' ' + 'm²' 
-    ] : [];
 
   return (
     <div>
@@ -81,13 +66,9 @@ const ClientDetail = ({ clientData }: ClientDetailProps) => {
           {
             clientListings &&
               <CustomTable 
-                source={ tableSource }
+                source={ clientListings }
                 setSource={setClientListings}
-                labels={[
-                  t('district'),
-                  t('neighborhood'),
-                  ...tableAreaLabels
-                ]}
+                labels={ LABELS }
                 detailRouteStructure={['listingdetail', 'clientId', 'estateId']}
                 editRouteStructure={['editlisting', 'clientId', 'estateId']}
                 deleteBaseUrl={'/listings'}

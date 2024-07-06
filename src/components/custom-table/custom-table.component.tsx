@@ -29,6 +29,8 @@ import Pagination from '../pagination/pagination.component';
 import { getPageSize } from "./custom-table.utils";
 import ContentSpinner from "../content-spinner/content-spinner.component";
 import { useTranslation } from "react-i18next";
+import useWindowDimensions from "../../hooks/use-window-dimensions";
+import { MOBILE_BREAKPOINT_VALUE } from "../../constants/breakpoints.constants";
 
 const CustomTable: FC<CustomTableProps> = ({ 
   source, 
@@ -49,7 +51,7 @@ const CustomTable: FC<CustomTableProps> = ({
   useClickOutside(buttonsRef, () => setHighlightedRow(null));
   const clientDevice = useClientDevice();
   const [ isLoading, setIsLoading ] = useState<boolean>(false);
-  const { t } = useTranslation(['ui']);
+  const { windowInnerWidth } = useWindowDimensions();
 
   const data = useMemo(() => source.map(item => {
     const itemKeys = Object.keys(item);
@@ -68,13 +70,16 @@ const CustomTable: FC<CustomTableProps> = ({
         Header: labels[idx],
         accessor: prop
       }))
-      //columnsArray.push({ Header: '', accessor: 'options'  });
-      return columnsArray
+      if (windowInnerWidth > MOBILE_BREAKPOINT_VALUE) {
+        return columnsArray;
+      } else {
+        return columnsArray.slice(0,2);
+      };
     } else {
       return [];
     }
 
-  }, [source])
+  }, [ source, windowInnerWidth ])
 
   const tableInstance = useTable(
     { 

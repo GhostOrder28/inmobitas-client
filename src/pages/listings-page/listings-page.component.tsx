@@ -1,17 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { Pane, Heading, Link } from 'evergreen-ui';
+import { Pane } from 'evergreen-ui';
 import { useTranslation } from 'react-i18next';
-
-import useWindowDimensions from '../../hooks/use-window-dimensions';
 
 import http from '../../http/http';
 import { ListingItem } from './listings-page.types';
 import { selectCurrentUserId } from '../../redux/user/user.selectors';
 import CustomTable from '../../components/custom-table/custom-table.component';
 import '../../global-styles/listings-page-scroll.styles.css';
-import { MOBILE_BREAKPOINT_VALUE } from '../../constants/breakpoints.constants';
-import { getSummarizedListingProps } from './listings-page.utils';
+import { LABELS } from './listings-page.consts';
 import NoDataMessage from '../../components/no-data-message/no-data-message.component';
 
 const ListingsPage = () => {
@@ -20,7 +17,6 @@ const ListingsPage = () => {
   const [noListings, setNoListings] = useState<boolean>(false);
   const userId = useSelector(selectCurrentUserId);
   const { t } = useTranslation(['listing', 'ui']);
-  const { windowInnerWidth, windowInnerHeight } = useWindowDimensions();
 
   useEffect(() => {
     (async function () {
@@ -49,16 +45,9 @@ const ListingsPage = () => {
       {
         listings.length ?
         <CustomTable 
-          source={windowInnerWidth > MOBILE_BREAKPOINT_VALUE ? listings : getSummarizedListingProps(listings)}
+          source={ listings }
           setSource={setListings}
-          labels={[
-            t('district'),
-            t('neighborhood'),
-            ...(windowInnerWidth > MOBILE_BREAKPOINT_VALUE ? [
-              t('totalArea') + ' ' + 'm²',
-              t('builtArea') + ' ' + 'm²'
-            ] : [])
-          ]}
+          labels={ LABELS }
           detailRouteStructure={['listingdetail', 'clientId', 'estateId']}
           editRouteStructure={['editlisting', 'clientId', 'estateId']}
           deleteBaseUrl={'/listings'}
