@@ -36,7 +36,7 @@ const Input = ({ name, type, label, placeholder, register, errors, selectOptions
                 {option[optionLabelKey]}
               </option>
             ))}
-          </Select> : type === 'checkbox' && control ?
+          </Select> : type === 'checkbox' ?
           <Controller 
             name={ name }
             control={ control }

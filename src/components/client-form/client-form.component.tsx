@@ -11,30 +11,25 @@ import { CLIENT_FORM_INITIAL_STATE } from './client-form.consts';
 import Input from '../input/input.component';
 import FormSubmit from "../form-submit/form-submit.component";
 import { ClientFormProps } from "./client-form.types";
+import Form from "../form/form.component";
+import useGenerateForm from "../../hooks/use-generate-form";
 
 const ClientForm: FC<ClientFormProps> = ({ clientData, setClient }) => {
   const appWidth = useCalculateAppWidth();
   const { t } = useTranslation([ 'client', 'listing' ])
-
-  const { register, handleSubmit, setError, formState: { errors } } = useForm<Client>({
-    defaultValues: CLIENT_FORM_INITIAL_STATE,
-    values: clientData
-  });
+  const { handleSubmit, setError, inputCommonProps } = useGenerateForm<Client>(CLIENT_FORM_INITIAL_STATE, clientData);
 
   return (
     <Pane width={ appWidth } marginX={'auto'}>
-      <form
-        className="form flex flex-column pa3"
+      <Form
         onSubmit={handleSubmit((formData: Client) => onSubmitClientData(formData, setClient, setError))}
-        encType="multipart/form-data"
-        method="post"
       >
-        <Input name='clientName' type="text" label={ t('clientName') } register={register} errors={errors} />
-        <Input name='clientAge' type="text" label={ t('clientAge') } register={register} errors={errors} />
-        <Input name='clientContactPhone' type="text" label={ t('contactPhone') } register={register} errors={errors} />
-        <Input name='clientDetails' type="textarea" label={ t('clientDetails') } register={register} errors={errors} />
+        <Input name='clientName' type="text" label={ t('clientName') } { ...inputCommonProps } />
+        <Input name='clientAge' type="text" label={ t('clientAge') } { ...inputCommonProps } />
+        <Input name='clientContactPhone' type="text" label={ t('contactPhone') } { ...inputCommonProps } />
+        <Input name='clientDetails' type="textarea" label={ t('clientDetails') } { ...inputCommonProps } />
         <FormSubmit text={ t('commitChanges', { ns: 'listing' }) } />
-      </form>
+      </Form>
     </Pane>
   )
 }

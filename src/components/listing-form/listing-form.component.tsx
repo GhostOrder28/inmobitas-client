@@ -14,10 +14,13 @@ import { Presets, Listing } from "../../pages/listing-page/listing-page.types";
 
 import { LISTING_FORM_INITIAL_STATE } from "./listing-form.consts";
 import { onSubmitListingData } from './listing-form.api';
+import { useResetOnPathChange } from "./listing-form.utils";
 import "./listing-form.styles.css";
 
 import useRelativeHeight from '../../hooks/use-relative-height';
 import useCalculateAppWidth from "../../hooks/use-calculate-app-width";
+import useGenerateForm from "../../hooks/use-generate-form";
+import Form from "../form/form.component";
 
 type ListingFormProps = {
   dataPresets: Presets | undefined;
@@ -29,32 +32,28 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
   
   const location = useLocation();
   const { t } = useTranslation(['listing', 'client', 'ui']);
-  // const [errors, setErrors] = useState<AxiosError<{ validationErrors: ValidationError[] }>>();
   const [selectedMode, setSelectedMode] = useState<number>(1);
   const formWrapperRef = useRef<HTMLDivElement | null>(null);
   const formHeight = useRelativeHeight(formWrapperRef, { extraSpace: 60 });
   const appWidth = useCalculateAppWidth();
 
-  const { register, handleSubmit, watch, control, reset, setError, formState: { errors } } = useForm<Listing>({
-    defaultValues: LISTING_FORM_INITIAL_STATE,
-    values: listing
-  });
+  const {
+    handleSubmit, 
+    watch, 
+    reset, 
+    setError, 
+    formState: { errors },
+    inputCommonProps, 
+    controlledCommonProps 
+  } = useGenerateForm<Listing>(LISTING_FORM_INITIAL_STATE, listing);
 
-  const inputCommonProps = { register, errors };
+  useResetOnPathChange<Listing>(reset, LISTING_FORM_INITIAL_STATE)
 
-  const checkboxCommonProps = {
-    ...inputCommonProps,
-    control,
-  };
-
-  useEffect(() => {
-    if (location.pathname === "/newlisting") {
-      console.log('is new listing');
-      reset(LISTING_FORM_INITIAL_STATE)
-    }
-  }, [location.pathname]);
-
-  const onSubmit = (values: any) => { console.log(values); };
+  // useEffect(() => {
+  //   if (location.pathname === "/newlisting") {
+  //     reset(LISTING_FORM_INITIAL_STATE)
+  //   }
+  // }, [location.pathname]);
 
   return (
     <Pane width={ appWidth } marginX={ 'auto' }>
@@ -79,12 +78,8 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
         overflow={'scroll'}
         height={formHeight}
       >
-        <form
-          className="form flex flex-column pa3"
-          onSubmit={handleSubmit((listingData) => onSubmitListingData(listingData, setListing, setError))}
-          /* onSubmit={handleSubmit(onSubmit)} */
-          encType="multipart/form-data"
-          method="post"
+        <Form
+          onSubmit={handleSubmit(listingData => onSubmitListingData(listingData, setListing, setError))}
         >
           <FormBlock title={ t('owner', { ns: 'client' }) }>
             <Input name='clientName' type='text' label={ t('clientName', { ns: 'client' }) } { ...inputCommonProps }/>
@@ -102,14 +97,14 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
           <FormBlock title={ t('contract') }>
             <ContractTypeBlock 
               selectOptions={ dataPresets?.contractTypes }
-              { ...checkboxCommonProps }
+              { ...controlledCommonProps }
             />
           </FormBlock>
           {
             watch("contractTypeId") === 2 && selectedMode === 1 && (
             <FormBlock title={ t('preferenceDetails') }>
-              <Input name="petsAllowed" type="checkbox" label={ t('petsAllowed') } { ...checkboxCommonProps } />
-              <Input name="childrenAllowed" type="checkbox" label={ t('childrenAllowed') } { ...checkboxCommonProps } />
+              <Input name="petsAllowed" type="checkbox" label={ t('petsAllowed') } { ...controlledCommonProps } />
+              <Input name="childrenAllowed" type="checkbox" label={ t('childrenAllowed') } { ...controlledCommonProps } />
               <Input name='ownerPreferencesDetails' type="textarea" label={ t('preferenceDetails') } { ...inputCommonProps } />
             </FormBlock>
             )
@@ -138,7 +133,7 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
                 <Input name='numberOfBathrooms' type='number' label={ t('numberOfBathrooms') } { ...inputCommonProps }/>
                 <Input name='numberOfGarages' type='number' label={ t('numberOfGarages') } { ...inputCommonProps }/>
                 <Input name='numberOfKitchens' type='number' label={ t('numberOfKitchens') } { ...inputCommonProps }/>
-                <Input name="haveNaturalGas" type="checkbox" label={ t('naturalGas') } { ...checkboxCommonProps } />
+                <Input name="haveNaturalGas" type="checkbox" label={ t('naturalGas') } { ...controlledCommonProps } />
                 <Input name='estateDetails' type="textarea" label={ t('estateDetails') } { ...inputCommonProps } />
               </>
             }
@@ -149,7 +144,7 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
           <FormSubmit
             text={ location.pathname === "/newlisting" ? t('addNewListing') : t('commitChanges')  } 
           />
-        </form>
+        </Form>
       </Pane>
     </Pane>
   );

@@ -16,7 +16,7 @@ import { useForm } from 'react-hook-form';
 import { SignUpData } from '../user-auth.types';
 import { SIGN_UP_INITIAL_STATE } from './signup.consts';
 import Input from '../../input/input.component';
-import Form from '../../form/from.component';
+import Form from '../../form/form.component';
 
 const Signup = () => {
 

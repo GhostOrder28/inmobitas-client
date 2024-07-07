@@ -17,7 +17,7 @@ import './signin.styles.css';
 import { SIGN_IN_INITIAL_STATE } from "./signin.consts";
 import Input from "../../input/input.component";
 import GuestSection from "./subcomponents/guest-section.subcomponent";
-import Form from "../../form/from.component";
+import Form from "../../form/form.component";
 
 const signinWithGoogle = async () => {
   const url = `${options.baseURL}auth/google`;

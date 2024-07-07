@@ -12,7 +12,6 @@ type TimePickerProps = {
 const TimePicker: FC<TimePickerProps> = ({ value, onChange }) => {
   const [display, setDisplay] = useState(false);
   const clockRef = useRef<HTMLDivElement>(null);
-  console.log(clockRef)
  
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>

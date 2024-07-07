@@ -1,6 +1,6 @@
-form > div+div {
-  margin-top: 1.5rem;
-}
+/* form > div+div { */
+/*   margin-top: 1.5rem; */
+/* } */
 
 .features > div+div {
   margin-top: 1rem;

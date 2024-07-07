@@ -1,0 +1,5 @@
+const MOBILE_COLUMN_COUNT = 2
+
+export {
+  MOBILE_COLUMN_COUNT
+}

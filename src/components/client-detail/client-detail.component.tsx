@@ -46,12 +46,8 @@ const ClientDetail = ({ clientData }: ClientDetailProps) => {
               {
                 clientPersonalData.map((dataItem, idx) => (
                   <TableRow key={`row-${idx}`}>
-                    <TableCell>
-                      { dataItem.label }
-                    </TableCell>
-                    <TableCell>
-                      { dataItem.content }
-                    </TableCell>
+                    <TableCell>{ dataItem.label }</TableCell>
+                    <TableCell>{ dataItem.content }</TableCell>
                   </TableRow>
                 ))
               }
