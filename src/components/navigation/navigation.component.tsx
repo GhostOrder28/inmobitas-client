@@ -21,7 +21,7 @@ import LogoIcon from "../../icons/logo-icon/logo-icon.component";
 import SignoutButton from '../signout-btn/signout-btn.component';
 import MainMenuButton from "../main-menu-button/main-menu-button.component";
 import useWindowDimensions from '../../hooks/use-window-dimensions';
-import { DESKTOP_BREAKPOINT_VALUE } from "../../constants/breakpoints.constants";
+import { DESKTOP_BREAKPOINT_VALUE } from "../../constants/breakpoints.consts";
 
 import "./navigation.styles.css";
 

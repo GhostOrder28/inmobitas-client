@@ -1,7 +1,5 @@
 import { AxiosError } from 'axios';
 import { UserInfo } from '../../components/user-auth/user-auth.types';
-import { FieldErrors } from 'react-hook-form';
-import { UserError } from './user.types';
 import { AnyAction } from 'redux';
 import { HTTPErrorData } from '../../http/http.types';
 import { 
@@ -20,14 +18,13 @@ import {
   generateGuestSuccess,
   generateGuestFailure,
 } from './user.actions'
-import { ClientError } from '../../errors/errors.types';
 
 // export type ResponseError = { [ K in keyof HTTPErrorData ]: ValidationError[] | string };
 
 export type UserState = {
   readonly currentUser: UserInfo | null;
   readonly guestPending: boolean;
-  readonly errors: AxiosError<HTTPErrorData> | Error | ClientError | null;
+  readonly errors: AxiosError<HTTPErrorData> | Error | null;
   readonly userSignedOut: boolean;
 }
 

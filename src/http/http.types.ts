@@ -1,20 +1,27 @@
 import { OneOf, Expand } from "../utils/utility-types";
 
-export type AuthenticationError = string;
+export type InvalidIdentifierError = string;
 export type AuthorizationError = string;
 export type DuplicateEntityError = string;
 export type GuestUserError = string;
 export type DbConnectionError = string;
 export type LimitReachedError = string;
+export type UserSessionExpiredError = string;
 export type ValidationError = {
   context: { key: string; label: string; };
   message: string;
   path: string[];
   type: string;
 }
+export type UnverifiedUserErrorData = {
+  unverifiedUserError: {
+    errorMessage: string;
+    errorMessageDescription: string;
+  }
+}
 
-export type AuthenticationErrorData = {
-  authenticationError: AuthenticationError
+export type InvalidIdentifierErrorData = {
+  authenticationError: InvalidIdentifierError
 }
 export type AuthorizationErrorData = {
   authorizationError: AuthorizationError
@@ -31,21 +38,27 @@ export type LimitReachedErrorData = {
 export type ValidationErrorData = {
   validationErrors: ValidationError[]
 }
+export type UserSessionExpiredErrorData = {
+  userSessionExpiredError: UserSessionExpiredError
+}
 // export type GuestUserErrorData = {
 //   guestUserError: GuestUserError;
 // }
 
 export type UserErrorData = OneOf<[
-  AuthenticationErrorData,
+  InvalidIdentifierErrorData,
   AuthorizationErrorData,
   DuplicateEntityErrorData,
-  LimitReachedErrorData,
+  LimitReachedErrorData
   // GuestUserErrorData,
 ]>
 
-export type ServerErrorData = {
-  dbConnectionError: DbConnectionError
-}
+export type HTTPErrorData = Expand<OneOf<[
+  ValidationErrorData, 
+  UserErrorData, 
+  DbConnectionErrorData,
+  UnverifiedUserErrorData, 
+  UserSessionExpiredErrorData,
+]>>
 
-
-export type HTTPErrorData = Expand<OneOf<[ValidationErrorData, UserErrorData, ServerErrorData]>>
+export type HTTPErrors = Exclude<keyof HTTPErrorData, 'validationErrors' | 'unverifiedUserError'>;

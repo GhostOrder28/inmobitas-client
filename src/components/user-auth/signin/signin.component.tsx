@@ -9,7 +9,7 @@ import FieldErrorMessage from "../../field-error-message/field-error-message.com
 import { selectValidationError, selectServerError, selectClientError, selectUserSignedOut } from "../../../redux/user/user.selectors";
 import useWindowDimensions from '../../../hooks/use-window-dimensions';
 import GoogleIcon from "../../../icons/social-media-icons/google.icon";
-import { TABLET_BREAKPOINT_VALUE } from '../../../constants/breakpoints.constants';
+import { TABLET_BREAKPOINT_VALUE } from '../../../constants/breakpoints.consts';
 import { onSubmitSigninData } from "./signin.api";
 import { useForm } from "react-hook-form";
 
@@ -28,7 +28,8 @@ const Signin = () => {
   const emailErrMsg = useSelector(selectValidationError("email"));
   const authErrMsg = useSelector(selectServerError("authenticationError"));
   const dbConnectionError = useSelector(selectServerError("dbConnectionError"));
-  const clientError = useSelector(selectClientError);
+  const userSessionExpiredError = useSelector(selectServerError("userSessionExpiredError"));
+  const clientError = useSelector(selectClientError());
   const userSignedOut = useSelector(selectUserSignedOut);
 
   const { windowInnerWidth  } = useWindowDimensions();
@@ -60,10 +61,11 @@ const Signin = () => {
             <FieldErrorMessage message={emailErrMsg} />
           </Pane>
           <Input name='password' type="password" placeholder={ t('password') } { ...inputCommonProps } />
-          { (authErrMsg || dbConnectionError || clientError) ?
+          { (authErrMsg || dbConnectionError || userSessionExpiredError) ?
             <Pane>
               <FieldErrorMessage message={authErrMsg} />
               <FieldErrorMessage message={dbConnectionError} />
+              <FieldErrorMessage message={userSessionExpiredError} />
               <FieldErrorMessage message={clientError} />
             </Pane> : ""
           }

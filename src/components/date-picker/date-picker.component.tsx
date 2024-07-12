@@ -1,8 +1,11 @@
-import React, { useState, FC } from 'react';
+import { useState, FC } from 'react';
 import { Pane, TextInput, IconButton, CalendarIcon, minorScale } from 'evergreen-ui';
 import { format } from 'date-fns';
 import { DayPicker } from "react-day-picker";
 import { useTranslation } from 'react-i18next';
+import useAutoHidePopup from "../../hooks/use-auto-hide-popup";
+import { handleDateSelection } from "./date-picker.utils";
+
 import enUS from 'date-fns/locale/en-US';
 import es from 'date-fns/locale/es';
 import 'react-day-picker/dist/style.css';
@@ -16,17 +19,7 @@ const DatePicker: FC<DatePickerProps> = ({ value, onChange }) => {
   const [display, setDisplay] = useState(false);
   const { i18n } = useTranslation()
   const locale = i18n.language?.includes('es') ? es : enUS; // the ? operator here is just for snapshot testing purposes, in the browser language is never undefined
-
-  const handleDateSelection = (newDate: Date | undefined) => {
-    if (!newDate) return;
-    const date = new Date(newDate);
-    if (value) {
-      date.setHours(value.getHours());
-      date.setMinutes(value.getMinutes());
-    }
-    onChange(date)
-    setDisplay(false); 
-  }
+  useAutoHidePopup(value, setDisplay)
 
   return (
     <Pane position={'relative'} width={'100%'}>
@@ -56,7 +49,7 @@ const DatePicker: FC<DatePickerProps> = ({ value, onChange }) => {
             mode="single"
             locale={locale}
             selected={value} 
-            onSelect={(newDate: Date | undefined) => { handleDateSelection(newDate) }}
+            onSelect={(newDate: Date | undefined) => { handleDateSelection(value, newDate, onChange) }}
           />
         </Pane>
       }

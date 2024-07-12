@@ -19,7 +19,7 @@ import { useTranslation } from "react-i18next";
 import useRelativeHeight from '../../hooks/use-relative-height';
 import useWindowDimensions from "../../hooks/use-window-dimensions";
 
-import { DESKTOP_BREAKPOINT_VALUE } from '../../constants/breakpoints.constants';
+import { DESKTOP_BREAKPOINT_VALUE } from '../../constants/breakpoints.consts';
 import http from "../../http/http";
 import { selectCurrentUserId } from "../../redux/user/user.selectors";
 import GalleryMenu from "../gallery-menu/gallery-menu.component";
@@ -352,7 +352,6 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
                 isLoading === 'deletePictures' ? t('waitForPictureDelete') :
                 isLoading === 'deleteCategories' ? t('waitForCategoryDelete') : ''
               }
-              zIndex={20}
             /> : ''
           }
           { 

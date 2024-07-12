@@ -1,9 +1,4 @@
-import { AuthenticationError } from './auth.errors'
+import { InvalidIdentifierError } from './auth.errors'
 
-export type ClientErrorTypes = 
-  | AuthenticationError
-  | Error;
-
-export type ClientError = {
-  clientError: ClientErrorTypes;
-}
+export type ClientErrors = 
+  | InvalidIdentifierError

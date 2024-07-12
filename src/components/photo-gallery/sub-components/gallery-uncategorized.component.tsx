@@ -14,7 +14,7 @@ import { Uncategorized } from './gallery-category.types';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { selectCurrentUserId } from '../../../redux/user/user.selectors';
-import { AuthenticationError } from '../../../errors/auth.errors';
+import { InvalidIdentifierError } from '../../../errors/auth.errors';
 import { pictureUploader } from '../../../utils/utility-functions/utility-functions';
 import { signOutWithError } from '../../../redux/user/user.actions';
 import axios, { AxiosError } from 'axios';
@@ -40,8 +40,8 @@ const GalleryUncategorized = ({
 
   const onUpload: ChangeEventHandler<HTMLInputElement> = async (e) => {
     try {
-      if (!userId) throw new AuthenticationError(t('noUserIdError'));
-      if (!listingid) throw new Error(t('noListingIdError'));
+      if (!userId) throw new InvalidIdentifierError(t('noUserIdError'));
+      if (!listingid) throw new InvalidIdentifierError(t('noListingIdError'));
 
       setIsLoading('upload')
       const newPictures = await pictureUploader(e, userId, Number(listingid), categoryPictures.length);
@@ -51,25 +51,26 @@ const GalleryUncategorized = ({
     } catch (err) {
       setIsLoading(null);
 
-      if (err instanceof AuthenticationError) {
-        return dispatch(signOutWithError({ clientError: err })) 
+      if (err instanceof InvalidIdentifierError) {
+        return dispatch(signOutWithError(err)) 
+      } else {
+        // toaster.warning(( err as Error ).message, {
+        //   duration: 5
+        // });
       };
       
-      if (axios.isAxiosError(err)) {
-        if (( err as AxiosError ).response?.data.unverifiedUserError) {
-          toaster.warning(( err as AxiosError ).response?.data.unverifiedUserError.errorMessage, {
-            description: ( err as AxiosError ).response?.data.unverifiedUserError.errorMessageDescription,
-            duration: 7
-          });
-          return;
-        } else {
-          console.error(err)
-        };
-      };
+      // if (axios.isAxiosError(err)) {
+      //   if (( err as AxiosError ).response?.data.unverifiedUserError) {
+      //     toaster.warning(( err as AxiosError ).response?.data.unverifiedUserError.errorMessage, {
+      //       description: ( err as AxiosError ).response?.data.unverifiedUserError.errorMessageDescription,
+      //       duration: 7
+      //     });
+      //     return;
+      //   } else {
+      //     console.error(err)
+      //   };
+      // };
 
-      toaster.warning(( err as Error ).message, {
-        duration: 5
-      });
     }
   };
 

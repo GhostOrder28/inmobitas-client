@@ -18,7 +18,7 @@ import {
   ActionWithDependencyAndPayload,
   ActionWithDependency,
 } from '../../utils/action-creator'
-import { ClientError } from '../../errors/errors.types';
+import { UserSessionExpiredErrorData } from '../../http/http.types';
 
 
 export type UserAction = 
@@ -51,7 +51,7 @@ export type SignOutFailure = ActionWithPayload<userActionTypes.SIGN_OUT_FAILURE,
 export type UserSignOutStart = ActionWithDependency<userActionTypes.USER_SIGN_OUT_START>;
 export type UserSignOutSuccess = Action<userActionTypes.USER_SIGN_OUT_SUCCESS>;
 export type UserSignOutFailure = ActionWithPayload<userActionTypes.USER_SIGN_OUT_FAILURE, Error>;
-export type SignOutWithError = ActionWithPayload<userActionTypes.SIGN_OUT_WITH_ERROR, ClientError>;
+export type SignOutWithError = ActionWithPayload<userActionTypes.SIGN_OUT_WITH_ERROR, AxiosError<AxiosResponse<UserSessionExpiredErrorData>> | Error>;
 
 export type ClearErrors = Action<userActionTypes.CLEAR_ERRORS>;
 export type RequestUserInfoForSignInStart = ActionWithDependency<userActionTypes.REQUEST_USER_INFO_FOR_SIGN_IN_START>;
@@ -106,7 +106,7 @@ export const userSignOutSuccess = withMatcher((): UserSignOutSuccess =>
 export const userSignOutFailure = withMatcher((error: Error): UserSignOutFailure =>
   createAction(userActionTypes.USER_SIGN_OUT_FAILURE, error));
 
-export const signOutWithError = withMatcher((error: ClientError): SignOutWithError =>
+export const signOutWithError = withMatcher((error: SignOutWithError["payload"]): SignOutWithError =>
   createAction(userActionTypes.SIGN_OUT_WITH_ERROR, error));
 
 export const clearErrors = withMatcher((): ClearErrors =>

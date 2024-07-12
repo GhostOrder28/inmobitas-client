@@ -18,7 +18,7 @@ const AuthPage = () => {
 
   return (
     <>
-      { guestPending && <ContentSpinner waitMessage={t('waitForGuest')} zIndex={10}/> }
+      { guestPending && <ContentSpinner waitMessage={t('waitForGuest')} /> }
       <Pane
         height={viewport*0.85}
         display={'flex'}

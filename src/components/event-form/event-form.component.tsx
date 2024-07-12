@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, FC } from "react";
+import React, { useRef, FC } from "react";
 import { useTranslation } from "react-i18next";
 import { 
   Button, 
@@ -11,66 +11,63 @@ import './event-form.styles.scss';
 import { EVENT_FORM_INITIAL_STATE } from "./event-form.consts";
 import Input from "../input/input.component";
 import { onSubmitEventData } from "./event-form.api";
-import { useInitializeEndDate } from "./event-form.utils";
 import useGenerateForm from "../../hooks/use-generate-form";
 import Form from "../form/form.component";
 
 type EventFormProps = {
-  date: Date;
   setEvents: React.Dispatch<React.SetStateAction<AgendaEvent[]>>;
-  setDisplayEventForm: React.Dispatch<React.SetStateAction<boolean>>;
-  currentEvent?: AgendaEvent | undefined;
-  setCurrentEvent: React.Dispatch<React.SetStateAction<AgendaEvent | undefined>>;
+  currentEvent?: AgendaEvent;
+  setCurrentEvent: React.Dispatch<React.SetStateAction<AgendaEvent | null>>;
 }
 
-const EventForm: FC<EventFormProps> = ({ currentEvent, setCurrentEvent, date, setEvents, setDisplayEventForm }) => {
-  const [displayEndDate, setDisplayEndDate] = useState(false);
+const EventForm: FC<EventFormProps> = ({ currentEvent, setCurrentEvent, setEvents }) => {
   const formRef = useRef(null);
 
   const { 
     handleSubmit, 
+    unregister,
     setError, 
     setValue, 
     getValues, 
+    watch,
     inputCommonProps,
     controlledCommonProps
-  } = useGenerateForm<AgendaEvent>(EVENT_FORM_INITIAL_STATE, currentEvent);
+  } = useGenerateForm<AgendaEvent>(EVENT_FORM_INITIAL_STATE, currentEvent); 
 
-  useInitializeEndDate(displayEndDate, setValue, getValues)
+  const endDate = watch("endDate");
 
   useClickOutside(formRef, () => {
-    setDisplayEventForm(false);
-    setCurrentEvent(undefined);
+    setCurrentEvent(null); // this is the only utility for this funtion, can I manage to get rid of this?
   });
 
   const { t } = useTranslation(['agenda', 'ui']); 
 
   return (
-    <Pane width={350}  padding={20} ref={formRef}>
+    <Pane width={350} padding={20} ref={formRef}>
       <Form 
-        onSubmit={handleSubmit((formData) => onSubmitEventData(formData, setEvents, currentEvent, setCurrentEvent, setDisplayEventForm, setError))} 
+        onSubmit={handleSubmit((formData) => onSubmitEventData(formData, setEvents, setError))} 
       >
         <Heading size={800}>{ currentEvent ? t('editEvent') : t('newEvent') }</Heading>
         <Input name='title' type="text" placeholder={ t('eventTitle') + " *" } { ...inputCommonProps } />
         <Input name='startDate' type="date" label={ t('date') } { ...controlledCommonProps } />
         <Input name='startDate' type="time" label={ t('startTime') } { ...controlledCommonProps } />
-        { displayEndDate &&
+        { endDate &&
           <Input name='endDate' type="time" label={ t('endTime') } { ...controlledCommonProps } />
         }
         <Button
-          width={"100%"}
-          marginTop={15}
-          intent={ displayEndDate ? 'danger' : 'success' }
+          intent={ watch("endDate") ? 'danger' : 'success' }
           type="button"
-          onClick={() => setDisplayEndDate(!displayEndDate)}
+          onClick= { () => 
+            endDate ?
+              unregister("endDate") : 
+              setValue("endDate", getValues("startDate"))
+          }
         >
-          { displayEndDate ? t('removeEndTime'): t('addEndTime') } 
+          { endDate ? t('removeEndTime'): t('addEndTime') } 
         </Button>
-        <Pane display="flex" marginTop={15}>
-          <Button width={"100%"} type="submit" appearance="primary">
-            { currentEvent ? t('editEvent') : t('addNewEvent') } 
-          </Button>
-        </Pane>
+        <Button type="submit" appearance="primary">
+          { currentEvent?.eventId ? t('editEvent') : t('addNewEvent') } 
+        </Button>
       </Form>
     </Pane>
   );

@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { selectServerError } from "../../../../redux/user/user.selectors";
 import FieldErrorMessage from "../../../field-error-message/field-error-message.component";
-import { TABLET_BREAKPOINT_VALUE } from "../../../../constants/breakpoints.constants";
+import { TABLET_BREAKPOINT_VALUE } from "../../../../constants/breakpoints.consts";
 
 const GuestSection = () => {
   const { windowInnerWidth } = useWindowDimensions();

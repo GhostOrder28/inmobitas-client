@@ -30,7 +30,7 @@ import { getPageSize } from "./custom-table.utils";
 import ContentSpinner from "../content-spinner/content-spinner.component";
 import { useTranslation } from "react-i18next";
 import useWindowDimensions from "../../hooks/use-window-dimensions";
-import { MOBILE_BREAKPOINT_VALUE } from "../../constants/breakpoints.constants";
+import { MOBILE_BREAKPOINT_VALUE } from "../../constants/breakpoints.consts";
 import { MOBILE_COLUMN_COUNT } from "./custom-table.consts";
 
 const CustomTable: FC<CustomTableProps> = ({ 

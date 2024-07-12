@@ -1,10 +1,10 @@
-class AuthenticationError extends Error {
+class InvalidIdentifierError extends Error {
   constructor(message: string) {
     super(message);
-    this.name = "AuthenticationError";
+    this.name = "InvalidIdentifierError";
   }
 }
 
 export {
-  AuthenticationError
+  InvalidIdentifierError
 }

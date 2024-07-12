@@ -2,7 +2,7 @@ import React, { useEffect, useCallback, lazy, Suspense } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 
-import { selectCurrentUser, selectClientError } from '../redux/user/user.selectors';
+import { selectCurrentUser, selectServerError } from '../redux/user/user.selectors';
 import { clearErrors } from '../redux/user/user.actions';
 import { Spinner, ThemeProvider, mergeTheme, defaultTheme } from 'evergreen-ui';
 import ErrorBoundary from '../components/error-boundary/error-boundary.component';
@@ -24,7 +24,7 @@ const theme = mergeTheme(defaultTheme, inmobitasTheme)
 const App = () => {
 
   const currentUser = useSelector(selectCurrentUser);
-  const clientError = useSelector(selectClientError);
+  const userSessionExpiredError = useSelector(selectServerError("userSessionExpiredError"));
   const dispatch = useDispatch();
   const location = useLocation();
 
@@ -34,7 +34,7 @@ const App = () => {
   }, [currentUser])
 
   useEffect(() => {
-    if (!clientError) dispatch(clearErrors())
+    if (!userSessionExpiredError) dispatch(clearErrors())
   }, [location]);
 
   return (

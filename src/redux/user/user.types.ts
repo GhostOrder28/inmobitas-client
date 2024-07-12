@@ -1,4 +1,4 @@
-export enum userActionTypes {
+enum userActionTypes {
   SIGN_UP_START = 'SIGN_UP_START',
   SIGN_UP_SUCCESS = 'SIGN_UP_SUCCESS',
   SIGN_UP_FAILURE = 'SIGN_UP_FAILURE',
@@ -23,11 +23,5 @@ export enum userActionTypes {
   REQUEST_USER_INFO_FOR_SIGN_IN_SUCCESS = 'REQUEST_USER_INFO_FOR_SIGN_IN_SUCCESS',
   REQUEST_USER_INFO_FOR_SIGN_IN_FAILURE = 'REQUEST_USER_INFO_FOR_SIGN_IN_FAILURE',
 };
-
-export type UserError = 
-  | 'authenticationError' 
-  | 'duplicateEntityError' 
-  | 'limitReachedError'
-  | 'dbConnectionError'
 
 export default userActionTypes;

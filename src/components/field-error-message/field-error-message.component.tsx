@@ -1,4 +1,3 @@
-import React from 'react';
 import { Pane, Text, BanCircleIcon, minorScale } from 'evergreen-ui';
 
 type ErrorMessageProps = {

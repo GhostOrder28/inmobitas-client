@@ -1,6 +1,6 @@
 import { useForm, DefaultValues, UseFormReturn } from "react-hook-form";
 
-function useGenerateForm <F>(defaultValues: DefaultValues<F>, values: F | undefined) {
+function useGenerateForm <F>(defaultValues: DefaultValues<F>, values?: F | undefined) {
   const form = useForm<F>({
     defaultValues,
     values

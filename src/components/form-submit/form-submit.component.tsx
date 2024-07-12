@@ -1,6 +1,6 @@
 import { Pane, Button, minorScale } from 'evergreen-ui';
 import useWindowDimensions from '../../hooks/use-window-dimensions';
-import { DESKTOP_BREAKPOINT_VALUE } from "../../constants/breakpoints.constants";
+import { DESKTOP_BREAKPOINT_VALUE } from "../../constants/breakpoints.consts";
 
 type FormSubmitProps = {
   text: string;

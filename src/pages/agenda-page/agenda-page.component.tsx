@@ -40,6 +40,7 @@ import { strParseOut } from '../../utils/utility-functions/utility-functions';
 import CustomTableOption from '../../components/custom-table/custom-table-option';
 import useOrientation from '../../hooks/use-orientation';
 import { getPageSize } from '../../components/custom-table/custom-table.utils';
+import { EVENT_FORM_INITIAL_STATE } from '../../components/event-form/event-form.consts';
 
 const views = ['month', 'week', 'day', 'today'];
 const rowHeight = 50;
@@ -53,10 +54,10 @@ const AgendaPage = () => {
   const prevDate = usePrevious(currentDate);
   const [currentView, setCurrentView] = useState<string>('month');
   const [events, setEvents] = useState<AgendaEvent[]>([]);
-  const [currentEvent, setCurrentEvent] = useState<AgendaEvent>();
+  const [currentEvent, setCurrentEvent] = useState<AgendaEvent | null>(null);
   const [selectedEvent, setSelectedEvent] = useState<number | null>(null);
   const [filteredEvents, setFilteredEvents] = useState<AgendaEvent[]>([]);
-  const [displayEventForm, setDisplayEventForm] = useState<boolean>(false);
+  // const [displayEventForm, setDisplayEventForm] = useState<boolean>(false);
   const [showPastEvents, setShowPastEvents] = useState<boolean>(false);
   const eventListRef = useRef<HTMLDivElement | null>(null);
   const eventListHeight = useRelativeHeight(eventListRef);
@@ -191,6 +192,11 @@ const AgendaPage = () => {
     return source.filter(event => event.startDate > now);
   }
 
+  useEffect(() => { console.log('events: ', events); }, [ events ])
+  useEffect(() => {
+    setCurrentEvent(null)
+  }, [ events ])
+
   return (
     <Pane>
       <Pane paddingX={20} flex={1}>
@@ -213,7 +219,7 @@ const AgendaPage = () => {
           <Pane>
             <IconButton
               icon={PlusIcon} 
-              onClick={() => setDisplayEventForm(true)}
+              onClick={() => setCurrentEvent(EVENT_FORM_INITIAL_STATE)}
             />
           </Pane>
         </Pane>
@@ -288,7 +294,6 @@ const AgendaPage = () => {
                             onClick={() => {
                               const { original: { eventId } } = page[rowIdx]
                               setCurrentEvent(events.find(e => e.eventId === eventId) as AgendaEvent); // this can't be undefined
-                              setDisplayEventForm(true);
                               setSelectedEvent(null);
                             }}
                           />
@@ -322,12 +327,10 @@ const AgendaPage = () => {
           onPageChange={page => gotoPage(page - 1)}
         />
       </Pane>
-      { displayEventForm &&
+      { currentEvent &&
         <ModalContainer>
           <EventForm
-            date={currentDate}
             setEvents={setEvents}
-            setDisplayEventForm={setDisplayEventForm}
             currentEvent={currentEvent}
             setCurrentEvent={setCurrentEvent}
           />

@@ -23,7 +23,7 @@ import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { signOutWithError } from '../../../redux/user/user.actions';
 import { useDispatch } from 'react-redux';
-import { AuthenticationError } from '../../../errors/auth.errors';
+import { InvalidIdentifierError } from '../../../errors/auth.errors';
 import axios, { AxiosError } from 'axios';
 import "./gallery-category.styles.css";
 import GalleryCategoryButton from './gallery-category-button.component';
@@ -100,8 +100,8 @@ const GalleryCategorized = ({
 
   const onUpload: ChangeEventHandler<HTMLInputElement> = async (e) => {
     try {
-      if (!userId) throw new AuthenticationError(t('noUserIdError'));
-      if (!listingid) throw new Error(t('noListingIdError'));
+      if (!userId) throw new InvalidIdentifierError(t('noUserIdError'));
+      if (!listingid) throw new InvalidIdentifierError(t('noListingIdError'));
 
       setIsLoading('upload')
       const newPictures = await pictureUploader(e, userId, Number(listingid), categoryPictures.length, categoryId);
@@ -111,24 +111,24 @@ const GalleryCategorized = ({
     } catch (err) {
       setIsLoading(null);
 
-      if (err instanceof AuthenticationError) {
-        return dispatch(signOutWithError({ clientError: err })) 
+      if (err instanceof InvalidIdentifierError) {
+        return dispatch(signOutWithError(err)) 
       };
-      
-      if (axios.isAxiosError(err)) {
-        if (( err as AxiosError ).response?.data.unverifiedUserError) {
-          toaster.warning(( err as AxiosError ).response?.data.unverifiedUserError.errorMessage, {
-            description: ( err as AxiosError ).response?.data.unverifiedUserError.errorMessageDescription,
-            duration: 7
-          });
-        } else {
-          console.error(err)
-        };
-      };
-
-      toaster.warning(( err as Error ).message, {
-        duration: 5
-      });
+      // 
+      // if (axios.isAxiosError(err)) {
+      //   if (( err as AxiosError ).response?.data.unverifiedUserError) {
+      //     toaster.warning(( err as AxiosError ).response?.data.unverifiedUserError.errorMessage, {
+      //       description: ( err as AxiosError ).response?.data.unverifiedUserError.errorMessageDescription,
+      //       duration: 7
+      //     });
+      //   } else {
+      //     console.error(err)
+      //   };
+      // };
+      //
+      // toaster.warning(( err as Error ).message, {
+      //   duration: 5
+      // });
     }
   };
 

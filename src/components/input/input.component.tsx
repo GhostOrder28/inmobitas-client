@@ -41,14 +41,14 @@ const Input = ({ name, type, label, placeholder, register, errors, selectOptions
             name={ name }
             control={ control }
             render={
-              ({ field: props }) => (
+              ({ field: { value, onChange } }) => (
                 <Checkbox
                   whiteSpace={"nowrap"}
                   margin={0}
                   display={"flex"}
-                  alignItems={"center"}
-                  checked={ props.value }
-                  onChange={ (e) => props.onChange(e.target.checked) }
+                  alignItems={"center"} 
+                  checked={ value }
+                  onChange={ e => onChange(e.target.checked) }
                 />
               )
             }
@@ -57,10 +57,10 @@ const Input = ({ name, type, label, placeholder, register, errors, selectOptions
             name={ name }
             control={ control }
             render={
-              ({ field: props }) => (
+              ({ field: { value, onChange } }) => (
                 <DatePicker
-                  value={props.value}
-                  onChange={(newDate) => props.onChange(newDate)}
+                  value={ value }
+                  onChange={newDate => onChange(newDate)}
                 />
               )
             }
@@ -69,10 +69,10 @@ const Input = ({ name, type, label, placeholder, register, errors, selectOptions
             name={ name }
             control={ control }
             render={
-              ({ field: props }) => (
+              ({ field: { value, onChange } }) => (
                 <TimePicker
-                  value={props.value}
-                  onChange={(newDate) => props.onChange(newDate)}
+                  value={ value }
+                  onChange={newDate => onChange(newDate)}
                 />
               )
             }

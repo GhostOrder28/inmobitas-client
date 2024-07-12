@@ -2,8 +2,10 @@ export type AgendaEvent = {
   eventId?: number;
   title: string;
   startDate: Date;
-  endDate: Date | null;
+  endDate?: Date;
 }
+
+export type AgendaEventFormData = Omit<AgendaEvent, "eventId">;
 
 export type AgendaTableColumns = [
   {

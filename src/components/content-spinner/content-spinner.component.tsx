@@ -1,12 +1,11 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { Pane, Spinner, Paragraph, majorScale, minorScale } from 'evergreen-ui';
 
 type ContentSpinnerProps = {
   waitMessage?: string;
-  zIndex?: number;
 }
 
-const ContentSpinner: FC<ContentSpinnerProps> = ({ waitMessage, zIndex }) => (
+const ContentSpinner: FC<ContentSpinnerProps> = ({ waitMessage }) => (
   <Pane
     display="flex"
     flexDirection="column"
