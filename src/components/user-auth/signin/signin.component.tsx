@@ -25,9 +25,9 @@ const signinWithGoogle = async () => {
 }
 
 const Signin = () => {
-  const emailErrMsg = useSelector(selectValidationError("email"));
-  const authErrMsg = useSelector(selectServerError("authenticationError"));
-  const dbConnectionError = useSelector(selectServerError("dbConnectionError"));
+  const emailError = useSelector(selectValidationError("email"));
+  const authError = useSelector(selectServerError("authenticationError"));
+  const serverError = useSelector(selectServerError("serverError"));
   const userSessionExpiredError = useSelector(selectServerError("userSessionExpiredError"));
   const clientError = useSelector(selectClientError());
   const userSignedOut = useSelector(selectUserSignedOut);
@@ -58,13 +58,13 @@ const Signin = () => {
         <Form onSubmit={ handleSubmit((formData: SignInData) => onSubmitSigninData(formData)) }>
           <Pane>
             <Input name='email' type="text" placeholder={ t('email') } { ...inputCommonProps } />
-            <FieldErrorMessage message={emailErrMsg} />
+            <FieldErrorMessage message={emailError} />
           </Pane>
           <Input name='password' type="password" placeholder={ t('password') } { ...inputCommonProps } />
-          { (authErrMsg || dbConnectionError || userSessionExpiredError) ?
+          { (authError || serverError || userSessionExpiredError) ?
             <Pane>
-              <FieldErrorMessage message={authErrMsg} />
-              <FieldErrorMessage message={dbConnectionError} />
+              <FieldErrorMessage message={authError} />
+              <FieldErrorMessage message={serverError} />
               <FieldErrorMessage message={userSessionExpiredError} />
               <FieldErrorMessage message={clientError} />
             </Pane> : ""

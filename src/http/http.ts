@@ -23,15 +23,14 @@ http.interceptors.response.use<AxiosResponse | HTTPErrorData>(
       const { response: { data: { 
         authorizationError,
         authenticationError, 
-        dbConnectionError, 
+        serverError,
         unverifiedUserError,
         userSessionExpiredError,
       } } } = error;
 
       if (authorizationError) store.dispatch(signOutSuccess());
       // if (authenticationError) store.dispatch(signOutSuccess());
-      if (userSessionExpiredError) store.dispatch(signOutWithError(error));
-      if (dbConnectionError) store.dispatch(signOutSuccess());
+      if (userSessionExpiredError || serverError) store.dispatch(signOutWithError(error));
 
       if (unverifiedUserError) {
         toaster.warning(unverifiedUserError.errorMessage, {

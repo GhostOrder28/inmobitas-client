@@ -4,7 +4,8 @@ export type InvalidIdentifierError = string;
 export type AuthorizationError = string;
 export type DuplicateEntityError = string;
 export type GuestUserError = string;
-export type DbConnectionError = string;
+export type ServerError = string;
+// export type DbConnectionError = string;
 export type LimitReachedError = string;
 export type UserSessionExpiredError = string;
 export type ValidationError = {
@@ -29,8 +30,11 @@ export type AuthorizationErrorData = {
 export type DuplicateEntityErrorData = {
   duplicateEntityError: DuplicateEntityError
 }
-export type DbConnectionErrorData = {
-  dbConnectionError: DbConnectionError
+// export type DbConnectionErrorData = {
+//   dbConnectionError: DbConnectionError
+// }
+export type ServerErrorData = {
+  serverError: ServerError
 }
 export type LimitReachedErrorData = {
   limitReachedError: LimitReachedError
@@ -56,7 +60,8 @@ export type UserErrorData = OneOf<[
 export type HTTPErrorData = Expand<OneOf<[
   ValidationErrorData, 
   UserErrorData, 
-  DbConnectionErrorData,
+  ServerErrorData,
+  // DbConnectionErrorData,
   UnverifiedUserErrorData, 
   UserSessionExpiredErrorData,
 ]>>
