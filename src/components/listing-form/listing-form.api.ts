@@ -7,7 +7,13 @@ import { selectCurrentUserId } from "../../redux/user/user.selectors";
 import axios  from 'axios';
 import { history } from "../..";
 import { handleValidationErrors } from "../../utils/utility-functions/utility-functions";
-import { HTTPErrorData } from "../../http/http.types";
+
+import i18next from "i18next";
+import { initReactI18next } from 'react-i18next';
+
+i18next.use(initReactI18next).init()
+
+const { t } = i18next;
 
 const onSubmitListingData = async (
   listingData: Partial<Listing>, 
@@ -15,7 +21,6 @@ const onSubmitListingData = async (
   setError: UseFormSetError<Listing>,
 ): Promise<void> => {
   const userId = selectCurrentUserId(store.getState());
-  console.log("submitting listingData: ", listingData);
 
   const { clientId, estateId, contractId } = listingData;
   const formKeys = Object.keys(listingData) as (keyof Listing)[];
@@ -35,20 +40,11 @@ const onSubmitListingData = async (
     
     setListing(res.data);      
     history.push(`/listingdetail/${res.data.clientId}/${res.data.estateId}`);
-  } catch (err) {
-    if (axios.isAxiosError(err)) {
-      if (!err.response) throw new Error(`there is an error but it doesn't have a response: ${err}`);
+  } catch (error) {
+    if (!axios.isAxiosError(error)) return console.error(t('nonAxiosError', { ns: 'error' }), error);
 
-      const errorData: HTTPErrorData = err.response.data;
-
-      if (errorData.validationErrors) {
-        handleValidationErrors<Listing>(listingData, errorData.validationErrors, setError); 
-      } else {
-        throw errorData;
-      }
-    } else {
-      console.error(err)
-    };
+    const { data: { validationErrors } } = error.response!!;
+    handleValidationErrors<Listing>(listingData, validationErrors, setError); 
   }
 };
 

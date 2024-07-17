@@ -7,7 +7,13 @@ import { store } from "../../redux/redux-store";
 import { selectCurrentUserId } from "../../redux/user/user.selectors";
 import { UseFormSetError } from "react-hook-form";
 import { handleValidationErrors } from "../../utils/utility-functions/utility-functions";
-import { HTTPErrorData } from "../../http/http.types";
+
+import i18next from "i18next";
+import { initReactI18next } from 'react-i18next';
+
+i18next.use(initReactI18next).init()
+
+const { t } = i18next;
 
 const onSubmitClientData = async (
   clientData: Client,
@@ -21,20 +27,11 @@ const onSubmitClientData = async (
 
     setClient(res.data);
     history.push(`/clientdetail/${clientId}`)
-  } catch (err) {
-    if (axios.isAxiosError(err)) {
-      if (!err.response) throw new Error(`there is an error but it doesn't have a response: ${err}`);
+  } catch (error) {
+    if (!axios.isAxiosError(error)) return console.error(t('nonAxiosError', { ns: 'error' }), error);
 
-      const errorData: HTTPErrorData = err.response.data;
-
-      if (errorData.validationErrors) {
-        handleValidationErrors<Client>(clientData, errorData.validationErrors, setError); 
-      } else {
-        throw errorData;
-      }
-    } else {
-      console.error(err)
-    };
+    const { data: { validationErrors } } = error.response!!;
+    handleValidationErrors<Client>(clientData, validationErrors, setError); 
   }
 }
 

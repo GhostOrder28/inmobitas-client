@@ -79,8 +79,8 @@ const Input = ({ name, type, label, placeholder, register, errors, selectOptions
           /> : "input type is empty or doesn't exist"
         }
       </div>
-      { errors ?
-          <FieldErrorMessage message={ errors[name as FieldNameWithoutAuth]?.message } />
+      { errors?.root ?
+          <FieldErrorMessage message={ errors.root[name as FieldNameWithoutAuth]?.message } />
         : ""
       }
     </Pane>

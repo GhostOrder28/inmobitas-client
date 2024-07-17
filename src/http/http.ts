@@ -5,10 +5,16 @@ import { AxiosResponse } from 'axios';
 import { HTTPErrorData } from './http.types';
 import { toaster } from 'evergreen-ui';
 
+import i18next from "i18next";
+import { initReactI18next } from 'react-i18next';
+
+i18next.use(initReactI18next).init()
+
+const { t } = i18next;
+
 export const options = {
   withCredentials: true,
   baseURL: process.env.REACT_APP_BASE_URL,
-  // baseURL: '/',
 }
 
 const http = axios.create(options);
@@ -18,34 +24,23 @@ http.interceptors.response.use<AxiosResponse | HTTPErrorData>(
     return response; 
   },
   function (error: AxiosError<HTTPErrorData> | Error) {
-    if (axios.isAxiosError(error)) {
-      if (!error.response) throw new Error(`there is an error but it doesn't have a response: ${error}`);
-      const { response: { data: { 
-        authorizationError,
-        authenticationError, 
-        serverError,
-        unverifiedUserError,
-        userSessionExpiredError,
-      } } } = error;
+    if (!axios.isAxiosError(error)) return console.error(t('nonAxiosError', { ns: 'error' }));
+    if (!error.response) return console.error(t('noResponseError', { ns: 'error' }), error);
 
-      if (authorizationError) store.dispatch(signOutSuccess());
-      // if (authenticationError) store.dispatch(signOutSuccess());
-      if (userSessionExpiredError || serverError) store.dispatch(signOutWithError(error));
+    const { response: { data: d } } = error;
 
-      if (unverifiedUserError) {
-        toaster.warning(unverifiedUserError.errorMessage, {
-          description: unverifiedUserError.errorMessageDescription,
-          duration: 7
-        });
-      };
-    } else {
-      toaster.warning(( error as Error ).message, {
-        duration: 5
+    if (d.authorizationError) store.dispatch(signOutSuccess());
+    if (d.userSessionExpiredError || d.serverError) store.dispatch(signOutWithError(error));
+    if (d.authenticationError) return Promise.reject(error);
+    if (d.validationErrors) return Promise.reject(error);
+    if (d.unverifiedUserError) {
+      toaster.warning(d.unverifiedUserError.errorMessage, {
+        description: d.unverifiedUserError.errorMessageDescription,
+        duration: 7
       });
-      console.error(error)
     };
 
-    return Promise.reject(error);
+    console.error(t('unexpectedError', { ns: 'error' }), error)
   }
 )
 

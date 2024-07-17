@@ -108,27 +108,14 @@ const GalleryCategorized = ({
       if (!newPictures) throw new Error(t('picturesIsUndefinedError'));
       setPictures(prev => [ ...prev, ...newPictures ])
       setIsLoading(null)
-    } catch (err) {
+    } catch (error) {
       setIsLoading(null);
 
-      if (err instanceof InvalidIdentifierError) {
-        return dispatch(signOutWithError(err)) 
+      if (error instanceof InvalidIdentifierError) {
+       return dispatch(signOutWithError(error)) 
       };
-      // 
-      // if (axios.isAxiosError(err)) {
-      //   if (( err as AxiosError ).response?.data.unverifiedUserError) {
-      //     toaster.warning(( err as AxiosError ).response?.data.unverifiedUserError.errorMessage, {
-      //       description: ( err as AxiosError ).response?.data.unverifiedUserError.errorMessageDescription,
-      //       duration: 7
-      //     });
-      //   } else {
-      //     console.error(err)
-      //   };
-      // };
-      //
-      // toaster.warning(( err as Error ).message, {
-      //   duration: 5
-      // });
+
+      console.error(error)
     }
   };
 
