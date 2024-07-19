@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
+import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import {
   Pane,
@@ -13,10 +13,10 @@ import {
 import { selectCurrentUserId } from "../../redux/user/user.selectors";
 import { formatClientData } from "./client-detail.utils";
 import { strParseOut } from "../../utils/utility-functions/utility-functions";
-import CustomTable from '../custom-table/custom-table.component';
+import CustomTable from "../custom-table/custom-table.component";
 import Heading from "../heading/heading.component";
-import { getClientListings } from './client-detail.api';
-import { LABELS } from '../../pages/listings-page/listings-page.consts';
+import { getClientListings } from "./client-detail.api";
+import { LABELS } from "../../pages/listings-page/listings-page.consts";
 
 import useGetRequest from "../../hooks/use-get-request";
 
@@ -28,8 +28,8 @@ type ClientDetailProps = {
 };
 
 const ClientDetail = ({ clientData }: ClientDetailProps) => {
-  const { t } = useTranslation('listing');
-  const { clientid: clientId } = useParams();
+  const { t } = useTranslation("listing");
+  const { clientId } = useParams();
   const userId = useSelector(selectCurrentUserId);
   const [ clientListings, setClientListings ] = useGetRequest<ListingItem[]>(() => getClientListings(`/listings/${userId}/${clientId}`));
   const clientPersonalData = formatClientData(clientData);
@@ -38,7 +38,7 @@ const ClientDetail = ({ clientData }: ClientDetailProps) => {
     <div>
       {clientData && (
         <>
-          <Heading type={"h1"}>
+          <Heading type="h1">
             { strParseOut(clientData.clientName) }
           </Heading>
           <Table>
@@ -55,9 +55,9 @@ const ClientDetail = ({ clientData }: ClientDetailProps) => {
           </Table>
         </>
       )}
-      <Pane overflow={"scroll"} borderColor={"black"}>
-        <Heading type={"h2"}>
-          { t<string>('estates') }
+      <Pane overflow="scroll" borderColor="black">
+        <Heading type="h2">
+          { t<string>("estates") }
         </Heading>
           {
             clientListings &&
@@ -65,9 +65,9 @@ const ClientDetail = ({ clientData }: ClientDetailProps) => {
                 source={ clientListings }
                 setSource={setClientListings}
                 labels={ LABELS }
-                detailRouteStructure={['listingdetail', 'clientId', 'estateId']}
-                editRouteStructure={['editlisting', 'clientId', 'estateId']}
-                deleteBaseUrl={'/listings'}
+                detailRouteStructure={["listingdetail", "clientId", "estateId"]}
+                editRouteStructure={["editlisting", "clientId", "estateId"]}
+                deleteBaseUrl={"/listings"}
               /> 
           }
       </Pane>

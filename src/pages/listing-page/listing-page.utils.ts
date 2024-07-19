@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { initReactI18next } from 'react-i18next';
+import { initReactI18next } from "react-i18next";
 
 import { strParseOut } from "../../utils/utility-functions/utility-functions";
 import { EstatePreset, Listing, Presets } from "./listing-page.types";
@@ -22,110 +22,110 @@ function getStructuredData (listingData: Listing, presets: Presets) {
     contractId: listingData.contractId,
     data: [
     {
-      header: t('owner'),
+      header: t("owner"),
       items: [
         {
-          label: t('name'),
+          label: t("name"),
           value: strParseOut(listingData.clientName)
         },
         {
-          label: t('phone'),
+          label: t("phone"),
           value: Number(listingData.clientContactPhone)
         }
       ]
     },
     {
-      header: t('contract'),
+      header: t("contract"),
       items: [
         {
-          label: t('contractType'),
+          label: t("contractType"),
           value: contractName
         },
         {
-          label: t('exclusive'),
-          value: listingData.isExclusive ? t('yes') : t('no')
+          label: t("exclusive"),
+          value: listingData.isExclusive ? t("yes") : t('no')
         }
       ]
     },
     ...(listingData.contractTypeId === 2 ? [{
-      header: t('ownerPreferences'),
+      header: t("ownerPreferences"),
       items: [
         {
-          label: t('petsAllowed'),
-          value: listingData.petsAllowed ? t('yes') : t('no')
+          label: t("petsAllowed"),
+          value: listingData.petsAllowed ? t("yes") : t('no')
         },
         {
-          label: t('childrenAllowed'),
-          value: listingData.childrenAllowed ? t('yes') : t('no')
+          label: t("childrenAllowed"),
+          value: listingData.childrenAllowed ? t("yes") : t('no')
         },
         {
-          label: t('preferencesDetails'),
+          label: t("preferencesDetails"),
           value: listingData.ownerPreferencesDetails 
         }
       ]
     }] : []),
     {
-      header: t('location'),
+      header: t("location"),
       items: [
         {
-          label: t('district'),
+          label: t("district"),
           value: strParseOut(listingData.district) 
         },
         {
-          label: t('neighborhood'),
+          label: t("neighborhood"),
           value: strParseOut(listingData.neighborhood) 
         },
         {
-          label: t('addressDetails'),
+          label: t("addressDetails"),
           value: listingData.addressDetails 
         }
       ]
     },
     {
-      header: t('estate'),
+      header: t("estate"),
       items: [
         {
-          label: t('estateType'),
+          label: t("estateType"),
           value: estateName,
         },
         ...listingData.estateTypeId !== 1 ? [{
-          label: t('floorLocation'),
+          label: t("floorLocation"),
           value: listingData.floorLocation 
         }] : [],
         ...listingData.contractTypeId === 1 ? [{
-          label: t('numberOfFloors'),
+          label: t("numberOfFloors"),
           value: listingData.numberOfFloors 
         }] : [],
         {
-          label: t('totalArea'),
+          label: t("totalArea"),
           value: listingData.totalArea && `${listingData.totalArea} m²`
         },
         {
-          label: t('builtArea'),
+          label: t("builtArea"),
           value: listingData.builtArea && `${listingData.builtArea} m²`
         },
         {
-          label: t('bedrooms'),
+          label: t("bedrooms"),
           value: listingData.numberOfBedrooms 
         },
         {
-          label: t('bathrooms'),
+          label: t("bathrooms"),
           value: listingData.numberOfBathrooms 
         },
         {
-          label: t('garages'),
+          label: t("garages"),
           value: listingData.numberOfGarages 
         },
         {
-          label: t('kitchens'),
+          label: t("kitchens"),
           value: listingData.numberOfKitchens 
         },
         {
-          label: t('naturalGas'),
-          value: listingData.haveNaturalGas ? t('yes') : t('no') 
+          label: t("naturalGas"),
+          value: listingData.haveNaturalGas ? t("yes") : t('no') 
         },
         {
-          label: t('estateDetails'),
+          label: t("estateDetails"),
           value: listingData.estateDetails
         }
       ]

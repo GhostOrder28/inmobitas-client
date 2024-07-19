@@ -6,7 +6,7 @@ import { APP_WIDTH_FOR_DESKTOP_VIEW, APP_WIDTH_DEFAULT } from "../constants/size
 
 const useCalculateAppWidth = () => {
   const { windowInnerWidth } = useWindowDimensions();
-  const [ appWidth, setAppWidth ] = useState<number | string>('100%');
+  const [ appWidth, setAppWidth ] = useState<number | string>("100%");
   
   useEffect(() => {
     setAppWidth(windowInnerWidth > DESKTOP_BREAKPOINT_VALUE ? APP_WIDTH_FOR_DESKTOP_VIEW : APP_WIDTH_DEFAULT)

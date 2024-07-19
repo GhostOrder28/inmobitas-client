@@ -9,7 +9,7 @@ import { handleValidationErrors } from "../../utils/utility-functions/utility-fu
 import { compareAsc } from "date-fns";
 
 import i18next from "i18next";
-import { initReactI18next } from 'react-i18next';
+import { initReactI18next } from "react-i18next";
 
 i18next.use(initReactI18next).init()
 
@@ -44,7 +44,7 @@ const onSubmitEventData = async (
       setEvents(prev => [ ...prev, eventPayload ])
     };
   } catch (error) {
-    if (!axios.isAxiosError(error)) return console.error(t('nonAxiosError', { ns: 'error' }), error);
+    if (!axios.isAxiosError(error)) return console.error(t("nonAxiosError", { ns: 'error' }), error);
 
     const { data: { validationErrors } } = error.response!!;
     handleValidationErrors<AgendaEvent>(eventData, validationErrors, setError); 

@@ -1,9 +1,9 @@
 const CLIENT_FORM_INITIAL_STATE = {
   clientId: NaN,
-  clientName: '',
-  clientContactPhone: '',
+  clientName: "",
+  clientContactPhone: "",
   clientAge: NaN,
-  clientDetails: ''
+  clientDetails: ""
 };
 
 export { CLIENT_FORM_INITIAL_STATE }

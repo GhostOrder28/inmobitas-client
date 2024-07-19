@@ -1,7 +1,7 @@
-import React, { FC } from 'react';
-import { Pane, Heading, Link as LinkWrapper, majorScale } from 'evergreen-ui';
-import { Link } from 'react-router-dom';
-import useWindowDimensions from '../../hooks/use-window-dimensions';
+import { FC } from "react";
+import { Pane, Heading, majorScale } from "evergreen-ui";
+import { Link } from "react-router-dom";
+import useWindowDimensions from "../../hooks/use-window-dimensions";
 
 type NoDataMessageType = {
   messageText: string;
@@ -13,19 +13,19 @@ const NoDataMessage: FC<NoDataMessageType> = ({ messageText, linkText, url }) =>
   const { windowInnerWidth, windowInnerHeight } = useWindowDimensions();
   return (
     <Pane
-      position={'absolute'}
-      display={'flex'}
-      justifyContent={'center'}
+      position="absolute"
+      display="flex"
+      justifyContent="center"
       top={ windowInnerHeight / 2 }
       left={ 0 }
       paddingX={majorScale(4)}
       width={ windowInnerWidth }
     >
-      <Heading is={'h1'} color={'#474d66'}>
+      <Heading is="h1" color="#474d66">
         {messageText}
         { linkText && url &&
-          <Link to={url} className='link blue'>
-          {linkText}
+          <Link to={url} className="link blue">
+            {linkText}
           </Link>
         }
       </Heading>

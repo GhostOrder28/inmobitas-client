@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 const useOrientation = () => {
   const [orientation, setOrientation] = useState<string>();
   useEffect(() => {

@@ -1,4 +1,4 @@
-import React, { useRef, ChangeEventHandler } from 'react';
+import React, { useRef, ChangeEventHandler } from "react";
 import {
   Pane,
   Checkbox, 
@@ -8,17 +8,17 @@ import {
   majorScale,
   minorScale,
   useTheme,
-} from 'evergreen-ui';
+} from "evergreen-ui";
 import { useTranslation } from "react-i18next";
-import { Uncategorized } from './gallery-category.types';
-import { useSelector, useDispatch } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import { selectCurrentUserId } from '../../../redux/user/user.selectors';
-import { InvalidIdentifierError } from '../../../errors/auth.errors';
-import { pictureUploader } from '../../../utils/utility-functions/utility-functions';
-import { signOutWithError } from '../../../redux/user/user.actions';
-import axios, { AxiosError } from 'axios';
-import GalleryCategoryButton from './gallery-category-button.component';
+import { Uncategorized } from "./gallery-category.types";
+import { useSelector, useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
+import { selectCurrentUserId } from "../../../redux/user/user.selectors";
+import { InvalidIdentifierError } from "../../../errors/auth.errors";
+import { pictureUploader } from "../../../utils/utility-functions/utility-functions";
+import { signOutWithError } from "../../../redux/user/user.actions";
+import axios, { AxiosError } from "axios";
+import GalleryCategoryButton from "./gallery-category-button/gallery-category-button.component";
 import "./gallery-category.styles.css";
 
 const GalleryUncategorized = ({ 
@@ -33,19 +33,19 @@ const GalleryUncategorized = ({
 }: Uncategorized) => {
   const timeout = useRef<NodeJS.Timeout>();
   const userId = useSelector(selectCurrentUserId);
-  const { listingid } = useParams();
-  const { t } = useTranslation(['listing']);
+  const { listingId } = useParams();
+  const { t } = useTranslation(["listing"]);
   const dispatch = useDispatch();
   const { colors } = useTheme();
 
   const onUpload: ChangeEventHandler<HTMLInputElement> = async (e) => {
     try {
-      if (!userId) throw new InvalidIdentifierError(t('noUserIdError'));
-      if (!listingid) throw new InvalidIdentifierError(t('noListingIdError'));
+      if (!userId) throw new InvalidIdentifierError(t("noUserIdError"));
+      if (!listingId) throw new InvalidIdentifierError(t("noListingIdError"));
 
-      setIsLoading('upload')
-      const newPictures = await pictureUploader(e, userId, Number(listingid), categoryPictures.length);
-      if (!newPictures) throw new Error(t('picturesIsUndefinedError'));
+      setIsLoading("upload")
+      const newPictures = await pictureUploader(e, userId, Number(listingId), categoryPictures.length);
+      if (!newPictures) throw new Error(t("picturesIsUndefinedError"));
       setPictures(prev => [ ...prev, ...newPictures ])
       setIsLoading(null)
     } catch (err) {
@@ -89,7 +89,7 @@ const GalleryUncategorized = ({
           alignItems="center"
           paddingLeft={ minorScale(3) }
         >
-          <Text fontStyle='italic'>{ t('uncategorized') }</Text>
+          <Text fontStyle="italic">{ t('uncategorized') }</Text>
         </Pane>
         <Pane display="flex">
           <GalleryCategoryButton 
@@ -99,7 +99,7 @@ const GalleryUncategorized = ({
               <Pane>
                 <input
                   id={ `upload-btn-uncategorized` }
-                  className='upload-btn'
+                  className="upload-btn"
                   type="file"
                   onChange={(e) => onUpload(e)}
                   multiple
@@ -122,7 +122,7 @@ const GalleryUncategorized = ({
         position={"relative"}
         zIndex={10}
         width={"100%"}
-        padding={menuMode === 'pictures' && categoryPictures.length ? "1.5px" : ""}
+        padding={menuMode === "pictures" && categoryPictures.length ? "1.5px" : ""}
         transition={"all .3s"}
       >
         {
@@ -132,22 +132,22 @@ const GalleryUncategorized = ({
                 key={`image-${idx}`}
                 className="gallery-img-container"
                 position={"relative"}
-                border={menuMode === 'pictures' ? "3px solid white" : ""}
+                border={menuMode === "pictures" ? "3px solid white" : ""}
               >
                 <Pane
                   top="0"
                   left="0"
                   cursor={"pointer"}
                   onClick={
-                    menuMode === 'pictures'
+                    menuMode === "pictures"
                       ? () => toggleMark(file.pictureId)
                       : () => setFullscreenPicture(file)
                   }
-                  onTouchStart={() => {timeout.current = setTimeout(() => setMenuMode('pictures'), 500)}}
+                  onTouchStart={() => {timeout.current = setTimeout(() => setMenuMode("pictures"), 500)}}
                   onTouchEnd={ () => clearTimeout(timeout.current) }
                   onTouchMove={() => clearTimeout(timeout.current)}
                 >
-                  {menuMode === 'pictures' && (
+                  {menuMode === "pictures" && (
                     <Checkbox
                       position="absolute"
                       top="0"
@@ -164,7 +164,7 @@ const GalleryUncategorized = ({
                   )}
                   <img
                     className={`gallery-img`}
-                    crossOrigin='anonymous'
+                    crossOrigin="anonymous"
                     alt=""
                     src={file.smallSizeUrl}
                   />

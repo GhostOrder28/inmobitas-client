@@ -1,7 +1,7 @@
-import React from 'react';
-import { ClientItem } from '../../pages/clients-page/clients-page.types';
-import { ListingItem } from '../../pages/listings-page/listings-page.types';
-import { Row } from 'react-table';
+import React from "react";
+import { ClientItem } from "../../pages/clients-page/clients-page.types";
+import { ListingItem } from "../../pages/listings-page/listings-page.types";
+import { Row } from "react-table";
 
 export type CustomTableProps = {
   source: (ListingItem | ClientItem)[];

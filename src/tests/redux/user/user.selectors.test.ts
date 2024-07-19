@@ -1,22 +1,22 @@
-import * as userSelectors from '../../../redux/user/user.selectors';
+import * as userSelectors from "../../../redux/user/user.selectors";
 import { RootState } from "../../../redux/root-reducer";
-import { UserState } from '../../../redux/user/user.reducer';
-import { AxiosError } from 'axios';
+import { UserState } from "../../../redux/user/user.reducer";
+import { AxiosError } from "axios";
 
-describe('user selectors', () => {
+describe("user selectors", () => {
 
   const user: UserState = {
     currentUser: {
-      names: 'test',
+      names: "test",
       userId: 1,
       oauthId: 41313541345
     },
     guestPending: false,
-    errors: { response: 'there is an error' } as any as AxiosError,
+    errors: { response: "there is an error" } as any as AxiosError,
     userSignedOut: false,
   }
 
-  it('selectUserReducer', () => {
+  it("selectUserReducer", () => {
     const storeMock = {
       user: {
         currentUser: {},
@@ -27,17 +27,17 @@ describe('user selectors', () => {
     expect(userReducer).toEqual(storeMock.user)
   })  
 
-  it('selectCurrentUser', () => {
+  it("selectCurrentUser", () => {
     const currentUser = userSelectors.selectCurrentUser({ user } as RootState);
     expect(currentUser).toEqual(user.currentUser)
   })  
 
-  it('selectErrorObj', () => {
+  it("selectErrorObj", () => {
     const userErrors = userSelectors.selectErrorObj({ user } as RootState);
     expect(userErrors).toEqual(user.errors)
   })
 
-  it('selectCurrentUserId', () => {
+  it("selectCurrentUserId", () => {
     const currentUserId = userSelectors.selectCurrentUserId({ user } as RootState);
     expect(currentUserId).toEqual(1)
   });

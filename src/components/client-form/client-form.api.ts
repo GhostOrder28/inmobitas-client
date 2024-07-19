@@ -9,7 +9,7 @@ import { UseFormSetError } from "react-hook-form";
 import { handleValidationErrors } from "../../utils/utility-functions/utility-functions";
 
 import i18next from "i18next";
-import { initReactI18next } from 'react-i18next';
+import { initReactI18next } from "react-i18next";
 
 i18next.use(initReactI18next).init()
 
@@ -28,7 +28,7 @@ const onSubmitClientData = async (
     setClient(res.data);
     history.push(`/clientdetail/${clientId}`)
   } catch (error) {
-    if (!axios.isAxiosError(error)) return console.error(t('nonAxiosError', { ns: 'error' }), error);
+    if (!axios.isAxiosError(error)) return console.error(t("nonAxiosError", { ns: 'error' }), error);
 
     const { data: { validationErrors } } = error.response!!;
     handleValidationErrors<Client>(clientData, validationErrors, setError); 

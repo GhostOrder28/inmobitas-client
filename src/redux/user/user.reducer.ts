@@ -1,7 +1,7 @@
-import { AxiosError } from 'axios';
-import { UserInfo } from '../../components/user-auth/user-auth.types';
-import { AnyAction } from 'redux';
-import { HTTPErrorData } from '../../http/http.types';
+import { AxiosError } from "axios";
+import { UserInfo } from "../../components/user-auth/user-auth.types";
+import { AnyAction } from "redux";
+import { HTTPErrorData } from "../../http/http.types";
 import { 
   signUpFailure,
   signInSuccess,
@@ -17,7 +17,7 @@ import {
   generateGuestStart,
   generateGuestSuccess,
   generateGuestFailure,
-} from './user.actions'
+} from "./user.actions"
 
 // export type ResponseError = { [ K in keyof HTTPErrorData ]: ValidationError[] | string };
 

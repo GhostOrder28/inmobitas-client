@@ -1,5 +1,5 @@
 import { Pane } from "evergreen-ui";
-import { MenuMode } from '../photo-gallery/photo-gallery.component';
+import { MenuMode } from "../photo-gallery/photo-gallery.component";
 
 type DeletionPanelProps = {
   entity: Exclude<MenuMode, null>
@@ -25,7 +25,7 @@ const InnerMenu = ({
       zIndex={97}
       overflow={"hidden"}
       transition={"height .2s"}
-      data-testid='deletion-panel-container'
+      data-testid="deletion-panel-container"
     >
       { children }
     </Pane>

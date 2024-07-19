@@ -1,16 +1,16 @@
 import i18n from "i18next";
 import detector from "i18next-browser-languagedetector";
 import { initReactI18next } from "react-i18next";
-import listingTranslationEN from './locale/en/listing.translation.en.json';
-import clientTranslationEN from './locale/en/client.translation.en.json';
-import uiTranslationEN from './locale/en/ui.translation.en.json';
-import listingTranslationES from './locale/es/listing.translation.es.json';
-import clientTranslationES from './locale/es/client.translation.es.json';
-import uiTranslationES from './locale/es/ui.translation.es.json';
-import agendaTranslationEN from './locale/en/agenda.translation.en.json';
-import agendaTranslationES from './locale/es/agenda.translation.es.json';
-import errorTranslationEN from './locale/en/error.translation.en.json';
-import errorTranslationES from './locale/es/error.translation.es.json';
+import listingTranslationEN from "./locale/en/listing.translation.en.json";
+import clientTranslationEN from "./locale/en/client.translation.en.json";
+import uiTranslationEN from "./locale/en/ui.translation.en.json";
+import listingTranslationES from "./locale/es/listing.translation.es.json";
+import clientTranslationES from "./locale/es/client.translation.es.json";
+import uiTranslationES from "./locale/es/ui.translation.es.json";
+import agendaTranslationEN from "./locale/en/agenda.translation.en.json";
+import agendaTranslationES from "./locale/es/agenda.translation.es.json";
+import errorTranslationEN from "./locale/en/error.translation.en.json";
+import errorTranslationES from "./locale/es/error.translation.es.json";
 
 const resources = {
   en: {

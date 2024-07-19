@@ -4,7 +4,7 @@ import { signInStart, generateGuestStart } from "../../../redux/user/user.action
 import http from "../../../http/http";
 
 const onSubmitSigninData = async (userData: SignInData) => {
-  console.log('userData: ', userData);
+  console.log("userData: ", userData);
   store.dispatch(signInStart(userData, http));
 };
 

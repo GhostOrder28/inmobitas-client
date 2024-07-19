@@ -1,4 +1,4 @@
-import { DocumentIcon } from 'evergreen-ui';
+import { DocumentIcon } from "evergreen-ui";
 
 const PdfGenerator = () => {
   return (

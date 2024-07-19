@@ -1,7 +1,8 @@
 import { Dispatch, SetStateAction } from "react";
-import { Picture } from '../../listing-detail/listing-detail.types';
+import { Picture } from "../../listing-detail/listing-detail.types";
 import { PictureCategory, PictureCategoryFromPayload } from "../../listing-detail/listing-detail.types";
-import { IsLoading, MenuMode } from '../photo-gallery.component';
+import { IsLoading, MenuMode } from "../photo-gallery.component";
+import { TextInput } from "evergreen-ui";
 
 type CommonProps = {
   categoryPictures: Picture[];
@@ -12,14 +13,14 @@ type CommonProps = {
   toggleMark: (currentId: number) => void;
   setFullscreenPicture: Dispatch<SetStateAction<Picture | null>>;
   setIsLoading: Dispatch<SetStateAction<IsLoading>>;
-}
+};
 
 export type Categorized = {
   name: string;
   categoryId: number;
   position: number;
   setCategories: Dispatch<SetStateAction<PictureCategoryFromPayload[]>>;
-  isNew?: boolean;
+  newlyCreated?: boolean;
 } & CommonProps;
 
 export type Uncategorized = {} & CommonProps

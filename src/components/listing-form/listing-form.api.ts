@@ -4,12 +4,12 @@ import { Listing, ListingWithoutIds } from "../../pages/listing-page/listing-pag
 import http from "../../http/http";
 import { store } from "../../redux/redux-store";
 import { selectCurrentUserId } from "../../redux/user/user.selectors";
-import axios  from 'axios';
+import axios  from "axios";
 import { history } from "../..";
 import { handleValidationErrors } from "../../utils/utility-functions/utility-functions";
 
 import i18next from "i18next";
-import { initReactI18next } from 'react-i18next';
+import { initReactI18next } from "react-i18next";
 
 i18next.use(initReactI18next).init()
 
@@ -22,16 +22,7 @@ const onSubmitListingData = async (
 ): Promise<void> => {
   const userId = selectCurrentUserId(store.getState());
 
-  const { clientId, estateId, contractId } = listingData;
-  const formKeys = Object.keys(listingData) as (keyof Listing)[];
-
-  const remainingProps = formKeys.reduce<ListingWithoutIds>((acc, current) => {
-    if (!(current === "clientId" || current === "estateId" || current === "contractId")) {
-      return { ...acc, [current]: listingData[current] };
-    } else {
-      return acc;
-    }
-  }, {} as ListingWithoutIds);
+  const { clientId, estateId, contractId, ...remainingProps } = listingData;
 
   try {
     const res = history.location.pathname === `/newlisting`
@@ -41,7 +32,7 @@ const onSubmitListingData = async (
     setListing(res.data);      
     history.push(`/listingdetail/${res.data.clientId}/${res.data.estateId}`);
   } catch (error) {
-    if (!axios.isAxiosError(error)) return console.error(t('nonAxiosError', { ns: 'error' }), error);
+    if (!axios.isAxiosError(error)) return console.error(t("nonAxiosError", { ns: 'error' }), error);
 
     const { data: { validationErrors } } = error.response!!;
     handleValidationErrors<Listing>(listingData, validationErrors, setError); 

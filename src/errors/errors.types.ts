@@ -1,4 +1,4 @@
-import { InvalidIdentifierError } from './auth.errors'
+import { InvalidIdentifierError } from "./auth.errors"
 
 export type ClientErrors = 
   | InvalidIdentifierError

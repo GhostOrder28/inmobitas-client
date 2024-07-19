@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback, FC } from 'react';
+import React, { useMemo, useCallback, FC } from "react";
 import { 
   Pane, 
   useTheme, 
@@ -10,7 +10,7 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   ButtonOwnProps,
-} from 'evergreen-ui';
+} from "evergreen-ui";
 
 type PaginationButtonProps = ButtonOwnProps & {
   isSelected: boolean;
@@ -38,7 +38,7 @@ const range = (start: number, stop: number) => {
 
 const PaginationButton: FC<PaginationButtonProps> = ({ isSelected, onPageChange, page, ...rest }) => {
   const { colors } = useTheme()
-  const isEllipsis = typeof page === 'string' && page === '...'
+  const isEllipsis = typeof page === "string" && page === "..."
   const selectedProps = useMemo(() => {
     if (isSelected) {
       return {
@@ -83,9 +83,9 @@ const PaginationButton: FC<PaginationButtonProps> = ({ isSelected, onPageChange,
 const Pagination: FC<PaginationProps> = ({ onNextPage, onPageChange, onPreviousPage, page = 1, totalPages }) => {
   const pages = range(1, totalPages);
   return (
-    <Pane is={'nav'}>
-      <Pane is={'ul'} height={50} display={'flex'} alignItems={'center'} padding={0} margin={0}>
-        <Pane is={'li'} listStyle={'none'} padding={0}>
+    <Pane is="nav">
+      <Pane is="ul" height={50} display="flex" alignItems="center" padding={0} margin={0}>
+        <Pane is="li" listStyle="none" padding={0}>
           <IconButton appearance="minimal" icon={ChevronLeftIcon} disabled={page === 1} onClick={onPreviousPage} />
         </Pane>
         {
@@ -105,7 +105,7 @@ const Pagination: FC<PaginationProps> = ({ onNextPage, onPageChange, onPreviousP
             ) 
           })
         }
-        <Pane is={'li'} listStyle={'none'} padding={0}>
+        <Pane is="li" listStyle="none" padding={0}>
           <IconButton
             appearance="minimal"
             icon={ChevronRightIcon}

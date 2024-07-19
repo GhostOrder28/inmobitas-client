@@ -1,5 +1,5 @@
 import React from "react";
-import { Pane, Text } from "evergreen-ui"
+import { Pane, Text, minorScale } from "evergreen-ui"
 
 type FormBlockProps = {
   title: string;
@@ -9,7 +9,10 @@ type FormBlockProps = {
 const FormBlock = ({ title, children }: FormBlockProps) => {
   return (
     <Pane
-      position={"relative"}
+      position="relative"
+      display="flex"
+      flexDirection="column"
+      gap={ minorScale(5) }
       elevation={0}
       padding={20}
       className="form-category"

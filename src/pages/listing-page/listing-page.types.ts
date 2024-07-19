@@ -1,5 +1,5 @@
-import { PartialBy } from '../../utils/utility-types';
-import { Client } from '../client-page/client-page.types';
+import { PartialBy } from "../../utils/utility-types";
+import { Client } from "../client-page/client-page.types";
 import { Nullable } from "../../utils/utility-types";
 
 export type Presets = {
@@ -37,7 +37,7 @@ export type Contract = {
   // utilitiesIncluded: boolean;
   isExclusive: boolean;
   // isPercentage: boolean;
-} & Pick<ContractPreset, 'contractTypeId'>
+} & Pick<ContractPreset, "contractTypeId">
 
 export type Estate = {
   estateId: number;
@@ -47,7 +47,7 @@ export type Estate = {
   totalArea: number;
   builtArea: number;
   estateDetails: string;
-} & Pick<EstatePreset, 'estateTypeId'>
+} & Pick<EstatePreset, "estateTypeId">
 
 export type Features = {
   numberOfBedrooms: number;
@@ -72,20 +72,20 @@ export type ClientPreferences = {
 }
 
 // in listing-details those partial props are not partial but always expected
-// is only in liting-form that those props are partial, but I don't know how
+// is only in liting-form that those props are partial, but I don"t know how
 // to differentiate between this a type with all props required and another
 // with some of them being optional, this differentiation is necessary because
 // because both listing-details and listing-form expect just one type of listing
 // data, and not something like "Listing | ListingWithSomePropsOptional"
-// for the moment I'm just using this type but is not telling the true really
+// for the moment I"m just using this type but is not telling the true really
 // since, again, in listing-details the listing type it expect is one with all
 // its props required.
 
 export type Listing = 
 // & { [prop: string]: string | number | null | boolean; } 
-& Omit<Client, 'clientAge' | 'clientDetails'>
-& PartialBy<Contract, 'contractId'>
-& PartialBy<Estate, 'estateId'>
+& Omit<Client, "clientAge" | 'clientDetails'>
+& PartialBy<Contract, "contractId">
+& PartialBy<Estate, "estateId">
 & Features 
 & House 
 & Apartment 

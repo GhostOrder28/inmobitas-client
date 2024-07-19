@@ -1,9 +1,9 @@
 import {
   UseExpandedOptions,
   UsePaginationOptions,
-} from 'react-table';
+} from "react-table";
 
-declare module 'react-table' {
+declare module "react-table" {
   export interface TableOptions<D extends Record<string, unknown>>
     extends UsePaginationOptions<D>,
 			UseGroupByOptions<D>,

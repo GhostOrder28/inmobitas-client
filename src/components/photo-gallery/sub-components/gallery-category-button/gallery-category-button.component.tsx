@@ -1,5 +1,5 @@
-import React, { FC, ReactNode } from 'react';
-import { Pane, IconComponent } from 'evergreen-ui';
+import React, { FC, ReactNode } from "react";
+import { Pane, IconComponent } from "evergreen-ui";
 
 type GalleryCategoryButtonProps = {
   icon?: IconComponent;
@@ -13,13 +13,13 @@ type GalleryCategoryButtonProps = {
 const GalleryCategoryButton: FC<GalleryCategoryButtonProps> = ({ icon: Icon, onClick, color, borderColor, size, upload }) => (
   <Pane
     flex={1}
-    display={'flex'}
-    justifyContent={'center'}
-    alignItems={'center'}
-    borderLeft={`1px solid ${borderColor || '#EDEFF5'}`}
+    display="flex"
+    justifyContent="center"
+    alignItems="center"
+    borderLeft={`1px solid ${borderColor || "#EDEFF5"}`}
     onClick={ !upload ? onClick : undefined }
-    height={ size || '100%' }
-    width={ size || '100%' }
+    height={ size || "100%" }
+    width={ size || "100%" }
     cursor="pointer"
   >
     { upload || Icon && <Icon color={color} /> }

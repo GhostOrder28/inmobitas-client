@@ -1,5 +1,5 @@
-import { FC } from 'react';
-import { Pane, Spinner, Paragraph, majorScale, minorScale } from 'evergreen-ui';
+import { FC } from "react";
+import { Pane, Spinner, Paragraph, majorScale, minorScale } from "evergreen-ui";
 
 type ContentSpinnerProps = {
   waitMessage?: string;
@@ -24,8 +24,8 @@ const ContentSpinner: FC<ContentSpinnerProps> = ({ waitMessage }) => (
     <Spinner />
     <Paragraph
       marginTop={minorScale(5)}
-      textAlign={'center'}
-      size={'large'}
+      textAlign="center"
+      size="large"
       fontWeight={600}
       lineHeight={1.5}
       paddingX={majorScale(5)}

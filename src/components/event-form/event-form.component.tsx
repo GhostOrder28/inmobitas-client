@@ -5,9 +5,9 @@ import {
   Pane, 
   Heading, 
 } from "evergreen-ui";
-import { AgendaEvent } from '../../pages/agenda-page/agenda-page.types';
-import useClickOutside from '../../hooks/use-click-outside';
-import './event-form.styles.scss';
+import { AgendaEvent } from "../../pages/agenda-page/agenda-page.types";
+import useClickOutside from "../../hooks/use-click-outside";
+import "./event-form.styles.scss";
 import { EVENT_FORM_INITIAL_STATE } from "./event-form.consts";
 import Input from "../input/input.component";
 import { onSubmitEventData } from "./event-form.api";
@@ -40,22 +40,22 @@ const EventForm: FC<EventFormProps> = ({ currentEvent, setCurrentEvent, setEvent
     setCurrentEvent(null); // this is the only utility for this funtion, can I manage to get rid of this?
   });
 
-  const { t } = useTranslation(['agenda', 'ui']); 
+  const { t } = useTranslation(["agenda", "ui"]); 
 
   return (
-    <Pane width={350} padding={20} ref={formRef}>
+    <Pane width={350} ref={formRef}>
       <Form 
         onSubmit={handleSubmit((formData) => onSubmitEventData(formData, setEvents, setError))} 
       >
-        <Heading size={800}>{ currentEvent ? t('editEvent') : t('newEvent') }</Heading>
-        <Input name='title' type="text" placeholder={ t('eventTitle') + " *" } { ...inputCommonProps } />
-        <Input name='startDate' type="date" label={ t('date') } { ...controlledCommonProps } />
-        <Input name='startDate' type="time" label={ t('startTime') } { ...controlledCommonProps } />
+        <Heading size={800}>{ currentEvent ? t("editEvent") : t("newEvent") }</Heading>
+        <Input name="title" type="text" placeholder={ t("eventTitle") + " *" } { ...inputCommonProps } />
+        <Input name="startDate" type="date" label={ t("date") } { ...controlledCommonProps } />
+        <Input name="startDate" type="time" label={ t("startTime") } { ...controlledCommonProps } />
         { endDate &&
-          <Input name='endDate' type="time" label={ t('endTime') } { ...controlledCommonProps } />
+          <Input name="endDate" type="time" label={ t("endTime") } { ...controlledCommonProps } />
         }
         <Button
-          intent={ watch("endDate") ? 'danger' : 'success' }
+          intent={ watch("endDate") ? "danger" : "success" }
           type="button"
           onClick= { () => 
             endDate ?
@@ -63,10 +63,10 @@ const EventForm: FC<EventFormProps> = ({ currentEvent, setCurrentEvent, setEvent
               setValue("endDate", getValues("startDate"))
           }
         >
-          { endDate ? t('removeEndTime'): t('addEndTime') } 
+          { endDate ? t("removeEndTime"): t("addEndTime") } 
         </Button>
         <Button type="submit" appearance="primary">
-          { currentEvent?.eventId ? t('editEvent') : t('addNewEvent') } 
+          { currentEvent?.eventId ? t("editEvent") : t("addNewEvent") } 
         </Button>
       </Form>
     </Pane>

@@ -1,5 +1,5 @@
-import React, { FC, useState, useEffect } from 'react';
-import { Pane, ChevronLeftIcon, ChevronRightIcon, Heading } from 'evergreen-ui';
+import React, { FC, useState, useEffect } from "react";
+import { Pane, ChevronLeftIcon, ChevronRightIcon, Heading } from "evergreen-ui";
 import {
   addDays,
   addWeeks,
@@ -9,12 +9,12 @@ import {
   subMonths,
   getYear,
   isSameMonth
-} from 'date-fns';
+} from "date-fns";
 import { useTranslation } from "react-i18next";
-import { format, startOfWeek, endOfWeek,} from 'date-fns';
-import enUS from 'date-fns/locale/en-US';
-import es from 'date-fns/locale/es';
-import { strParseOut } from '../../../utils/utility-functions/utility-functions';
+import { format, startOfWeek, endOfWeek,} from "date-fns";
+import enUS from "date-fns/locale/en-US";
+import es from "date-fns/locale/es";
+import { strParseOut } from "../../../utils/utility-functions/utility-functions";
 
 type AgendaHeaderProps = {
   currentDate: Date;
@@ -23,8 +23,8 @@ type AgendaHeaderProps = {
 }
 
 const AgendaHeader: FC<AgendaHeaderProps> = ({ currentDate, currentView, setCurrentDate }) => {
-  const { t, i18n } = useTranslation(['agenda']);
-  const locale = i18n.language.includes('es') ? es : enUS;
+  const { t, i18n } = useTranslation(["agenda"]);
+  const locale = i18n.language.includes("es") ? es : enUS;
   const [outOfRange, setOutOfRange] = useState<boolean>();
   const firstDayOfTheWeek = startOfWeek(currentDate);
   const lastDayOfTheWeek = endOfWeek(currentDate);
@@ -38,70 +38,70 @@ const AgendaHeader: FC<AgendaHeaderProps> = ({ currentDate, currentView, setCurr
   }, [currentDate])
 
   const onChange = (action: string) => {
-    if (currentView === 'month') {
-      if (action === 'prev') setCurrentDate(subMonths(currentDate, 1));
-      if (action === 'next') setCurrentDate(addMonths(currentDate, 1));
+    if (currentView === "month") {
+      if (action === "prev") setCurrentDate(subMonths(currentDate, 1));
+      if (action === "next") setCurrentDate(addMonths(currentDate, 1));
     }
-    if (currentView === 'week') {
-      if (action === 'prev') setCurrentDate(subWeeks(currentDate, 1));
-      if (action === 'next') setCurrentDate(addWeeks(currentDate, 1));
+    if (currentView === "week") {
+      if (action === "prev") setCurrentDate(subWeeks(currentDate, 1));
+      if (action === "next") setCurrentDate(addWeeks(currentDate, 1));
     }
-    if (currentView === 'day') {
-      if (action === 'prev') setCurrentDate(subDays(currentDate, 1));
-      if (action === 'next') setCurrentDate(addDays(currentDate, 1));
+    if (currentView === "day") {
+      if (action === "prev") setCurrentDate(subDays(currentDate, 1));
+      if (action === "next") setCurrentDate(addDays(currentDate, 1));
     }
   }
   return (
     <Pane 
-      display={'flex'}
-      justifyContent={'space-between'}
-      alignItems={'center'}
+      display={"flex"}
+      justifyContent={"space-between"}
+      alignItems={"center"}
       marginTop={20}
     >
       <ChevronLeftIcon
         size={25}
-        cursor={'pointer'}
-        color={'#3a3e58'}
-        onClick={() => onChange('prev')}
+        cursor={"pointer"}
+        color={"#3a3e58"}
+        onClick={() => onChange("prev")}
       />
       <Pane>
         <Heading
-          is={'h1'} 
+          is={"h1"} 
           size={600} 
-          textAlign={'center'}
-          color={'#3a3e58'}
+          textAlign={"center"}
+          color={"#3a3e58"}
         >
-          { currentView === 'month' ?
-            strParseOut(format(currentDate, 'MMMM', { locale })) :
-            currentView === 'week' ?
-            `${strParseOut(format(startOfWeek(currentDate), 'EEEE', { locale }))} ${format(startOfWeek(currentDate), 'd')} - ${strParseOut(format(endOfWeek(currentDate), 'EEEE', { locale }))} ${format(endOfWeek(currentDate), 'd')}`:
-            currentView === 'day' ?
-            `${strParseOut(format(currentDate, 'EEEE', { locale }))} ${format(currentDate, 'd', { locale })}` : null
+          { currentView === "month" ?
+            strParseOut(format(currentDate, "MMMM", { locale })) :
+            currentView === "week" ?
+            `${strParseOut(format(startOfWeek(currentDate), "EEEE", { locale }))} ${format(startOfWeek(currentDate), 'd')} - ${strParseOut(format(endOfWeek(currentDate), 'EEEE', { locale }))} ${format(endOfWeek(currentDate), 'd')}`:
+            currentView === "day" ?
+            `${strParseOut(format(currentDate, "EEEE", { locale }))} ${format(currentDate, 'd', { locale })}` : null
           }
         </Heading>
         <Heading
-          is={'h2'}
-          textAlign={'center'}
+          is={"h2"}
+          textAlign={"center"}
           size={200}
         >
           {`(${
-              currentView === 'week' ? 
+              currentView === "week" ? 
                 (
                   outOfRange ?
-                  format(firstDayOfTheWeek, 'MMMM ', { locale }) + ' - ' + format(lastDayOfTheWeek, 'MMMM', { locale }) + ' / ' :
-                  format(currentDate, 'MMMM', { locale }) + ' / '
+                  format(firstDayOfTheWeek, "MMMM ", { locale }) + ' - ' + format(lastDayOfTheWeek, 'MMMM', { locale }) + ' / ' :
+                  format(currentDate, "MMMM", { locale }) + ' / '
                 ) :
-              currentView === 'day' ?
-                strParseOut(format(currentDate, 'MMMM', { locale })) + ' / ':
-                ''
+              currentView === "day" ?
+                strParseOut(format(currentDate, "MMMM", { locale })) + ' / ':
+                ""
             }${getYear(currentDate)})`}
         </Heading>
       </Pane>
       <ChevronRightIcon
         size={25}
-        cursor={'pointer'}
-        color={'#3a3e58'}
-        onClick={() => onChange('next')}
+        cursor={"pointer"}
+        color={"#3a3e58"}
+        onClick={() => onChange("next")}
       />
     </Pane>
 

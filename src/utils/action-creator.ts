@@ -1,4 +1,4 @@
-import { AxiosInstance } from 'axios';
+import { AxiosInstance } from "axios";
 
 export type Action<T> = {
   type: T;

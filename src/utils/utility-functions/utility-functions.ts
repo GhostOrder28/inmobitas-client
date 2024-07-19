@@ -1,21 +1,21 @@
 import { ChangeEvent } from "react";
-import axios, { AxiosError } from 'axios';
-import http from '../../http/http';
+import axios, { AxiosError } from "axios";
+import http from "../../http/http";
 import { ValidationError } from "../../http/http.types";
-import { AnyAction } from 'redux';
-import { ItemIds } from '../../components/custom-table/custom-table.types';
-import { RouteSource, Uncertain } from '../utility-types';
+import { AnyAction } from "redux";
+import { ItemIds } from "../../components/custom-table/custom-table.types";
+import { RouteSource, Uncertain } from "../utility-types";
 import { Picture } from "../../components/listing-detail/listing-detail.types";
 import { ContractPreset, EstatePreset } from "../../pages/listing-page/listing-page.types";
 import { FormState, UseFormSetError, FieldErrors } from "react-hook-form";
 import { Matchable, FormattedError, Preset } from "./utility-functions.type";
 
 export const strParseIn = (str: string) => {
-  return str.replaceAll(' ', '-').toLowerCase();
+  return str.replaceAll(" ", '-').toLowerCase();
 };
 
 export const strParseOut = (str: string) => {
-  return str.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+  return str.split("-").map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 };
 
 export const parseCamellCase = (str: string) => {
@@ -26,16 +26,16 @@ export const parseCamellCase = (str: string) => {
 
 export const buildRoute = (source: RouteSource, structure: string[]) => {
   if (source.original) source = source.original
-  const arrayFromItemIds = Object.keys(source).filter(prop => prop.includes('Id'));
+  const arrayFromItemIds = Object.keys(source).filter(prop => prop.includes("Id"));
   const itemParamsIds: ItemIds = arrayFromItemIds.reduce((acc, curr) => {
     return { ...acc, [curr]: source[curr] }
   }, {});
   console.log(itemParamsIds)
 
   const detailUrl = structure.reduce((acc, curr) => {
-    if (structure[0] === curr) return '/' + curr;
-    return acc + '/' + itemParamsIds[curr]
-  }, '');
+    if (structure[0] === curr) return "/" + curr;
+    return acc + "/" + itemParamsIds[curr]
+  }, "");
   return detailUrl;
 }
 
@@ -75,7 +75,7 @@ export const pictureUploader = async (
 
 export const checkPositions = <O extends { [key: string]: any }>(orderedEntities: O[], key: string) => {
   try {
-    if (!orderedEntities.length) throw new Error('this function need a non empty array');
+    if (!orderedEntities.length) throw new Error("this function need a non empty array");
     const checkedEntities = orderedEntities.map((ent, idx) => {
       return ent[key] === idx + 1 ? true : false;
     })
@@ -97,7 +97,7 @@ export function sortEntities <O extends { [key: string]: any }>(arr: O[], key: s
   return clonedArr;
 };
 
-// Non redux 'selectors'
+// Non redux "selectors"
 
 // export const selectValidationErrMsg = (errObj: AxiosError<{ validationErrors: ValidationError[] }> | undefined, field: string): string | undefined => {  
 //   const error = errObj?.response?.data.validationErrors.find (
@@ -134,8 +134,8 @@ export function handleValidationErrors <F>(formData: Uncertain<F>, rawErrors: Va
 export const presetSelector = <P extends Preset>(preset: P[], presetId: number): P => {
   const selection = preset.find(item => {
     const keys = Object.keys(item) as (keyof (ContractPreset | EstatePreset))[]
-    const idKey = keys.find(key => (key as string).includes('Id'));    
-    if (!idKey) throw Error(`object doesn't have an id property`);
+    const idKey = keys.find(key => (key as string).includes("Id"));    
+    if (!idKey) throw Error(`object doesn"t have an id property`);
 
     return item[idKey] === presetId;
   });

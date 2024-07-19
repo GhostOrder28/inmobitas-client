@@ -1,12 +1,12 @@
-import { Button, LogOutIcon } from 'evergreen-ui';
-import { useTranslation } from 'react-i18next'
+import { Button, LogOutIcon } from "evergreen-ui";
+import { useTranslation } from "react-i18next"
 
 type SignoutButtonProps = {
   onClick: () => void;
 }
 
 const SignoutButton = ({ onClick }: SignoutButtonProps) => {
-  const { t } = useTranslation(['ui']);
+  const { t } = useTranslation(["ui"]);
   return (
     <Button
       intent="danger"
@@ -20,7 +20,7 @@ const SignoutButton = ({ onClick }: SignoutButtonProps) => {
       onClick={onClick}
     >
       <LogOutIcon marginRight={10} />
-      { t('signout') } 
+      { t("signout") } 
     </Button>
   )
 }

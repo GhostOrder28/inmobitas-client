@@ -1,5 +1,5 @@
-import React from 'react';
-import { IconButton, Button, MenuIcon } from 'evergreen-ui';
+import React from "react";
+import { IconButton, MenuIcon } from "evergreen-ui";
 
 type MainMenuButtonProps = {
   setIsShown: React.Dispatch<React.SetStateAction<boolean>> 

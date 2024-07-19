@@ -1,4 +1,4 @@
-import { useState, useEffect, MutableRefObject, FC } from 'react';
+import { useState, useEffect, MutableRefObject, FC } from "react";
 
 const paginationSpace = 50;
 
@@ -31,8 +31,8 @@ const useRelativeHeight: RelativeHeight = (ref, options) => {
 
   useEffect(() => {
     calculateRelativeHeight();
-    window.addEventListener('resize', calculateRelativeHeight);
-    return () => window.removeEventListener('resize', calculateRelativeHeight);
+    window.addEventListener("resize", calculateRelativeHeight);
+    return () => window.removeEventListener("resize", calculateRelativeHeight);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

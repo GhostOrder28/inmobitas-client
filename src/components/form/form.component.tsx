@@ -10,9 +10,10 @@ const Form = ({ onSubmit, children, ...otherProps }: FormProps) => {
   return (
     <Pane 
       is="form"
-      display={'flex'} 
+      display="flex" 
       flex={ 1 }
       flexDirection="column"
+      padding={ minorScale(5) }
       gap={ minorScale(5) }
       onSubmit={ onSubmit }
       { ...otherProps }

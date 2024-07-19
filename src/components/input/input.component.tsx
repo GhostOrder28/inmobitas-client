@@ -1,29 +1,32 @@
 import { Pane, minorScale, Text, TextInput, Textarea, Select, Checkbox } from "evergreen-ui"
 import FieldErrorMessage from "../field-error-message/field-error-message.component";
-import { Controller } from 'react-hook-form';
+import { Controller } from "react-hook-form";
 import { FieldNameWithoutAuth, InputProps } from "./input.types";
 import DatePicker from "../date-picker/date-picker.component";
 import TimePicker from "../time-picker/time-picker.component";
+import { useTranslation } from "react-i18next";
 
-const Input = ({ name, type, label, placeholder, register, errors, selectOptions, control, optionLabelKey, optionValueKey }: InputProps) => {
+const Input = ({ name, type, label, placeholder, register, errors, selectOptions, control, optionLabelKey, optionValueKey, ...otherProps }: InputProps) => {
+  const { t } = useTranslation(["error"]);
   return (
-    <Pane width={'100%'}>
-      <div className={ label ? 'flex items-center form-field' : 'w-100'}>
+    <Pane width={"100%"}>
+      <div className={ label ? "flex items-center form-field" : "w-100"}>
         { label ?
-          <Text width={"9rem"}>{ label }</Text> : ''
+          <Text width={"9rem"}>{ label }</Text> : ""
         }
-        { [ 'text', 'number', 'password' ].includes(type) ?
+        { [ "text", "number", "password" ].includes(type) ?
           <TextInput
             { ...register(name, { valueAsNumber: type === "number" ? true : false }) }
             defaultValue=""
             placeholder={ placeholder || label }
             width={"100%"}
             type={ type }
-          /> : type === 'textarea' ?
+            { ...otherProps }
+          /> : type === "textarea" ?
           <Textarea
             { ...register(name) }
             placeholder={ placeholder || label }
-          /> : type === 'select' && selectOptions && optionLabelKey && optionValueKey ?
+          /> : type === "select" && selectOptions && optionLabelKey && optionValueKey ?
           // this input probably need to be controlled cause I need to be sure that the
           // first item showed is always the one with the id I set as the default one
           <Select
@@ -36,7 +39,7 @@ const Input = ({ name, type, label, placeholder, register, errors, selectOptions
                 {option[optionLabelKey]}
               </option>
             ))}
-          </Select> : type === 'checkbox' ?
+          </Select> : type === "checkbox" ?
           <Controller 
             name={ name }
             control={ control }
@@ -76,7 +79,7 @@ const Input = ({ name, type, label, placeholder, register, errors, selectOptions
                 />
               )
             }
-          /> : "input type is empty or doesn't exist"
+          /> : t("emptyInputType")
         }
       </div>
       { errors?.root ?

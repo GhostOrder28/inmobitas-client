@@ -28,7 +28,7 @@ export const selectUserSignedOut = createSelector(
   (userReducer) => userReducer.userSignedOut
 );
 
-function isAxiosError(err: UserState['errors']): err is AxiosError {
+function isAxiosError(err: UserState["errors"]): err is AxiosError {
   return (err as AxiosError).response !== undefined;
 }
 

@@ -1,5 +1,5 @@
-import React, { FC } from 'react';
-import { Pane, IconComponent } from 'evergreen-ui';
+import React, { FC } from "react";
+import { Pane, IconComponent } from "evergreen-ui";
 
 type CustomTableOptionProps = {
   icon: IconComponent;
@@ -12,13 +12,13 @@ type CustomTableOptionProps = {
 const CustomTableOption: FC<CustomTableOptionProps> = ({ icon: Icon, onClick, color, borderColor, height }) => (
   <Pane
     flex={1}
-    display={'flex'}
-    justifyContent={'center'}
-    alignItems={'center'}
-    borderLeft={`1px solid ${borderColor || '#EDEFF5'}`}
+    display={"flex"}
+    justifyContent={"center"}
+    alignItems={"center"}
+    borderLeft={`1px solid ${borderColor || "#EDEFF5"}`}
     onClick={onClick}
-    height={ height || '100%' }
-    width={'100%'}
+    height={ height || "100%" }
+    width={"100%"}
   >
     <Icon color={color} />
   </Pane>

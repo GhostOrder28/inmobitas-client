@@ -1,6 +1,6 @@
-import { takeLatest, put, all, call } from 'typed-redux-saga/macro';
-import userActionTypes from './user.types';
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import { takeLatest, put, all, call } from "typed-redux-saga/macro";
+import userActionTypes from "./user.types";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import {
   // actions
   signInStart,
@@ -23,14 +23,14 @@ import {
   RequestUserInfoForSignInSuccess,
   GenerateGuestStart,
   GenerateGuestSuccess,
-} from './user.actions';
+} from "./user.actions";
 import {
   SignInFailureError,
   SignUpFailureError,
   RequestUserInfoFailureError,
   GenerateGuestUserError,
-} from '../redux.types';
-import { createGetRequest, createPostRequest } from '../redux-utils/create-request';
+} from "../redux.types";
+import { createGetRequest, createPostRequest } from "../redux-utils/create-request";
 
 function isResponse(res: AxiosResponse | Error): res is AxiosResponse {
   return (res as AxiosResponse).data !== undefined;
@@ -39,7 +39,7 @@ function isResponse(res: AxiosResponse | Error): res is AxiosResponse {
 export function* signUp ({ payload, http }: SignUpStart) { 
   try {
     const requestNewUser = createPostRequest(http);
-    const res: AxiosResponse = yield* call(requestNewUser, '/auth/signup/normal', payload);
+    const res: AxiosResponse = yield* call(requestNewUser, "/auth/signup/normal", payload);
     yield* put(signUpSuccess(res.data, http));
   } catch (err) {
     yield* put(signUpFailure(err as AxiosError<AxiosResponse<SignUpFailureError>>));
@@ -65,7 +65,7 @@ export function* signIn ({ payload, http }: SignInStart) {
     const requestSignIn = createPostRequest(http);
     let userType;
     if (!payload.userType) {
-      userType = 'normal';
+      userType = "normal";
     } else {
       userType = payload.userType;
     }
@@ -79,7 +79,7 @@ export function* signIn ({ payload, http }: SignInStart) {
 // export function* requestUserInfoForSignIn ({ http }: RequestUserInfoForSignInStart) {
 //   try {
 //     const requestSignInWithGoogle = createGetRequest(http);
-//     const res: AxiosResponse = yield* call(requestSignInWithGoogle, '/auth/getuser');
+//     const res: AxiosResponse = yield* call(requestSignInWithGoogle, "/auth/getuser");
 //     yield* put(requestUserInfoForSignInSuccess(res.data));
 //   } catch (err) {
 //     yield* put(requestUserInfoForSignInFailure(err as AxiosError<AxiosResponse<RequestUserInfoFailureError>>));
@@ -89,7 +89,7 @@ export function* signIn ({ payload, http }: SignInStart) {
 export function* signOut ({ http }: SignOutStart) {
   try {
     const requestSignOut = createGetRequest(http);
-    yield* call(requestSignOut, '/auth/signout');
+    yield* call(requestSignOut, "/auth/signout");
     yield* put(signOutSuccess());
   } catch (error) {
     console.log(error) 
@@ -100,7 +100,7 @@ export function* signOut ({ http }: SignOutStart) {
 export function* userSignOut ({ http }: UserSignOutStart) {
   try {
     const requestSignOut = createGetRequest(http);
-    yield* call(requestSignOut, '/auth/signout');
+    yield* call(requestSignOut, "/auth/signout");
     yield* put(userSignOutSuccess());
   } catch (error) {
     console.log(error) 

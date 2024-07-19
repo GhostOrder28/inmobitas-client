@@ -1,21 +1,21 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { Card, Pane, Text, Heading, Strong } from 'evergreen-ui';
-import http from '../../http/http';
+import React, { useEffect, useState, useRef } from "react";
+import { Card, Pane, Text, Heading, Strong } from "evergreen-ui";
+import http from "../../http/http";
 import { useSelector, useDispatch } from "react-redux";
 import { selectCurrentUser, selectCurrentUserId } from "../../redux/user/user.selectors";
-import { AgendaEvent } from '../agenda-page/agenda-page.types';
-import { format } from 'date-fns';
-import { useTranslation } from 'react-i18next';
-import ContentSpinner from '../../components/content-spinner/content-spinner.component';
-import useRelativeHeight from '../../hooks/use-relative-height';
-import { strParseOut } from '../../utils/utility-functions/utility-functions';
-import { signOutStart } from '../../redux/user/user.actions';
+import { AgendaEvent } from "../agenda-page/agenda-page.types";
+import { format } from "date-fns";
+import { useTranslation } from "react-i18next";
+import ContentSpinner from "../../components/content-spinner/content-spinner.component";
+import useRelativeHeight from "../../hooks/use-relative-height";
+import { strParseOut } from "../../utils/utility-functions/utility-functions";
+import { signOutStart } from "../../redux/user/user.actions";
 
 const DashboardPage = () => {
   const userId = useSelector(selectCurrentUserId);
   const userInfo = useSelector(selectCurrentUser);
   const [todayEvents, setTodayEvents] = useState<AgendaEvent[]>();
-  const { t } = useTranslation(['ui']);
+  const { t } = useTranslation(["ui"]);
   const todayEventsRef = useRef<HTMLDivElement | null>(null);
   const todayEventsHeight = useRelativeHeight(todayEventsRef, { extraSpace: 60 });
   const now = new Date();
@@ -46,32 +46,32 @@ const DashboardPage = () => {
     >
       <Pane>
         <Heading
-          color={'#3A3E58'}
-          is={'h1'}
+          color={"#3A3E58"}
+          is={"h1"}
           size={800}
         >
-          { userInfo && `${t('hello')} ${strParseOut(userInfo.names)}!` }
+          { userInfo && `${t("hello")} ${strParseOut(userInfo.names)}!` }
         </Heading>
         <Heading 
-          color={'#3A3E58'}
-          id={'h2'}
+          color={"#3A3E58"}
+          id={"h2"}
           size={500}
         >
-          { todayEvents?.length ? t('eventsForTodayMessage') : t('noEventsForTodayMessage') }
+          { todayEvents?.length ? t("eventsForTodayMessage") : t('noEventsForTodayMessage') }
         </Heading>
       </Pane>
       <Pane 
-        flexDirection={'column'}
-        justifyItems={'flex-end'}
-        alignItems={'center'}
+        flexDirection={"column"}
+        justifyItems={"flex-end"}
+        alignItems={"center"}
         ref={todayEventsRef} 
         height={todayEventsHeight}
-        overflow={'scroll'}
+        overflow={"scroll"}
       >
         { todayEvents ?
           todayEvents.map((event, idx) => {
             const { startDate, endDate } = event;
-            const haveEndDate = endDate && !(format(startDate, 'HH:mm') === format(endDate, 'HH:mm'));
+            const haveEndDate = endDate && !(format(startDate, "HH:mm") === format(endDate, 'HH:mm'));
             return (
               <Card
                 elevation={3}
@@ -80,7 +80,7 @@ const DashboardPage = () => {
                 marginX={5}
                 key={`today-event-${idx}`}
               >
-                <Pane><Text size={500}>{ format(startDate, 'h:mm a') + (haveEndDate ? ' - ' + format(endDate, 'h:mm a') : '') }</Text></Pane>
+                <Pane><Text size={500}>{ format(startDate, "h:mm a") + (haveEndDate ? ' - ' + format(endDate, 'h:mm a') : '') }</Text></Pane>
                 <Strong size={600}>{ event.title }</Strong>
               </Card>
             )

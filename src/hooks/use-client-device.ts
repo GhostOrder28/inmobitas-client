@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 const useClientDevice = () => {
   if ("ontouchstart" in document.documentElement) {
-    return 'touchscreen'
+    return "touchscreen"
   } else {
-    return 'desktop'
+    return "desktop"
   }
 }
 

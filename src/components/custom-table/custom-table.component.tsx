@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState, FC, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { selectCurrentUserId } from '../../redux/user/user.selectors';
+import { selectCurrentUserId } from "../../redux/user/user.selectors";
 import {
   EditIcon,
   CrossIcon,
@@ -15,17 +15,17 @@ import {
   Pane, 
   //Pagination
 } from "evergreen-ui";
-import { useTable, usePagination } from 'react-table';
+import { useTable, usePagination } from "react-table";
 
-import useRelativeHeight from '../../hooks/use-relative-height';
+import useRelativeHeight from "../../hooks/use-relative-height";
 import useClientDevice from "../../hooks/use-client-device";
 import useClickOutside from "../../hooks/use-click-outside";
 
 import { buildRoute } from "../../utils/utility-functions/utility-functions";
-import { CustomTableProps, CustomTableColumn, CustomTableRow } from './custom-table.types';
-import CustomTableOption from './custom-table-option';
-import http from '../../http/http';
-import Pagination from '../pagination/pagination.component';
+import { CustomTableProps, CustomTableColumn, CustomTableRow } from "./custom-table.types";
+import CustomTableOption from "./custom-table-option";
+import http from "../../http/http";
+import Pagination from "../pagination/pagination.component";
 import { getPageSize } from "./custom-table.utils";
 import ContentSpinner from "../content-spinner/content-spinner.component";
 import { useTranslation } from "react-i18next";
@@ -65,7 +65,7 @@ const CustomTable: FC<CustomTableProps> = ({
   const columns: CustomTableColumn[] = useMemo(() => {
     if (source.length) {
       const itemKeys = Object.keys(source[0]);
-      const itemProps = itemKeys.filter(prop => !prop.includes('Id'));
+      const itemProps = itemKeys.filter(prop => !prop.includes("Id"));
       
       const columnsArray = itemProps.map((prop, idx) => ({
         Header: labels[idx],
@@ -127,18 +127,18 @@ const CustomTable: FC<CustomTableProps> = ({
   const getFlexValues = (idx: number) => idx === columns.length - 1 ? .4 : .45;
 
   return (
-    <Pane position='relative'>
+    <Pane position="relative">
       { isLoading ?
-        <ContentSpinner waitMessage={ deleteMessage } /> : ''
+        <ContentSpinner waitMessage={ deleteMessage } /> : ""
       }
       <Table flex={1} {...getTableProps()}>
-        <TableHead display={'flex'} userSelect={'none'}>
+        <TableHead display="flex" userSelect="none">
           {
             headerGroups.map(headerGroup => (
               headerGroup.headers.map((column, idx) => (
                 <TableHeaderCell flex={.45} {...column.getHeaderProps()}>
                   {
-                    column.render('Header')
+                    column.render("Header")
                   }
                 </TableHeaderCell>
               ))
@@ -150,27 +150,27 @@ const CustomTable: FC<CustomTableProps> = ({
           {
             page.map((row: CustomTableRow, rowIdx) => {
               const rowKeys = Object.keys(row.original);
-              const entityIdentifier = rowKeys.find(key => key.includes('Id')) as string; //id is always present, if not then it is an error from the server side, same happems with entityId;
+              const entityIdentifier = rowKeys.find(key => key.includes("Id")) as string; //id is always present, if not then it is an error from the server side, same happems with entityId;
               prepareRow(row)
               return (
                 <TableRow
                   isHighlighted={highlightedRow === rowIdx ? true : false}
-                  color={'#3a3e58'} 
-                  display={'flex'}
-                  cursor={'pointer'}
-                  onMouseOver={ clientDevice === 'desktop' ? () => setHighlightedRow(rowIdx) : undefined }
-                  onMouseLeave={ clientDevice === 'desktop' ? () => setHighlightedRow(null) : undefined }
-                  onTouchStart={ clientDevice === 'touchscreen' ? () => {
+                  color="#3a3e58" 
+                  display="flex"
+                  cursor="pointer"
+                  onMouseOver={ clientDevice === "desktop" ? () => setHighlightedRow(rowIdx) : undefined }
+                  onMouseLeave={ clientDevice === "desktop" ? () => setHighlightedRow(null) : undefined }
+                  onTouchStart={ clientDevice === "touchscreen" ? () => {
                     setTimeoutId(setTimeout(() => setHighlightedRow(rowIdx), 500))
                   } : undefined }
-                  onTouchEnd={ clientDevice === 'touchscreen' ? () => {
+                  onTouchEnd={ clientDevice === "touchscreen" ? () => {
                     clearTimeout(timeoutId)
                   } : undefined }
-                  onTouchMove={ clientDevice === 'touchscreen' ? () => {
+                  onTouchMove={ clientDevice === "touchscreen" ? () => {
                     clearTimeout(timeoutId)
                   } : undefined }
                   onClick={() => {
-                    if (clientDevice === 'touchscreen') {
+                    if (clientDevice === "touchscreen") {
                       highlightedRow ? setHighlightedRow(null) : navigate(buildRoute(source[rowIdx], detailRouteStructure))
                     } else {
                       navigate(buildRoute(page[rowIdx], detailRouteStructure))
@@ -186,7 +186,7 @@ const CustomTable: FC<CustomTableProps> = ({
                         paddingX={idx === row.cells.length - 1 ? 0 : 12}
                       > 
                         {
-                          <Text>{ cell.render('Cell') }</Text> 
+                          <Text>{ cell.render("Cell") }</Text> 
                         }
                       </TableCell>
                     ))
@@ -196,7 +196,7 @@ const CustomTable: FC<CustomTableProps> = ({
                     paddingX={0}
                   >
                     { rowIdx === highlightedRow &&
-                      <Pane ref={buttonsRef} display={'flex'} width={'100%'} height={'100%'}>
+                      <Pane ref={buttonsRef} display="flex" width="100%" height="100%">
                         <CustomTableOption
                           icon={EditIcon}
                           onClick={
@@ -208,7 +208,7 @@ const CustomTable: FC<CustomTableProps> = ({
                         />
                         <CustomTableOption
                           icon={CrossIcon}
-                          color={'danger'}
+                          color="danger"
                           onClick={
                             (e: React.MouseEvent<HTMLDivElement>) => {
                               e.stopPropagation();
@@ -226,9 +226,9 @@ const CustomTable: FC<CustomTableProps> = ({
         </TableBody>
       </Table>
       <Pane
-        width={'100%'}
-        display={'flex'}
-        justifyContent={'center'}
+        width="100%"
+        display="flex"
+        justifyContent="center"
       >
         <Pagination
           page={state.pageIndex + 1} 

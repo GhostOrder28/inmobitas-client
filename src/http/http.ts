@@ -1,12 +1,12 @@
-import axios, { AxiosError } from 'axios'; 
-import { store } from '../redux/redux-store';
-import { signOutSuccess, signOutWithError } from '../redux/user/user.actions';
-import { AxiosResponse } from 'axios';
-import { HTTPErrorData } from './http.types';
-import { toaster } from 'evergreen-ui';
+import axios, { AxiosError } from "axios"; 
+import { store } from "../redux/redux-store";
+import { signOutSuccess, signOutWithError } from "../redux/user/user.actions";
+import { AxiosResponse } from "axios";
+import { HTTPErrorData } from "./http.types";
+import { toaster } from "evergreen-ui";
 
 import i18next from "i18next";
-import { initReactI18next } from 'react-i18next';
+import { initReactI18next } from "react-i18next";
 
 i18next.use(initReactI18next).init()
 
@@ -24,8 +24,8 @@ http.interceptors.response.use<AxiosResponse | HTTPErrorData>(
     return response; 
   },
   function (error: AxiosError<HTTPErrorData> | Error) {
-    if (!axios.isAxiosError(error)) return console.error(t('nonAxiosError', { ns: 'error' }));
-    if (!error.response) return console.error(t('noResponseError', { ns: 'error' }), error);
+    if (!axios.isAxiosError(error)) return console.error(t("nonAxiosError", { ns: 'error' }));
+    if (!error.response) return console.error(t("noResponseError", { ns: 'error' }), error);
 
     const { response: { data: d } } = error;
 
@@ -40,7 +40,7 @@ http.interceptors.response.use<AxiosResponse | HTTPErrorData>(
       });
     };
 
-    console.error(t('unexpectedError', { ns: 'error' }), error)
+    console.error(t("unexpectedError", { ns: 'error' }), error)
   }
 )
 

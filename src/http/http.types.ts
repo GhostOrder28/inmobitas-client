@@ -66,4 +66,4 @@ export type HTTPErrorData = Expand<OneOf<[
   UserSessionExpiredErrorData,
 ]>>
 
-export type HTTPErrors = Exclude<keyof HTTPErrorData, 'validationErrors' | 'unverifiedUserError'>;
+export type HTTPErrors = Exclude<keyof HTTPErrorData, "validationErrors" | 'unverifiedUserError'>;

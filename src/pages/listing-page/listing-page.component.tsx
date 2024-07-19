@@ -1,17 +1,17 @@
-import React, { useState, useEffect, lazy, Suspense } from 'react';
-import { useSelector } from 'react-redux';
-import { useLocation, useParams } from 'react-router-dom';
-import { Spinner } from 'evergreen-ui'
-import { AxiosError } from 'axios';
+import React, { useState, useEffect, lazy, Suspense } from "react";
+import { useSelector } from "react-redux";
+import { useLocation, useParams } from "react-router-dom";
+import { Spinner } from "evergreen-ui"
+import { AxiosError } from "axios";
 
-import http from '../../http/http';
-import { selectCurrentUserId } from '../../redux/user/user.selectors';
+import http from "../../http/http";
+import { selectCurrentUserId } from "../../redux/user/user.selectors";
 
-import { Presets, Listing } from './listing-page.types';
+import { Presets, Listing } from "./listing-page.types";
 
-import { SpecificationTable } from '../../components/specification-table/specification-table.types';
-const ListingForm = lazy(() => import('../../components/listing-form/listing-form.component'));
-const ListingDetail = lazy(() => import('../../components/listing-detail/listing-detail.component'));
+import { SpecificationTable } from "../../components/specification-table/specification-table.types";
+const ListingForm = lazy(() => import("../../components/listing-form/listing-form.component"));
+const ListingDetail = lazy(() => import("../../components/listing-detail/listing-detail.component"));
 
 // function isSpecificationTable (data: Listing | SpecificationTable | undefined): data is SpecificationTable{
 //   return (data as SpecificationTable).data.length !== undefined;
@@ -23,7 +23,7 @@ const ListingDetail = lazy(() => import('../../components/listing-detail/listing
 const ListingPage = () => {
 
   const location = useLocation();
-  const { clientid, listingid } = useParams();
+  const { clientId, listingId } = useParams();
   const [listing, setListing] = useState<Listing>();
   const [presets, setPresets] = useState<Presets>();
   const [error, setError] = useState<Error | null>(null);
@@ -33,12 +33,12 @@ const ListingPage = () => {
 
     (async function () {
       try {
-        if (location.pathname !== '/newlisting') {
+        if (location.pathname !== "/newlisting") {
           let listingData;
-          if (location.pathname.includes('/listingdetail')) {
-            listingData = await http.get<Listing>(`/listings/${userId}/${clientid}/${listingid}/group`);
+          if (location.pathname.includes("/listingdetail")) {
+            listingData = await http.get<Listing>(`/listings/${userId}/${clientId}/${listingId}/group`);
           } else {
-            listingData = await http.get<Listing>(`/listings/${userId}/${clientid}/${listingid}`);
+            listingData = await http.get<Listing>(`/listings/${userId}/${clientId}/${listingId}`);
           }
           const dataPresets = await http.get<Presets>(`/listingpresets`);
           setListing(listingData.data);
@@ -55,19 +55,19 @@ const ListingPage = () => {
   },[])
 
   switch (location.pathname) {
-    case '/newlisting':
+    case "/newlisting":
       return (
         <Suspense fallback={<Spinner />}>
           <ListingForm dataPresets={presets} setListing={setListing} />
         </Suspense>
       )
-    case `/editlisting/${clientid}/${listingid}`:
+    case `/editlisting/${clientId}/${listingId}`:
       return (
         <Suspense fallback={<Spinner />}>
           <ListingForm dataPresets={presets} listing={listing} setListing={setListing} />
         </Suspense>
       )
-    case `/listingdetail/${clientid}/${listingid}`:
+    case `/listingdetail/${clientId}/${listingId}`:
       // if (!isSpecificationTable(listing)) return;
       return (
         <Suspense fallback={<Spinner />}>

@@ -12,11 +12,11 @@ export type PictureCategory = {
   name: string;
   position: number;
   categoryPictures: Picture[];
-  isNew?: boolean;
+  newlyCreated?: boolean;
 }
 
 export type PictureCategoryUpdatedNamePayload = {
-  updatedName: PictureCategory['name']
+  updatedName: PictureCategory["name"]
 }
 
-export type PictureCategoryFromPayload = Omit<PictureCategory, 'categoryPictures'>
+export type PictureCategoryFromPayload = Omit<PictureCategory, "categoryPictures">
