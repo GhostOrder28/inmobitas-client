@@ -1,21 +1,18 @@
-import React, { useState, useEffect, useRef, ChangeEventHandler } from "react";
+import { useState, useEffect, useRef, ChangeEventHandler } from "react";
 import {
   Pane,
-  TextInput, 
   Checkbox, 
   Strong,
   ArrowUpIcon,
   EditIcon,
   TickIcon,
   CrossIcon,
-  toaster,
   useTheme,
   minorScale,
   majorScale,
 } from "evergreen-ui";
 import { PictureCategoryUpdatedNamePayload } from "../../../listing-detail/listing-detail.types";
 import { Categorized } from "../gallery-category.types";
-import http from "../../../../http/http";
 import { pictureUploader } from "../../../../utils/utility-functions/utility-functions";
 import { useSelector } from "react-redux";
 import { selectCurrentUserId } from "../../../../redux/user/user.selectors";
@@ -24,16 +21,17 @@ import { useTranslation } from "react-i18next";
 import { signOutWithError } from "../../../../redux/user/user.actions";
 import { useDispatch } from "react-redux";
 import { InvalidIdentifierError } from "../../../../errors/auth.errors";
-import axios, { AxiosError } from "axios";
 import "../gallery-category.styles.css";
 import GalleryCategoryButton from "../gallery-category-button/gallery-category-button.component";
-import { strParseOut } from "../../../../utils/utility-functions/utility-functions";
 import useGenerateForm from "../../../../hooks/use-generate-form";
 import { GALLERY_CATEGORY_FORM_INITIAL_STATE } from "./gallery-category.consts";
 import { GalleryCategoryForm } from "./gallery-category.types";
 import Input from "../../../input/input.component";
+import { updateName } from "./gallery-category.api";
+import { cancelUpdateName } from "./gallery-category.utils";
+import { onUpload } from "./gallery-category.api";
 
-const GalleryCategorized = ({ 
+const GalleryCategory = ({ 
     categoryId,
     name, 
     categoryPictures, 
@@ -47,10 +45,8 @@ const GalleryCategorized = ({
     setPictures,
     setCategories,
     setFullscreenPicture, 
-    setIsLoading,
   }: Categorized) => {
   const [ editMode, setEditMode ] = useState<boolean>(false);
-  const [ userInteraction, setUserInteraction ] = useState(false);
 
   const timeout = useRef<NodeJS.Timeout>();
   const categoryTouchTimeout = useRef<NodeJS.Timeout>();
@@ -69,51 +65,9 @@ const GalleryCategorized = ({
   const dispatch = useDispatch();
   const { colors } = useTheme();
 
-  const updateName = async (categoryFormData: GalleryCategoryForm) => {
-    const { 
-      data: { 
-        name: updatedName
-      }
-    } = await http.patch<GalleryCategoryForm>(`/categories/${categoryId}`, categoryFormData)
-
-    setCategories((prev) => prev.map(c => {
-      if (c.categoryId !== categoryId) {
-        return c;
-      } else {
-        return { ...c, name: updatedName }
-      };
-    }))
-
-    setEditMode(false);
-    setUserInteraction(true);
-  };
-
-  const cancelUpdateName = () => {
-    reset()
-    setEditMode(false);
-    setUserInteraction(true);
-  };
-
-  const onUpload: ChangeEventHandler<HTMLInputElement> = async (e) => {
-    try {
-      if (!userId) throw new InvalidIdentifierError(t("noUserIdError"));
-      if (!listingId) throw new InvalidIdentifierError(t("noListingIdError"));
-
-      setIsLoading("upload")
-      const newPictures = await pictureUploader(e, userId, Number(listingId), categoryPictures.length, categoryId);
-      if (!newPictures) throw new Error(t("picturesIsUndefinedError"));
-      setPictures(prev => [ ...prev, ...newPictures ])
-      setIsLoading(null)
-    } catch (error) {
-      setIsLoading(null);
-
-      if (error instanceof InvalidIdentifierError) {
-       return dispatch(signOutWithError(error)) 
-      };
-
-      console.error(error)
-    }
-  };
+  useEffect(() => {
+    if (newlyCreated) setEditMode(true);
+  }, [])
 
   return (
     <Pane borderTop={ `1px solid ${colors.gray500}` }>
@@ -138,7 +92,7 @@ const GalleryCategorized = ({
           width="100%" 
           paddingX={ minorScale(3) }
         >
-          { editMode || ( newlyCreated && !userInteraction ) ? 
+          { editMode ? 
             <>
               <Input 
                 name="name" 
@@ -156,7 +110,7 @@ const GalleryCategorized = ({
           }
         </Pane>
         <Pane display="flex">
-          { !editMode && menuMode === null && ( !newlyCreated || userInteraction ) ? 
+          { !editMode && menuMode === null ? 
             <>
               <GalleryCategoryButton
                 icon={ EditIcon }
@@ -173,7 +127,7 @@ const GalleryCategorized = ({
                       id={ `upload-btn-${categoryId}` }
                       className="upload-btn"
                       type="file"
-                      onChange={(e) => onUpload(e)}
+                      onChange={(e) => onUpload(e, Number(listingId!!), setPictures, categoryPictures.length, categoryId)}
                       multiple
                       accept="image/*"
                     />
@@ -189,19 +143,19 @@ const GalleryCategorized = ({
             </>
             : ""
           }
-          { editMode || ( newlyCreated && !userInteraction )?
+          { editMode ?
             <>
               <GalleryCategoryButton
                 icon={ TickIcon }
                 color={ colors.green500 }
-                onClick={ handleSubmit((formData) => updateName(formData)) }
+                onClick={ handleSubmit((formData) => updateName(formData, categoryId, setCategories, setEditMode, setError)) }
                 borderColor={ colors.gray500 }
                 size={ majorScale(6) }
               />
               <GalleryCategoryButton
                 icon={ CrossIcon }
                 color={ colors.red500 }
-                onClick={ cancelUpdateName }
+                onClick={ () => cancelUpdateName(reset, setEditMode) }
                 borderColor={ colors.gray500 }
                 size={ majorScale(6) }
               />
@@ -279,4 +233,4 @@ const GalleryCategorized = ({
   )
 };
 
-export default GalleryCategorized;
+export default GalleryCategory;

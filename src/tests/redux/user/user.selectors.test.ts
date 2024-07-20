@@ -11,7 +11,6 @@ describe("user selectors", () => {
       userId: 1,
       oauthId: 41313541345
     },
-    guestPending: false,
     errors: { response: "there is an error" } as any as AxiosError,
     userSignedOut: false,
   }

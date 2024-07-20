@@ -1,12 +1,15 @@
-import { useRef } from "react";
+import { Dispatch, SetStateAction } from "react";
+import { UseFormReset } from "react-hook-form";
+import { GalleryCategoryForm } from "./gallery-category.types";
 
-function useIsNew () {
-  const ref = useRef(true);
-  const isNew  = ref.current;
-  ref.current = false;
-  return isNew;
+const cancelUpdateName = (
+  reset: UseFormReset<GalleryCategoryForm>,
+  setEditMode: Dispatch<SetStateAction<boolean>>
+) => {
+  reset()
+  setEditMode(false);
 };
 
 export {
-  useIsNew,
+  cancelUpdateName,
 }

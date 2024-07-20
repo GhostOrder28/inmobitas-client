@@ -1,25 +1,19 @@
-import React, { useRef, ChangeEventHandler } from "react";
+import { useRef } from "react";
 import {
   Pane,
   Checkbox, 
   Text, 
   ArrowUpIcon,
-  toaster,
   majorScale,
   minorScale,
   useTheme,
 } from "evergreen-ui";
 import { useTranslation } from "react-i18next";
-import { Uncategorized } from "./gallery-category.types";
-import { useSelector, useDispatch } from "react-redux";
+import { Uncategorized } from "../gallery-category.types";
 import { useParams } from "react-router-dom";
-import { selectCurrentUserId } from "../../../redux/user/user.selectors";
-import { InvalidIdentifierError } from "../../../errors/auth.errors";
-import { pictureUploader } from "../../../utils/utility-functions/utility-functions";
-import { signOutWithError } from "../../../redux/user/user.actions";
-import axios, { AxiosError } from "axios";
-import GalleryCategoryButton from "./gallery-category-button/gallery-category-button.component";
-import "./gallery-category.styles.css";
+import GalleryCategoryButton from "../gallery-category-button/gallery-category-button.component";
+import { onUpload } from "./gallery-uncategorized.api";
+import "../gallery-category.styles.css";
 
 const GalleryUncategorized = ({ 
   categoryPictures, 
@@ -27,52 +21,13 @@ const GalleryUncategorized = ({
   markedItems,
   toggleMark, 
   setFullscreenPicture, 
-  setIsLoading,
   setPictures,
   setMenuMode,
 }: Uncategorized) => {
   const timeout = useRef<NodeJS.Timeout>();
-  const userId = useSelector(selectCurrentUserId);
   const { listingId } = useParams();
   const { t } = useTranslation(["listing"]);
-  const dispatch = useDispatch();
   const { colors } = useTheme();
-
-  const onUpload: ChangeEventHandler<HTMLInputElement> = async (e) => {
-    try {
-      if (!userId) throw new InvalidIdentifierError(t("noUserIdError"));
-      if (!listingId) throw new InvalidIdentifierError(t("noListingIdError"));
-
-      setIsLoading("upload")
-      const newPictures = await pictureUploader(e, userId, Number(listingId), categoryPictures.length);
-      if (!newPictures) throw new Error(t("picturesIsUndefinedError"));
-      setPictures(prev => [ ...prev, ...newPictures ])
-      setIsLoading(null)
-    } catch (err) {
-      setIsLoading(null);
-
-      if (err instanceof InvalidIdentifierError) {
-        return dispatch(signOutWithError(err)) 
-      } else {
-        // toaster.warning(( err as Error ).message, {
-        //   duration: 5
-        // });
-      };
-      
-      // if (axios.isAxiosError(err)) {
-      //   if (( err as AxiosError ).response?.data.unverifiedUserError) {
-      //     toaster.warning(( err as AxiosError ).response?.data.unverifiedUserError.errorMessage, {
-      //       description: ( err as AxiosError ).response?.data.unverifiedUserError.errorMessageDescription,
-      //       duration: 7
-      //     });
-      //     return;
-      //   } else {
-      //     console.error(err)
-      //   };
-      // };
-
-    }
-  };
 
   return (
     <Pane>
@@ -101,7 +56,7 @@ const GalleryUncategorized = ({
                   id={ `upload-btn-uncategorized` }
                   className="upload-btn"
                   type="file"
-                  onChange={(e) => onUpload(e)}
+                  onChange={(e) => onUpload(e, Number(listingId!!), setPictures, categoryPictures.length)}
                   multiple
                   accept="image/*"
                 />

@@ -12,7 +12,6 @@ type CommonProps = {
   setMenuMode: Dispatch<SetStateAction<MenuMode>>;
   toggleMark: (currentId: number) => void;
   setFullscreenPicture: Dispatch<SetStateAction<Picture | null>>;
-  setIsLoading: Dispatch<SetStateAction<IsLoading>>;
 };
 
 export type Categorized = {

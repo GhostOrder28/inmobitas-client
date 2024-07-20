@@ -32,6 +32,8 @@ import { useTranslation } from "react-i18next";
 import useWindowDimensions from "../../hooks/use-window-dimensions";
 import { MOBILE_BREAKPOINT_VALUE } from "../../constants/breakpoints.consts";
 import { MOBILE_COLUMN_COUNT } from "./custom-table.consts";
+import { useDispatch } from "react-redux";
+import { setIsLoading, unsetIsLoading } from "../../redux/app/app.actions";
 
 const CustomTable: FC<CustomTableProps> = ({ 
   source, 
@@ -51,7 +53,7 @@ const CustomTable: FC<CustomTableProps> = ({
   const buttonsRef = useRef(null);
   useClickOutside(buttonsRef, () => setHighlightedRow(null));
   const clientDevice = useClientDevice();
-  const [ isLoading, setIsLoading ] = useState<boolean>(false);
+  const dispatch = useDispatch();
   const { windowInnerWidth } = useWindowDimensions();
 
   const data = useMemo(() => source.map(item => {
@@ -107,14 +109,15 @@ const CustomTable: FC<CustomTableProps> = ({
   } = tableInstance;
 
   const onDelete = async (userId: number, entityId: number, entityIdentifier: string) => {
-    setIsLoading(true)
+    if (!deleteMessage) return;
+    dispatch(setIsLoading(deleteMessage))
 
     const deletedEntity = await http.delete(`${deleteBaseUrl}/${userId}/${entityId}`);
     const remainingEntities = source.filter(item => item[entityIdentifier] !== deletedEntity.data)
     setSource(remainingEntities);
     setHighlightedRow(null);
 
-    setIsLoading(false);
+    dispatch(unsetIsLoading())
   }
 
   useEffect(() => {
@@ -128,9 +131,7 @@ const CustomTable: FC<CustomTableProps> = ({
 
   return (
     <Pane position="relative">
-      { isLoading ?
-        <ContentSpinner waitMessage={ deleteMessage } /> : ""
-      }
+      <ContentSpinner />
       <Table flex={1} {...getTableProps()}>
         <TableHead display="flex" userSelect="none">
           {

@@ -16,7 +16,6 @@ describe("user reducer", () => {
   const initialState: UserState = {
     currentUser: null,
     errors: null,
-    guestPending: false,
     userSignedOut: false,
   };
 

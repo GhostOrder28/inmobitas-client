@@ -9,6 +9,8 @@ import { Picture } from "../../components/listing-detail/listing-detail.types";
 import { ContractPreset, EstatePreset } from "../../pages/listing-page/listing-page.types";
 import { FormState, UseFormSetError, FieldErrors } from "react-hook-form";
 import { Matchable, FormattedError, Preset } from "./utility-functions.type";
+import { store } from "../../redux/redux-store";
+import { selectCurrentUserId } from "../../redux/user/user.selectors";
 
 export const strParseIn = (str: string) => {
   return str.replaceAll(" ", '-').toLowerCase();
@@ -46,13 +48,13 @@ export const buildRoute = (source: RouteSource, structure: string[]) => {
 
 export const pictureUploader = async (
   e: ChangeEvent<HTMLInputElement>, 
-  userId: number, 
   listingId: number, 
   currentPicturesLength: number,
   categoryId?: number, 
 ) => {
   const filesToUpload = e.target.files ? [...e.target.files] : [];
   try {
+    const userId = selectCurrentUserId(store.getState());
     await http.get(`/checkverified/${userId}/${listingId}/${filesToUpload.length}`);
     const uploadedFiles = await Promise.all<{ data: Picture }>(
       filesToUpload.map((file: File, idx) => {

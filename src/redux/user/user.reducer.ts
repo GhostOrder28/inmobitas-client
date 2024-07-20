@@ -23,26 +23,26 @@ import {
 
 export type UserState = {
   readonly currentUser: UserInfo | null;
-  readonly guestPending: boolean;
+  // readonly guestPending: boolean;
   readonly errors: AxiosError<HTTPErrorData> | Error | null;
   readonly userSignedOut: boolean;
 }
 
 const INITIAL_STATE: UserState = {
   currentUser: null,
-  guestPending: false,
+  // guestPending: false,
   errors: null,
   userSignedOut: false,
 };
 
 const userReducer = (state = INITIAL_STATE, action = {} as AnyAction) => {
 
-  if (generateGuestStart.match(action)) {
-    return {
-      ...state,
-      guestPending: true,
-    }
-  }
+  // if (generateGuestStart.match(action)) {
+  //   return {
+  //     ...state,
+  //     guestPending: true,
+  //   }
+  // }
 
   if (
     signUpFailure.match(action) ||
@@ -55,7 +55,7 @@ const userReducer = (state = INITIAL_STATE, action = {} as AnyAction) => {
     
     return {
       ...state,
-      guestPending: false,
+      // guestPending: false,
       errors: action.payload
     } 
   }
@@ -67,7 +67,7 @@ const userReducer = (state = INITIAL_STATE, action = {} as AnyAction) => {
     return {
       ...state,
       currentUser: action.payload,
-      guestPending: false,
+      // guestPending: false,
       errors: null,
     }
   }

@@ -29,12 +29,14 @@ import { Picture, PictureCategory, PictureCategoryFromPayload } from "../listing
 import PopupMessage from "../popup-message/popup-message.component";
 import GalleryMenuButton from "../gallery-menu-button/gallery-menu-button.component";
 import GalleryCategory from "./sub-components/gallery-category/gallery-category.component";
-import GalleryUncategorized from "./sub-components/gallery-uncategorized.component";
+import GalleryUncategorized from "./sub-components/gallery-uncategorized/gallery-uncategorized.component";
 import ContentSpinner from "../content-spinner/content-spinner.component";
 import GalleryCategoryButton from "./sub-components/gallery-category-button/gallery-category-button.component";
 import ModalContainer from "../modal-container/modal-container.component";
 import { checkPositions, sortEntities } from "../../utils/utility-functions/utility-functions";
+import { useDispatch } from "react-redux";
 import { isLastDayOfMonth } from "date-fns";
+import { setIsLoading, unsetIsLoading } from "../../redux/app/app.actions";
 
 type PhotoGalleryProps = {
   generatePresentationFilename: () => string;
@@ -83,13 +85,13 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
 
   const [ fullscreenPicture, setFullscreenPicture ] = useState<Picture | null>(null);
 
-  const [isLoading, setIsLoading] = useState<IsLoading>(null);
   const { t } = useTranslation(["ui", "listing"]);
   const [noImages, setNoImages] = useState(false);
   const galleryRef = useRef<HTMLDivElement | null>(null);
   const galleryHeight = useRelativeHeight(galleryRef);
   const { windowInnerWidth } = useWindowDimensions();
   const { colors } = useTheme();
+  const dispatch = useDispatch();
 
   // useEffect(() => { console.log("categories: ", categories) }, [categories])
 
@@ -144,9 +146,6 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
     };
 
   }, [ pictures ])
-  // useEffect(() => { console.log("pictures", pictures) }, [ pictures ])
-  // useEffect(() => { console.log("categorizedPictures", categorizedPictures) }, [ categorizedPictures ])
-  // useEffect(() => { console.log("uncategorizedPictures", uncategorizedPictures) }, [ uncategorizedPictures ])
 
   useEffect(() => {
     const orderedCategories = sortEntities(categories, "categoryPosition");
@@ -189,7 +188,12 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
   };
 
   const submitDeletion = async (entity: Exclude<MenuMode, null>): Promise<void> => {
-    setIsLoading(entity === "pictures" ? "deletePictures" : "deleteCategories");
+    if (entity === "pictures") {
+      dispatch(setIsLoading(t("waitForPictureDelete")))
+    } else {
+      dispatch(setIsLoading(t("waitForCategoryDelete")))
+    };
+
     const res = await Promise.all(
       markedItems.map(id => {
         const deletedEntity = http.delete<number>(
@@ -213,7 +217,7 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
 
     setMenuMode(null);
     setMarkedItems([]);
-    setIsLoading(null);
+    dispatch(unsetIsLoading())
   };
 
   const groupCategories = (orderedEntities: Picture[]) => {
@@ -256,7 +260,7 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
   const generatePresentation = async () => {
     try {
       if (pictures.length || generatePresentationFilename !== undefined) {
-        setIsLoading("presentation");
+        dispatch(setIsLoading(t("waitForPresentation")))
         const res = await http.get(`/presentations/${userId}/${listingId}`, {
           responseType: "blob",
           headers: {
@@ -267,7 +271,7 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
         cloudRef.current.setAttribute("href", url);
         cloudRef.current.setAttribute("download", generatePresentationFilename());
         cloudRef.current.click()
-        setIsLoading(null);      
+        dispatch(unsetIsLoading())
       } else {
         setNoImages(true);
         setTimeout(() => {
@@ -344,16 +348,7 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
       >
         <PopupMessage message={ t("noImages") } displayCondition={noImages}/>
         <Pane position="relative">
-          { isLoading ?
-            <ContentSpinner
-              waitMessage={
-                isLoading === "presentation" ? t("waitForPresentation") :
-                isLoading === "upload" ? t("waitForPictureUpload") :
-                isLoading === "deletePictures" ? t("waitForPictureDelete") :
-                isLoading === "deleteCategories" ? t("waitForCategoryDelete") : ""
-              }
-            /> : ""
-          }
+          <ContentSpinner />
           { 
             categorizedPictures.map((c, idx) => (
               <GalleryCategory
@@ -372,7 +367,6 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
                 setPictures={ setPictures }
                 setCategories={ setCategories }
                 setFullscreenPicture={ setFullscreenPicture }
-                setIsLoading={ setIsLoading }
               />
             ))
           }
@@ -382,7 +376,6 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
             menuMode={ menuMode }
             markedItems={ markedItems }
             setPictures={ setPictures }
-            setIsLoading={ setIsLoading }
             setFullscreenPicture={ setFullscreenPicture }
             setMenuMode={ setMenuMode }
           />
