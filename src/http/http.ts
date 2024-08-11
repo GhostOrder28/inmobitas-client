@@ -29,10 +29,11 @@ http.interceptors.response.use<AxiosResponse | HTTPErrorData>(
 
     const { response: { data: d } } = error;
 
-    if (d.authorizationError) store.dispatch(signOutSuccess());
-    if (d.userSessionExpiredError || d.serverError) store.dispatch(signOutWithError(error));
     if (d.authenticationError) return Promise.reject(error);
     if (d.validationErrors) return Promise.reject(error);
+
+    if (d.authorizationError) store.dispatch(signOutSuccess());
+    if (d.userSessionExpiredError || d.serverError) store.dispatch(signOutWithError(error));
     if (d.unverifiedUserError) {
       toaster.warning(d.unverifiedUserError.errorMessage, {
         description: d.unverifiedUserError.errorMessageDescription,

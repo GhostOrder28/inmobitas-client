@@ -1,6 +1,7 @@
 {
-  "errorGenericMessage": "Encontramos algunos errores, porfavor revisa los campos e intenta de nuevo.",
+  "invalidFormError": "Encontramos algunos errores, porfavor revisa los campos e intenta de nuevo.",
   "noUserIdError": "No pudimos reconocer su id de usuario, porfavor ingrese de nuevo.",
   "noListingIdError": "No pudimos reconocer el id del listing, porfavor actualice la página.",
-  "picturesIsUndefinedError": "El array pictures es indefinido, porfavor intenta de nuevo."
+  "picturesUploadError": "No se pudo subir las imágenes.",
+  "picturesUploadErrorSuggestion": "Si este problema persiste porfavor comuníquese con el administrador."
 }

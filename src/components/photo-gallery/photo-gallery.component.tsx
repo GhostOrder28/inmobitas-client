@@ -28,10 +28,9 @@ import "./photo-gallery.styles.css";
 import { Picture, PictureCategory, PictureCategoryFromPayload } from "../listing-detail/listing-detail.types";
 import PopupMessage from "../popup-message/popup-message.component";
 import GalleryMenuButton from "../gallery-menu-button/gallery-menu-button.component";
-import GalleryCategory from "./sub-components/gallery-category/gallery-category.component";
-import GalleryUncategorized from "./sub-components/gallery-uncategorized/gallery-uncategorized.component";
-import ContentSpinner from "../content-spinner/content-spinner.component";
-import GalleryCategoryButton from "./sub-components/gallery-category-button/gallery-category-button.component";
+import GalleryCategory from "./components/gallery-category/gallery-category.component";
+import GalleryUncategorized from "./components/gallery-uncategorized/gallery-uncategorized.component";
+import GalleryCategoryButton from "./components/gallery-category-button/gallery-category-button.component";
 import ModalContainer from "../modal-container/modal-container.component";
 import { checkPositions, sortEntities } from "../../utils/utility-functions/utility-functions";
 import { useDispatch } from "react-redux";
@@ -98,6 +97,7 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
   useEffect(() => {
     try {
       (async function () {
+        console.log('fetching pictures...');
         const { data: picturesData } = await http.get<Picture[]>(
           `/pictures/${userId}/${listingId}`
         );
@@ -106,6 +106,7 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
           `/categories/${userId}/${listingId}`
         );
 
+        console.log('categoriesData: ', categoriesData);
         setPictures(picturesData)
         setCategories(categoriesData)
       })();
@@ -348,7 +349,6 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
       >
         <PopupMessage message={ t("noImages") } displayCondition={noImages}/>
         <Pane position="relative">
-          <ContentSpinner />
           { 
             categorizedPictures.map((c, idx) => (
               <GalleryCategory

@@ -1,12 +1,13 @@
-import { Pane, Button, minorScale } from "evergreen-ui";
+import { Pane, Button, ButtonProps, minorScale } from "evergreen-ui";
 import useWindowDimensions from "../../hooks/use-window-dimensions";
 import { DESKTOP_BREAKPOINT_VALUE } from "../../constants/breakpoints.consts";
+import { FORM } from "../../constants/sizes.consts";
 
 type FormSubmitProps = {
   text: string;
-}
+} & ButtonProps
 
-const FormSubmit = ({ text }: FormSubmitProps) => {
+const FormSubmit = ({ text, onSubmit, ...otherProps }: FormSubmitProps) => {
   const { windowInnerWidth } = useWindowDimensions();
 
   return (
@@ -14,14 +15,15 @@ const FormSubmit = ({ text }: FormSubmitProps) => {
       display="flex"
       justifyContent="center"
       width="100%"
-      marginTop={minorScale(5)}
+      // height={ FORM.SUBMIT_HEIGHT }
     >
       <Button
         width={windowInnerWidth > DESKTOP_BREAKPOINT_VALUE ? 400 : "100%"}
-        height={40}
+        height={ FORM.SUBMIT_HEIGHT }
         type="submit"
         appearance="primary"
         id="submit-btn"
+        { ...otherProps }
       >
         { text }
       </Button>

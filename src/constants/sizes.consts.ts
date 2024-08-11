@@ -1,2 +1,8 @@
-export const APP_WIDTH_FOR_DESKTOP_VIEW = 600
-export const APP_WIDTH_DEFAULT = "100%"
+export const DESKTOP_VIEW_WIDTH = 992
+export const DEFAULT_WIDTH = "100%"
+export const NAVBAR_HEIGHT = 72
+
+export const FORM = {
+  TAB_HEIGHT: 40,
+  SUBMIT_HEIGHT: 40
+}

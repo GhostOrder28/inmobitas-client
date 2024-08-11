@@ -1,23 +1,13 @@
 import http from "../../http/http";
 import { ListingItem } from "../../pages/listings-page/listings-page.types";
+import { selectCurrentUserId } from "../../redux/user/user.selectors";
+import { store } from "../../redux/redux-store";
 
-const getClientListings = async (route: string) => {
-  try {
-    const clientListingsData = await http.get<ListingItem[]>(route);
-    return clientListingsData;
+const getClientListings = async (clientId: string) => {
+  const userId = selectCurrentUserId(store.getState());
 
-    // this condition was here before but I"m not sure why I put it here
-    // because it is not necessary to perform the request
-    //
-    // if (clientId) {
-    //   const clientListingsData = await http.get<ListingItem[]>(route);
-    //   setClientListings(clientListingsData.data);
-    // } else {
-    //   throw new Error("clientId is undefined")
-    // };
-  } catch (err) {
-    throw new Error(`there was an error, ${err}`)
-  }
+  const clientListingsData = await http.get<ListingItem[]>(`/listings/${userId}/${clientId}`);
+  return clientListingsData;
 };
 
 export {

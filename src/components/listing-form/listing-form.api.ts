@@ -20,23 +20,24 @@ const onSubmitListingData = async (
   setListing: Dispatch<SetStateAction<Listing | undefined>>, 
   setError: UseFormSetError<Listing>,
 ): Promise<void> => {
-  const userId = selectCurrentUserId(store.getState());
-
-  const { clientId, estateId, contractId, ...remainingProps } = listingData;
-
-  try {
-    const res = history.location.pathname === `/newlisting`
-      ? await http.post<Listing>(`/listings/${userId}`, remainingProps)
-      : await http.put<Listing>(`/listings/${userId}/${clientId}/${estateId}/${contractId}`, remainingProps);
-    
-    setListing(res.data);      
-    history.push(`/listingdetail/${res.data.clientId}/${res.data.estateId}`);
-  } catch (error) {
-    if (!axios.isAxiosError(error)) return console.error(t("nonAxiosError", { ns: 'error' }), error);
-
-    const { data: { validationErrors } } = error.response!!;
-    handleValidationErrors<Listing>(listingData, validationErrors, setError); 
-  }
+  console.log('listingData: ', listingData);
+  // const userId = selectCurrentUserId(store.getState());
+  //
+  // const { clientId, estateId, contractId, ...remainingProps } = listingData;
+  //
+  // try {
+  //   const res = history.location.pathname === `/newlisting`
+  //     ? await http.post<Listing>(`/listings/${userId}`, remainingProps)
+  //     : await http.put<Listing>(`/listings/${userId}/${clientId}/${estateId}/${contractId}`, remainingProps);
+  //   
+  //   setListing(res.data);      
+  //   history.push(`/listingdetail/${res.data.clientId}/${res.data.estateId}`);
+  // } catch (error) {
+  //   if (!axios.isAxiosError(error)) return console.error(t("nonAxiosError", { ns: 'error' }), error);
+  //
+  //   const { data: { validationErrors } } = error.response!!;
+  //   handleValidationErrors<Listing>(listingData, validationErrors, setError); 
+  // }
 };
 
 export {

@@ -1,6 +1,4 @@
-import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import {
   Pane,
@@ -10,18 +8,14 @@ import {
   TableCell,
 } from "evergreen-ui";
 
-import { selectCurrentUserId } from "../../redux/user/user.selectors";
 import { formatClientData } from "./client-detail.utils";
 import { strParseOut } from "../../utils/utility-functions/utility-functions";
 import CustomTable from "../custom-table/custom-table.component";
 import Heading from "../heading/heading.component";
-import { getClientListings } from "./client-detail.api";
 import { LABELS } from "../../pages/listings-page/listings-page.consts";
 
-import useGetRequest from "../../hooks/use-get-request";
-
 import { Client } from "../../pages/client-page/client-page.types";
-import { ListingItem } from "../../pages/listings-page/listings-page.types";
+import { useGetClientListings } from "./client-detail.hooks";
 
 type ClientDetailProps = {
   clientData: Client | undefined;
@@ -30,8 +24,7 @@ type ClientDetailProps = {
 const ClientDetail = ({ clientData }: ClientDetailProps) => {
   const { t } = useTranslation("listing");
   const { clientId } = useParams();
-  const userId = useSelector(selectCurrentUserId);
-  const [ clientListings, setClientListings ] = useGetRequest<ListingItem[]>(() => getClientListings(`/listings/${userId}/${clientId}`));
+  const [ clientListings, setClientListings ] = useGetClientListings(clientId);
   const clientPersonalData = formatClientData(clientData);
 
   return (

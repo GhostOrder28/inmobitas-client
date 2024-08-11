@@ -1,12 +1,13 @@
-import React, { useState, useEffect, useRef, Dispatch, SetStateAction } from "react";
+import React, { useState, Dispatch, SetStateAction, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { useForm } from "react-hook-form";
 import { useLocation } from "react-router-dom";
-import { Pane, Tablist, Tab } from "evergreen-ui";
+import { Pane, Tablist, Tab, minorScale } from "evergreen-ui";
+import useMediaQuery from "@custom-react-hooks/use-media-query";
+import { DESKTOP_BREAKPOINT_VALUE } from "../../constants/breakpoints.consts";
 
 import Input from "../input/input.component";
-import ContractTypeBlock from "./subcomponents/contract-type-block.subcomponent";
-import FormBlock from "./subcomponents/form-block.subcomponent";
+import ContractTypeBlock from "./components/contract-type-block.component";
+import FormBlock from "./components/form-block.component";
 import FormSubmit from "../form-submit/form-submit.component";
 import FieldErrorMessage from "../field-error-message/field-error-message.component";
 
@@ -17,8 +18,7 @@ import { onSubmitListingData } from "./listing-form.api";
 import { useResetOnPathChange } from "./listing-form.utils";
 import "./listing-form.styles.css";
 
-import useRelativeHeight from "../../hooks/use-relative-height";
-import useCalculateAppWidth from "../../hooks/use-calculate-app-width";
+import useCalculateAppSize from "../../hooks/use-calculate-app-size";
 import useGenerateForm from "../../hooks/use-generate-form";
 import Form from "../form/form.component";
 
@@ -31,12 +31,7 @@ type ListingFormProps = {
 const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => {
   
   const location = useLocation();
-  const { t } = useTranslation(["listing", "client", "ui"]);
-  const [selectedMode, setSelectedMode] = useState<number>(1);
-  const formWrapperRef = useRef<HTMLDivElement | null>(null);
-  const formHeight = useRelativeHeight(formWrapperRef, { extraSpace: 60 });
-  const appWidth = useCalculateAppWidth();
-
+  const { t } = useTranslation(["listing", "client", "ui", "error"]);
   const {
     handleSubmit, 
     watch, 
@@ -49,32 +44,42 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
 
   useResetOnPathChange<Listing>(reset, LISTING_FORM_INITIAL_STATE)
 
+  const isDesktop = useMediaQuery(`(min-width: ${DESKTOP_BREAKPOINT_VALUE}px)`);
+  const [ _, appHeight ] = useCalculateAppSize();
+  const [selectedMode, setSelectedMode] = useState<number>(1);
+  const tabs = useMemo(() => [
+    t("basic", { ns: "listing" }), 
+    t("detailed", { ns: "listing" })
+  ], [])
+
   return (
-    <Pane width={ appWidth } marginX={ "auto" }>
-      <Tablist width={"100%"} marginBottom={".5rem"} display={"flex"} className="tablist">
-        {[t("basic", { ns: "listing" }), t("detailed", { ns: "listing" })].map((tab, index) => (
+    <Pane 
+      display="flex" 
+      flexDirection="column"
+      height={ appHeight }
+      marginX="auto" 
+    >
+      <Tablist display="flex" className="tablist">
+        { tabs.map((tab, index) => (
           <Tab
             key={tab}
-            id={tab}
             onSelect={() => setSelectedMode(index)}
             isSelected={index === selectedMode}
-            aria-controls={`panel-${tab}`}
             flex={1}
-            height={"2.5rem"}
             borderRadius={0}
+            paddingY={minorScale(5)}
           >
             {tab}
           </Tab>
         ))}
       </Tablist>
-      <Pane
-        ref={formWrapperRef}
-        overflow={"scroll"}
-        height={formHeight}
+      <Form
+        id="listing-form"
+        onSubmit={handleSubmit(listingData => onSubmitListingData(listingData, setListing, setError))}
+        flexDirection={ isDesktop ? "row" : "column" }
+        gap={minorScale(8)}
       >
-        <Form
-          onSubmit={handleSubmit(listingData => onSubmitListingData(listingData, setListing, setError))}
-        >
+        <Pane flex={1}>
           <FormBlock title={ t("owner", { ns: "client" }) }>
             <Input name="clientName" type="text" label={ t("clientName", { ns: "client" }) } { ...inputCommonProps }/>
             <Input name="clientContactPhone" type="text" label={ t("contactPhone", { ns: "client" }) } { ...inputCommonProps } />
@@ -82,10 +87,10 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
           <FormBlock title={ t("location") }>
             <Input name="district" type="text" label={ t("district") } { ...inputCommonProps } />
             { selectedMode === 1 &&
-            <>
-              <Input name="neighborhood" type="text" label={ t("neighborhood") } { ...inputCommonProps } />
-              <Input name="addressDetails" type="text" label={ t("addressDetails") } { ...inputCommonProps } />
-            </>
+              <>
+                <Input name="neighborhood" type="text" label={ t("neighborhood") } { ...inputCommonProps } />
+                <Input name="addressDetails" type="text" label={ t("addressDetails") } { ...inputCommonProps } />
+              </>
             }
           </FormBlock>
           <FormBlock title={ t("contract") }>
@@ -96,13 +101,15 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
           </FormBlock>
           {
             watch("contractTypeId") === 2 && selectedMode === 1 && (
-            <FormBlock title={ t("preferenceDetails") }>
-              <Input name="petsAllowed" type="checkbox" label={ t("petsAllowed") } { ...controlledCommonProps } />
-              <Input name="childrenAllowed" type="checkbox" label={ t("childrenAllowed") } { ...controlledCommonProps } />
-              <Input name="ownerPreferencesDetails" type="textarea" label={ t("preferenceDetails") } { ...inputCommonProps } />
-            </FormBlock>
+              <FormBlock title={ t("preferenceDetails") }>
+                <Input name="petsAllowed" type="checkbox" label={ t("petsAllowed") } { ...controlledCommonProps } />
+                <Input name="childrenAllowed" type="checkbox" label={ t("childrenAllowed") } { ...controlledCommonProps } />
+                <Input name="ownerPreferencesDetails" type="textarea" label={ t("preferenceDetails") } { ...inputCommonProps } />
+              </FormBlock>
             )
           }
+        </Pane>
+        <Pane flex={1}>
           <FormBlock title={ t("estate") }>
             <Input 
               name="estateTypeId" 
@@ -132,14 +139,17 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
               </>
             }
           </FormBlock>
-          {
-            errors && <FieldErrorMessage message={t("errorGenericMessage")} />
-          }
-          <FormSubmit
-            text={ location.pathname === "/newlisting" ? t("addNewListing") : t("commitChanges")  } 
-          />
-        </Form>
-      </Pane>
+        </Pane>
+      </Form>
+      { errors && 
+        <Pane paddingY={minorScale(3)}>
+          <FieldErrorMessage message={t("invalidFormError", { ns: "error" })} />
+        </Pane>
+      }
+      <FormSubmit
+        text={ location.pathname === "/newlisting" ? t("addNewListing") : t("commitChanges")  } 
+        form="listing-form"
+      />
     </Pane>
   );
 };

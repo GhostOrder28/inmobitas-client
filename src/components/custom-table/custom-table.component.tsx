@@ -27,7 +27,6 @@ import CustomTableOption from "./custom-table-option";
 import http from "../../http/http";
 import Pagination from "../pagination/pagination.component";
 import { getPageSize } from "./custom-table.utils";
-import ContentSpinner from "../content-spinner/content-spinner.component";
 import { useTranslation } from "react-i18next";
 import useWindowDimensions from "../../hooks/use-window-dimensions";
 import { MOBILE_BREAKPOINT_VALUE } from "../../constants/breakpoints.consts";
@@ -131,7 +130,6 @@ const CustomTable: FC<CustomTableProps> = ({
 
   return (
     <Pane position="relative">
-      <ContentSpinner />
       <Table flex={1} {...getTableProps()}>
         <TableHead display="flex" userSelect="none">
           {

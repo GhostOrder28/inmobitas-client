@@ -9,10 +9,11 @@ import { store } from "../../../../redux/redux-store";
 import { selectCurrentUserId } from "../../../../redux/user/user.selectors";
 import { InvalidIdentifierError } from "../../../../errors/auth.errors";
 import { Picture } from "../../../listing-detail/listing-detail.types";
-import { IsLoading } from "../../photo-gallery.component";
 import { pictureUploader } from "../../../../utils/utility-functions/utility-functions";
 import { signOutWithError } from "../../../../redux/user/user.actions";
 import { setIsLoading, unsetIsLoading } from "../../../../redux/app/app.actions";
+import { toaster } from "evergreen-ui";
+import { UploadError } from "../../../../errors/app.errors";
 
 import i18next from "i18next";
 import { initReactI18next } from "react-i18next";
@@ -63,10 +64,10 @@ const onUpload = async (
   try {
     if (!listingId) throw new InvalidIdentifierError(t("noListingIdError"));
 
-    dispatch(setIsLoading(t("waitForPictureUpload", { ns: 'ui' })))
+    dispatch(setIsLoading(t("waitForPictureUpload", { ns: "ui" })))
 
     const newPictures = await pictureUploader(e, listingId, currentPicturesLength, categoryId);
-    if (!newPictures) throw new Error(t("picturesIsUndefinedError"));
+    if (!newPictures) throw new UploadError(t("picturesUploadError", { ns: "error" }));
 
     setPictures(prev => [ ...prev, ...newPictures ])
     dispatch(unsetIsLoading())
@@ -74,7 +75,14 @@ const onUpload = async (
     dispatch(unsetIsLoading())
 
     if (error instanceof InvalidIdentifierError) {
-     return store.dispatch(signOutWithError(error)) 
+      return store.dispatch(signOutWithError(error)) 
+    };
+
+    if (error instanceof UploadError) {
+      toaster.warning(error.message, {
+        description: error.suggestion,
+        duration: 5
+      });
     };
 
     console.error(error)

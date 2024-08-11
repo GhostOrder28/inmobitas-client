@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 import { Pane } from "evergreen-ui";
-import { MenuMode } from "../photo-gallery/photo-gallery.component";
+import { MenuMode } from "../photo-gallery/photo-gallery.types";
 
 type PicturesContainerProps = {
   children: ReactNode;

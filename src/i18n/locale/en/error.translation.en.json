@@ -1,10 +1,11 @@
 {
-  "errorGenericMessage": "Encontramos algunos errores, porfavor revisa los campos e intenta de nuevo.",
+  "invalidFormError": "There are some errors, please check the fields and try again.",
   "noUserIdError": "We couldn't recognize your user id, please log in again.",
   "noListingIdError": "We couldn't recognize the listing id, please refresh the page.",
-  "picturesIsUndefinedError": "The pictures array is undefined, please try again.",
+  "picturesUploadError": "Pictures couldn't be uploaded.",
   "noResponseError": "There is an Axios error but it doesn't have a response, check the connection to the server.",
   "unexpectedError": "Unexpected Axios error occurred.",
   "nonAxiosError": "A non-axios error occurred.",
+  "contactTheAdmin": "If this issue persist please communicate with the administrator.",
   "emptyInputType": "Input type is empty"
 }

@@ -4,7 +4,7 @@ import { Listing } from "../../pages/listing-page/listing-page.types";
 import { FormErrors } from "../../types/global.types";
 import { SignInData, SignUpData } from "../../components/user-auth/user-auth.types";
 import { AgendaEvent } from "../../pages/agenda-page/agenda-page.types";
-import { GalleryCategoryForm } from "../../components/photo-gallery/sub-components/gallery-category/gallery-category.types";
+import { GalleryCategoryForm } from "../photo-gallery/components/gallery-category/gallery-category.types";
 
 type FieldType = "text" | "textarea" | "number" | "checkbox" | "select" | "date" | "time" | "password";
 type FieldName = keyof (Client & Listing & SignInData & SignUpData & AgendaEvent & GalleryCategoryForm);

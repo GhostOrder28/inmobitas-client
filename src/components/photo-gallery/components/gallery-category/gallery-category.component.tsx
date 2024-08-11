@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, ChangeEventHandler } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Pane,
   Checkbox, 
@@ -11,16 +11,9 @@ import {
   minorScale,
   majorScale,
 } from "evergreen-ui";
-import { PictureCategoryUpdatedNamePayload } from "../../../listing-detail/listing-detail.types";
 import { Categorized } from "../gallery-category.types";
-import { pictureUploader } from "../../../../utils/utility-functions/utility-functions";
-import { useSelector } from "react-redux";
-import { selectCurrentUserId } from "../../../../redux/user/user.selectors";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { signOutWithError } from "../../../../redux/user/user.actions";
-import { useDispatch } from "react-redux";
-import { InvalidIdentifierError } from "../../../../errors/auth.errors";
 import "../gallery-category.styles.css";
 import GalleryCategoryButton from "../gallery-category-button/gallery-category-button.component";
 import useGenerateForm from "../../../../hooks/use-generate-form";
@@ -28,7 +21,7 @@ import { GALLERY_CATEGORY_FORM_INITIAL_STATE } from "./gallery-category.consts";
 import { GalleryCategoryForm } from "./gallery-category.types";
 import Input from "../../../input/input.component";
 import { updateName } from "./gallery-category.api";
-import { cancelUpdateName } from "./gallery-category.utils";
+import { cancelUpdateName, useDetectNew } from "./gallery-category.utils";
 import { onUpload } from "./gallery-category.api";
 
 const GalleryCategory = ({ 
@@ -46,10 +39,15 @@ const GalleryCategory = ({
     setCategories,
     setFullscreenPicture, 
   }: Categorized) => {
-  const [ editMode, setEditMode ] = useState<boolean>(false);
 
+  const [ editMode, setEditMode ] = useState<boolean>(false);
   const timeout = useRef<NodeJS.Timeout>();
   const categoryTouchTimeout = useRef<NodeJS.Timeout>();
+  const { listingId } = useParams();
+  const { t } = useTranslation(["error", "ui"]);
+  const { colors } = useTheme();
+
+  useDetectNew(Boolean(newlyCreated), setEditMode)
 
   const {
     handleSubmit, 
@@ -58,16 +56,6 @@ const GalleryCategory = ({
     watch,
     inputCommonProps, 
   } = useGenerateForm<GalleryCategoryForm>(GALLERY_CATEGORY_FORM_INITIAL_STATE, { name });
-
-  const userId = useSelector(selectCurrentUserId);
-  const { listingId } = useParams();
-  const { t } = useTranslation(["error", 'ui']);
-  const dispatch = useDispatch();
-  const { colors } = useTheme();
-
-  useEffect(() => {
-    if (newlyCreated) setEditMode(true);
-  }, [])
 
   return (
     <Pane borderTop={ `1px solid ${colors.gray500}` }>

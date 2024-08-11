@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
 import { Picture } from "../../listing-detail/listing-detail.types";
 import { PictureCategory, PictureCategoryFromPayload } from "../../listing-detail/listing-detail.types";
-import { IsLoading, MenuMode } from "../photo-gallery.component";
+import { MenuMode } from "../photo-gallery.types";
 import { TextInput } from "evergreen-ui";
 
 type CommonProps = {

@@ -20,8 +20,11 @@ import {
 import LogoIcon from "../../icons/logo-icon/logo-icon.component";
 import SignoutButton from "../signout-btn/signout-btn.component";
 import MainMenuButton from "../main-menu-button/main-menu-button.component";
+import ContentSpinner from "../content-spinner/content-spinner.component";
 import useWindowDimensions from "../../hooks/use-window-dimensions";
+import useCalculateAppSize from "../../hooks/use-calculate-app-size";
 import { DESKTOP_BREAKPOINT_VALUE } from "../../constants/breakpoints.consts";
+import { NAVBAR_HEIGHT } from "../../constants/sizes.consts";
 
 import "./navigation.styles.css";
 
@@ -31,6 +34,7 @@ const Navigation = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation(["ui", "listing", "agenda"]);
   const { windowInnerWidth } = useWindowDimensions();
+  const [ appWidth, appHeight ] = useCalculateAppSize();
 
   const signOut = () => {
     dispatch(userSignOutStart(http));
@@ -39,15 +43,17 @@ const Navigation = () => {
 
   return (
     <>
+      <ContentSpinner />
       <Pane
         backgroundColor="#F9FAFC"
       >
         <Pane
           position="relative"
           display="flex"
+          height={ NAVBAR_HEIGHT }
           justifyContent="space-between"
           alignItems="center"
-          padding={minorScale(4)}
+          paddingX={minorScale(4)}
           width={windowInnerWidth && windowInnerWidth > DESKTOP_BREAKPOINT_VALUE ? DESKTOP_BREAKPOINT_VALUE : "100%"} 
           marginX="auto"
         >
@@ -86,7 +92,8 @@ const Navigation = () => {
         </Pane>
       </Pane>
       <Pane 
-        width={windowInnerWidth && windowInnerWidth > DESKTOP_BREAKPOINT_VALUE ? DESKTOP_BREAKPOINT_VALUE : "100%"} 
+        width={ appWidth } 
+        height={ appHeight }
         marginX="auto"
       >
         <Outlet />
