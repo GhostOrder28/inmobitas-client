@@ -1,14 +1,14 @@
-import userActionTypes from './user.types';
-import { SignUpData, SignInData } from '../../components/user-auth/user-auth.types'
-import { AxiosInstance, AxiosError, AxiosResponse } from 'axios';
+import userActionTypes from "./user.types";
+import { SignUpData, SignInData } from "../../components/user-auth/user-auth.types"
+import { AxiosInstance, AxiosError, AxiosResponse } from "axios";
 import { 
   SignUpFailureError,
   SignInFailureError,
   RequestUserInfoFailureError,
   GenerateGuestUserError
-} from '../redux.types';
-import { UserInfo } from '../../components/user-auth/user-auth.types';
-import { withMatcher } from '../../utils/utility-functions/utility-functions';
+} from "../redux.types";
+import { UserInfo } from "../../components/user-auth/user-auth.types";
+import { withMatcher } from "../../utils/utility-functions/utility-functions";
 import { 
   createAction, 
   createActionWithDependencyAndPayload,
@@ -17,8 +17,8 @@ import {
   ActionWithPayload, 
   ActionWithDependencyAndPayload,
   ActionWithDependency,
-} from '../../utils/action-creator'
-import { UserSessionExpiredErrorData } from '../../http/http.types';
+} from "../../utils/action-creator"
+import { UserSessionExpiredErrorData } from "../../http/http.types";
 
 
 export type UserAction = 

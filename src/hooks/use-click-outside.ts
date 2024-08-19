@@ -1,4 +1,4 @@
-import { useEffect, RefObject } from 'react';
+import { useEffect, RefObject } from "react";
 
 const useClickOutside = <T extends HTMLElement = HTMLElement>(
   ref: RefObject<T>,
@@ -12,8 +12,8 @@ const useClickOutside = <T extends HTMLElement = HTMLElement>(
         !ref?.current?.contains(e.target as Node)
       ) handler();
     }
-    document.addEventListener('click', trigger);
-    return () => document.removeEventListener('click', trigger);
+    document.addEventListener("click", trigger);
+    return () => document.removeEventListener("click", trigger);
   }, [handler, ref])
 }
 

@@ -1,23 +1,23 @@
-import { Pane } from 'evergreen-ui';
-import { useSelector } from 'react-redux';
+import { Pane } from "evergreen-ui";
+import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from "react";
 
-import http from '../../http/http';
-import { selectCurrentUserId } from '../../redux/user/user.selectors';
+import http from "../../http/http";
+import { selectCurrentUserId } from "../../redux/user/user.selectors";
 
-import '../../global-styles/listings-page-scroll.styles.css';
-import { ClientItem } from './clients-page.types';
+import "../../global-styles/listings-page-scroll.styles.css";
+import { ClientItem } from "./clients-page.types";
 
-import CustomTable from '../../components/custom-table/custom-table.component';
-import NoDataMessage from '../../components/no-data-message/no-data-message.component';
+import CustomTable from "../../components/custom-table/custom-table.component";
+import NoDataMessage from "../../components/no-data-message/no-data-message.component";
 
 const ClientsPage = () => {
 
   const [clients, setClients] = useState<ClientItem[]>([]);
   const [noClients, setNoClients] = useState<boolean>(false);
   const userId = useSelector(selectCurrentUserId);
-  const { t } = useTranslation(['client', 'ui'])
+  const { t } = useTranslation(["client", 'ui'])
 
   useEffect(() => {
 
@@ -37,12 +37,12 @@ const ClientsPage = () => {
   }, [userId])
 
   return (
-    <Pane overflow={'scroll'} borderColor={'black'}>
+    <Pane overflow={"scroll"} borderColor={'black'}>
       { noClients &&
         <NoDataMessage
-          messageText={t('noClients', { ns: 'ui' }) + ', '}
-          linkText={t('startAddingOne', { ns: 'ui' })}
-          url={'/newlisting'}
+          messageText={t("noClients", { ns: 'ui' }) + ', '}
+          linkText={t("startAddingOne", { ns: 'ui' })}
+          url={"/newlisting"}
         /> 
       }
       {
@@ -51,14 +51,12 @@ const ClientsPage = () => {
           source={clients}
           setSource={setClients}
           labels={[
-            t('name'),
-            t('phone'),
+            t("name"),
+            t("phone"),
           ]}
-          detailRouteStructure={['clientdetail', 'clientId']}
-          editRouteStructure={['editclient', 'clientId']}
-          deleteBaseUrl={'/clients'}
-          deleteMessage={ t('waitForClientDelete', { ns: 'ui' }) }
-        /> : ''
+          entity="client"
+          deleteMessage={ t("waitForClientDelete", { ns: 'ui' }) }
+        /> : ""
       }
     </Pane>
   )

@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Link, useNavigate, Outlet } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-import http from '../../http/http';
+import http from "../../http/http";
 import { userSignOutStart } from "../../redux/user/user.actions";
 import { selectCurrentUser } from "../../redux/user/user.selectors";
 import {
@@ -18,20 +18,23 @@ import {
   minorScale
 } from "evergreen-ui";
 import LogoIcon from "../../icons/logo-icon/logo-icon.component";
-import SignoutButton from '../signout-btn/signout-btn.component';
+import SignoutButton from "../signout-btn/signout-btn.component";
 import MainMenuButton from "../main-menu-button/main-menu-button.component";
-import useWindowDimensions from '../../hooks/use-window-dimensions';
+import ContentSpinner from "../content-spinner/content-spinner.component";
+import useWindowDimensions from "../../hooks/use-window-dimensions";
+import useCalculateAppSize from "../../hooks/use-calculate-app-size";
 import { DESKTOP_BREAKPOINT_VALUE } from "../../constants/breakpoints.consts";
+import { NAVBAR_HEIGHT } from "../../constants/sizes.consts";
 
 import "./navigation.styles.css";
 
 const Navigation = () => {
   const [isShown, setIsShown] = useState(false);
   const currentUser = useSelector(selectCurrentUser);
-  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { t } = useTranslation(['ui', 'listing', 'agenda']);
+  const { t } = useTranslation(["ui", "listing", "agenda"]);
   const { windowInnerWidth } = useWindowDimensions();
+  const { appWidth, appHeight } = useCalculateAppSize();
 
   const signOut = () => {
     dispatch(userSignOutStart(http));
@@ -40,17 +43,19 @@ const Navigation = () => {
 
   return (
     <>
+      <ContentSpinner />
       <Pane
-        backgroundColor={'#F9FAFC'}
+        backgroundColor="#F9FAFC"
       >
         <Pane
-          position={'relative'}
-          display={'flex'}
-          justifyContent={'space-between'}
-          alignItems={'center'}
-          padding={minorScale(4)}
-          width={windowInnerWidth && windowInnerWidth > DESKTOP_BREAKPOINT_VALUE ? DESKTOP_BREAKPOINT_VALUE : '100%'} 
-          marginX={'auto'}
+          position="relative"
+          display="flex"
+          height={ NAVBAR_HEIGHT }
+          justifyContent="space-between"
+          alignItems="center"
+          paddingX={minorScale(4)}
+          width={windowInnerWidth && windowInnerWidth > DESKTOP_BREAKPOINT_VALUE ? DESKTOP_BREAKPOINT_VALUE : "100%"} 
+          marginX="auto"
         >
           <SideSheet
             width={260}
@@ -60,35 +65,36 @@ const Navigation = () => {
           >
             <Menu>
               <nav className="flex flex-column">
-                <Link to={"/listings"} onClick={() => setIsShown(false)}>
+                <Link to="/listings" onClick={() => setIsShown(false)}>
                   <OfficeIcon marginRight={minorScale(3)} />
-                  { t('listings') }
+                  { t("listings") }
                 </Link>
-                <Link to={"/clients"} onClick={() => setIsShown(false)}>
+                <Link to="/clients" onClick={() => setIsShown(false)}>
                   <PersonIcon marginRight={minorScale(3)} />
-                  { t('clients') }
+                  { t("clients") }
                 </Link>
-                <Link to={"/newlisting"} onClick={() => setIsShown(false)}>
+                <Link to="/newlisting" onClick={() => setIsShown(false)}>
                   <ThListIcon marginRight={minorScale(3)} />
-                  { t('addNewListing', { ns: 'listing' }) } 
+                  { t("addNewListing", { ns: "listing" }) } 
                 </Link>
-                <Link to={"/agenda"} onClick={() => setIsShown(false)}>
+                <Link to="/agenda" onClick={() => setIsShown(false)}>
                   <PropertiesIcon marginRight={minorScale(3)} />
-                  { t('agenda', { ns: 'agenda' }) } 
+                  { t("agenda", { ns: "agenda" }) } 
                 </Link>
                 {currentUser && <SignoutButton onClick={signOut}/>}
               </nav>
             </Menu>
           </SideSheet>
-          <Link to={"/"} className="logo-icon">
+          <Link to="/" className="logo-icon">
             <LogoIcon />
           </Link>
           <MainMenuButton setIsShown={setIsShown} />
         </Pane>
       </Pane>
       <Pane 
-        width={windowInnerWidth && windowInnerWidth > DESKTOP_BREAKPOINT_VALUE ? DESKTOP_BREAKPOINT_VALUE : '100%'} 
-        marginX={'auto'}
+        width={ appWidth } 
+        height={ appHeight }
+        marginX="auto"
       >
         <Outlet />
       </Pane>

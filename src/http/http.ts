@@ -1,14 +1,21 @@
-import axios, { AxiosError } from 'axios'; 
-import { store } from '../redux/redux-store';
-import { signOutSuccess, signOutWithError } from '../redux/user/user.actions';
-import { AxiosResponse } from 'axios';
-import { HTTPErrorData } from './http.types';
-import { toaster } from 'evergreen-ui';
+import axios, { AxiosError } from "axios"; 
+import { store } from "../redux/redux-store";
+import { signOutSuccess, signOutWithError } from "../redux/user/user.actions";
+import { unsetIsLoading } from "../redux/app/app.actions";
+import { AxiosResponse } from "axios";
+import { HTTPErrorData } from "./http.types";
+import { toaster } from "evergreen-ui";
+
+import i18next from "i18next";
+import { initReactI18next } from "react-i18next";
+
+i18next.use(initReactI18next).init()
+
+const { t } = i18next;
 
 export const options = {
   withCredentials: true,
   baseURL: process.env.REACT_APP_BASE_URL,
-  // baseURL: '/',
 }
 
 const http = axios.create(options);
@@ -18,35 +25,29 @@ http.interceptors.response.use<AxiosResponse | HTTPErrorData>(
     return response; 
   },
   function (error: AxiosError<HTTPErrorData> | Error) {
-    if (axios.isAxiosError(error)) {
-      if (!error.response) throw new Error(`there is an error but it doesn't have a response: ${error}`);
-      const { response: { data: { 
-        authorizationError,
-        authenticationError, 
-        dbConnectionError, 
-        unverifiedUserError,
-        userSessionExpiredError,
-      } } } = error;
-
-      if (authorizationError) store.dispatch(signOutSuccess());
-      // if (authenticationError) store.dispatch(signOutSuccess());
-      if (userSessionExpiredError) store.dispatch(signOutWithError(error));
-      if (dbConnectionError) store.dispatch(signOutSuccess());
-
-      if (unverifiedUserError) {
-        toaster.warning(unverifiedUserError.errorMessage, {
-          description: unverifiedUserError.errorMessageDescription,
-          duration: 7
-        });
-      };
-    } else {
-      toaster.warning(( error as Error ).message, {
-        duration: 5
-      });
-      console.error(error)
+    if (!axios.isAxiosError(error)) return console.error(t("nonAxiosError", { ns: 'error' }));
+    if (!error.response) {
+      console.error(t("noResponseError", { ns: 'error' }), error)
+      store.dispatch(signOutSuccess())
+      store.dispatch(unsetIsLoading())
+      return;
     };
 
-    return Promise.reject(error);
+    const { response: { data: d } } = error;
+
+    if (d.authenticationError) return Promise.reject(error);
+    if (d.validationErrors) return Promise.reject(error);
+
+    if (d.authorizationError) store.dispatch(signOutSuccess());
+    if (d.userSessionExpiredError || d.serverError) store.dispatch(signOutWithError(error));
+    if (d.unverifiedUserError) {
+      toaster.warning(d.unverifiedUserError.errorMessage, {
+        description: d.unverifiedUserError.errorMessageDescription,
+        duration: 7
+      });
+    };
+
+    console.error(t("unexpectedError", { ns: 'error' }), error)
   }
 )
 

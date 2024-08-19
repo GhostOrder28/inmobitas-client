@@ -9,42 +9,42 @@ import { TABLET_BREAKPOINT_VALUE } from "../../../../constants/breakpoints.const
 
 const GuestSection = () => {
   const { windowInnerWidth } = useWindowDimensions();
-  const { t } = useTranslation(['ui'])
+  const { t } = useTranslation(["ui"])
 
   const rateLimitErrMsg = useSelector(selectServerError("limitReachedError"));
 
   return (
     <Card
-      display={'flex'}
-      flexDirection={'column'}
-      justifyContent={'center'}
-      alignItems={'center'}
-      width={'100%'}
+      display={"flex"}
+      flexDirection={"column"}
+      justifyContent={"center"}
+      alignItems={"center"}
+      width={"100%"}
       paddingY={ windowInnerWidth > TABLET_BREAKPOINT_VALUE ? null : minorScale(6) }
       elevation={1}
-      className={'guest-button'}
+      className={"guest-button"}
       flex={1}
     >
       <Button 
-        type='button'
+        type="button"
         onClick={onSignInAsGuest}
-        width={'70%'}
+        width={"70%"}
         marginX={minorScale(15)}
-        appearance={'primary'}
-        intent={'success'}
-        size={'medium'}
+        appearance={"primary"}
+        intent={"success"}
+        size={"medium"}
       >
-        { t('signinAsGuest') }
+        { t("signinAsGuest") }
       </Button>
       <Text 
-        width={'80%'}
+        width={"80%"}
         marginX={minorScale(15)}
         marginTop={minorScale(3)}
-        textAlign={'center'}
-        size={'300'}
-        color={'#696f8c'}
+        textAlign={"center"}
+        size={"300"}
+        color={"#696f8c"}
       >
-        { t('signinAsGuestMessage') }
+        { t("signinAsGuestMessage") }
       </Text>
       <FieldErrorMessage message={rateLimitErrMsg} />
     </Card>

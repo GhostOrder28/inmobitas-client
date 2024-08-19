@@ -1,8 +1,8 @@
-import React, { useState, FC, useRef } from 'react';
-import { Pane, TextInput, IconButton, TimeIcon } from 'evergreen-ui';
-import { ClockPicker, LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { format } from 'date-fns';
+import React, { useState, FC, useRef } from "react";
+import { Pane, TextInput, IconButton, TimeIcon } from "evergreen-ui";
+import { ClockPicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { format } from "date-fns";
 
 type TimePickerProps = {
   value: Date;
@@ -15,12 +15,12 @@ const TimePicker: FC<TimePickerProps> = ({ value, onChange }) => {
  
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <Pane display={'flex'}>
+      <Pane display={"flex"}>
         <TextInput 
           disabled
-          width={'100%'}
+          width={"100%"}
           marginRight={10}
-          value={value && format(value, 'p')}
+          value={value && format(value, "p")}
           onClick={() => setDisplay(true)}
         />
         <IconButton 
@@ -31,9 +31,9 @@ const TimePicker: FC<TimePickerProps> = ({ value, onChange }) => {
       </Pane>
       { display && 
         <Pane
-          position={'absolute'}
+          position={"absolute"}
           zIndex={6}
-          backgroundColor={'white'}
+          backgroundColor={"white"}
           elevation={3}
         >
           <ClockPicker
@@ -44,7 +44,7 @@ const TimePicker: FC<TimePickerProps> = ({ value, onChange }) => {
             showViewSwitcher={true}
             onChange={(newDate, isFinish) => {
               onChange(newDate)
-              if (isFinish === 'finish') {
+              if (isFinish === "finish") {
                 setDisplay(false);
               }
             }}

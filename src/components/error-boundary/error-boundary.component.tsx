@@ -1,4 +1,5 @@
-import React, { Component, ErrorInfo, ReactNode } from 'react';
+import React, { Component, ErrorInfo, ReactNode } from "react";
+import { Text } from "evergreen-ui";
 
 interface Props {
   children: ReactNode;
@@ -21,7 +22,7 @@ class ErrorBoundary extends Component<Props, State> {
   }
   render () {
     if (this.state.hasErrored) {
-      return <img alt='' src='../../assets/404.png' />
+      return <Text>404 ERROR</Text>
     }
     return this.props.children;
   }

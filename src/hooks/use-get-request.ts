@@ -1,4 +1,4 @@
-import { AxiosResponse } from 'axios';
+import { AxiosResponse } from "axios";
 import { useState, useEffect, Dispatch, SetStateAction} from "react";
 
 function useGetRequest <T>(fn: () => Promise<AxiosResponse<T, any>>): [ T, Dispatch<SetStateAction<T>> ]

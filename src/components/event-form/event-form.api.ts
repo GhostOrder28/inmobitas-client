@@ -1,14 +1,19 @@
 import { Dispatch, SetStateAction } from "react";
-import { ValidationError } from "../../http/http.types";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { AgendaEvent } from "../../pages/agenda-page/agenda-page.types";
 import http from "../../http/http";
 import { store } from "../../redux/redux-store";
 import { selectCurrentUserId } from "../../redux/user/user.selectors";
-import { HTTPErrorData } from "../../http/http.types";
 import { UseFormSetError } from "react-hook-form";
 import { handleValidationErrors } from "../../utils/utility-functions/utility-functions";
 import { compareAsc } from "date-fns";
+
+import i18next from "i18next";
+import { initReactI18next } from "react-i18next";
+
+i18next.use(initReactI18next).init()
+
+const { t } = i18next;
 
 const onSubmitEventData = async (
   eventData: AgendaEvent,
@@ -38,21 +43,11 @@ const onSubmitEventData = async (
     } else {
       setEvents(prev => [ ...prev, eventPayload ])
     };
-  } catch (err) {
-    if (axios.isAxiosError(err)) {
-      if (!err.response) throw new Error(`there is an error but it doesn't have a response: ${err}`);
+  } catch (error) {
+    if (!axios.isAxiosError(error)) return console.error(t("nonAxiosError", { ns: 'error' }), error);
 
-      const errorData: HTTPErrorData = err.response.data;
-
-      if (errorData.validationErrors) {
-        handleValidationErrors<AgendaEvent>(eventData, errorData.validationErrors, setError); 
-      } else {
-        throw errorData;
-      }
-    } else {
-      console.error(err)
-    };
-    // setErrors(err as AxiosError<{ validationErrors: ValidationError[] }>);
+    const { data: { validationErrors } } = error.response!!;
+    handleValidationErrors<AgendaEvent>(eventData, validationErrors, setError); 
   }
 };
 

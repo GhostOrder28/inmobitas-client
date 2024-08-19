@@ -1,14 +1,14 @@
-import React, { ReactNode, ElementType } from 'react';
-import { Heading as EvergreenHeading } from 'evergreen-ui';
+import { ReactNode, ElementType } from "react";
+import { Heading as EvergreenHeading, minorScale } from "evergreen-ui";
 
 const H1_FONT_WEIGHT = 800;
 const H2_FONT_WEIGHT = 500;
 
 function getFontWeight (headerType: string) {
   switch (headerType) {
-    case 'h1':
+    case "h1":
       return H1_FONT_WEIGHT;
-    case 'h2':
+    case "h2":
       return H2_FONT_WEIGHT;
     default:
       return H2_FONT_WEIGHT;
@@ -25,7 +25,7 @@ const Heading = ({ type, children }: CustomHeadingProps) => {
     <EvergreenHeading
       is={type as ElementType}
       size={800}
-      margin={20}
+      margin={ minorScale(5) }
       fontWeight={getFontWeight(type)}
     >
       { children }

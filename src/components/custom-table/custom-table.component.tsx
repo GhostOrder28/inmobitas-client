@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState, FC, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { selectCurrentUserId } from '../../redux/user/user.selectors';
+import { selectCurrentUserId } from "../../redux/user/user.selectors";
 import {
   EditIcon,
   CrossIcon,
@@ -13,46 +13,45 @@ import {
   TableHeaderCell,
   Text,
   Pane, 
-  //Pagination
 } from "evergreen-ui";
-import { useTable, usePagination } from 'react-table';
+import { useTable, usePagination } from "react-table";
 
-import useRelativeHeight from '../../hooks/use-relative-height';
+import useRelativeHeight from "../../hooks/use-relative-height";
 import useClientDevice from "../../hooks/use-client-device";
 import useClickOutside from "../../hooks/use-click-outside";
+import { useHighlightRow } from "./custom-table.hooks";
 
-import { buildRoute } from "../../utils/utility-functions/utility-functions";
-import { CustomTableProps, CustomTableColumn, CustomTableRow } from './custom-table.types';
-import CustomTableOption from './custom-table-option';
-import http from '../../http/http';
-import Pagination from '../pagination/pagination.component';
-import { getPageSize } from "./custom-table.utils";
-import ContentSpinner from "../content-spinner/content-spinner.component";
-import { useTranslation } from "react-i18next";
+import { CustomTableProps, CustomTableColumn, CustomTableRow } from "./custom-table.types";
+import CustomTableOption from "./custom-table-option";
+import http from "../../http/http";
+import Pagination from "../pagination/pagination.component";
+import { getPageSize, getItemUrl, handleDeleteItem } from "./custom-table.utils";
 import useWindowDimensions from "../../hooks/use-window-dimensions";
 import { MOBILE_BREAKPOINT_VALUE } from "../../constants/breakpoints.consts";
 import { MOBILE_COLUMN_COUNT } from "./custom-table.consts";
+import { useDispatch } from "react-redux";
+import { setIsLoading, unsetIsLoading } from "../../redux/app/app.actions";
 
 const CustomTable: FC<CustomTableProps> = ({ 
   source, 
   setSource, 
   labels, 
-  detailRouteStructure, 
-  editRouteStructure, 
-  deleteBaseUrl,
   deleteMessage,
+  entity,
+  ...otherProps
 }) => {
   const navigate = useNavigate();
   const sourceListRef = useRef<HTMLDivElement | null>(null);
   const tableRelativeHeight = useRelativeHeight(sourceListRef);
   const userId = useSelector(selectCurrentUserId) as number;
-  const [highlightedRow, setHighlightedRow] = useState<number | null>(null);
+  const [highlightedRow, setHighlightedRow] = useHighlightRow(source);
   const [timeoutId, setTimeoutId] = useState<ReturnType<typeof setTimeout>>();
   const buttonsRef = useRef(null);
   useClickOutside(buttonsRef, () => setHighlightedRow(null));
   const clientDevice = useClientDevice();
-  const [ isLoading, setIsLoading ] = useState<boolean>(false);
+  const dispatch = useDispatch();
   const { windowInnerWidth } = useWindowDimensions();
+  const params = useParams();
 
   const data = useMemo(() => source.map(item => {
     const itemKeys = Object.keys(item);
@@ -65,7 +64,7 @@ const CustomTable: FC<CustomTableProps> = ({
   const columns: CustomTableColumn[] = useMemo(() => {
     if (source.length) {
       const itemKeys = Object.keys(source[0]);
-      const itemProps = itemKeys.filter(prop => !prop.includes('Id'));
+      const itemProps = itemKeys.filter(prop => !prop.includes("Id"));
       
       const columnsArray = itemProps.map((prop, idx) => ({
         Header: labels[idx],
@@ -106,17 +105,6 @@ const CustomTable: FC<CustomTableProps> = ({
     gotoPage,
   } = tableInstance;
 
-  const onDelete = async (userId: number, entityId: number, entityIdentifier: string) => {
-    setIsLoading(true)
-
-    const deletedEntity = await http.delete(`${deleteBaseUrl}/${userId}/${entityId}`);
-    const remainingEntities = source.filter(item => item[entityIdentifier] !== deletedEntity.data)
-    setSource(remainingEntities);
-    setHighlightedRow(null);
-
-    setIsLoading(false);
-  }
-
   useEffect(() => {
     if(tableRelativeHeight) {
       const pageSize = getPageSize(tableRelativeHeight, 64);
@@ -127,18 +115,21 @@ const CustomTable: FC<CustomTableProps> = ({
   const getFlexValues = (idx: number) => idx === columns.length - 1 ? .4 : .45;
 
   return (
-    <Pane position='relative'>
-      { isLoading ?
-        <ContentSpinner waitMessage={ deleteMessage } /> : ''
-      }
-      <Table flex={1} {...getTableProps()}>
-        <TableHead display={'flex'} userSelect={'none'}>
+    <Pane 
+      position="relative" 
+      display="flex" 
+      flexDirection="column" 
+      flexGrow={1}
+      { ...otherProps }
+    >
+      <Table flexGrow={1} {...getTableProps()}>
+        <TableHead display="flex" userSelect="none">
           {
             headerGroups.map(headerGroup => (
               headerGroup.headers.map((column, idx) => (
                 <TableHeaderCell flex={.45} {...column.getHeaderProps()}>
                   {
-                    column.render('Header')
+                    column.render("Header")
                   }
                 </TableHeaderCell>
               ))
@@ -146,34 +137,33 @@ const CustomTable: FC<CustomTableProps> = ({
           }
           <TableHeaderCell flex={.3} />
         </TableHead>
-        <TableBody ref={sourceListRef} height={tableRelativeHeight}>
+        <TableBody ref={sourceListRef}>
           {
             page.map((row: CustomTableRow, rowIdx) => {
               const rowKeys = Object.keys(row.original);
-              const entityIdentifier = rowKeys.find(key => key.includes('Id')) as string; //id is always present, if not then it is an error from the server side, same happems with entityId;
               prepareRow(row)
               return (
                 <TableRow
                   isHighlighted={highlightedRow === rowIdx ? true : false}
-                  color={'#3a3e58'} 
-                  display={'flex'}
-                  cursor={'pointer'}
-                  onMouseOver={ clientDevice === 'desktop' ? () => setHighlightedRow(rowIdx) : undefined }
-                  onMouseLeave={ clientDevice === 'desktop' ? () => setHighlightedRow(null) : undefined }
-                  onTouchStart={ clientDevice === 'touchscreen' ? () => {
+                  color="#3a3e58" 
+                  display="flex"
+                  cursor="pointer"
+                  onMouseOver={ clientDevice === "desktop" ? () => setHighlightedRow(rowIdx) : undefined }
+                  onMouseLeave={ clientDevice === "desktop" ? () => setHighlightedRow(null) : undefined }
+                  onTouchStart={ clientDevice === "touchscreen" ? () => {
                     setTimeoutId(setTimeout(() => setHighlightedRow(rowIdx), 500))
                   } : undefined }
-                  onTouchEnd={ clientDevice === 'touchscreen' ? () => {
+                  onTouchEnd={ clientDevice === "touchscreen" ? () => {
                     clearTimeout(timeoutId)
                   } : undefined }
-                  onTouchMove={ clientDevice === 'touchscreen' ? () => {
+                  onTouchMove={ clientDevice === "touchscreen" ? () => {
                     clearTimeout(timeoutId)
                   } : undefined }
                   onClick={() => {
-                    if (clientDevice === 'touchscreen') {
-                      highlightedRow ? setHighlightedRow(null) : navigate(buildRoute(source[rowIdx], detailRouteStructure))
+                    if (clientDevice === "touchscreen") {
+                      highlightedRow ? setHighlightedRow(null) : navigate(getItemUrl(entity, row, "info"))
                     } else {
-                      navigate(buildRoute(page[rowIdx], detailRouteStructure))
+                      navigate(getItemUrl(entity, row, "info"))
                     }
                    }}
                    {...row.getRowProps()}
@@ -186,7 +176,7 @@ const CustomTable: FC<CustomTableProps> = ({
                         paddingX={idx === row.cells.length - 1 ? 0 : 12}
                       > 
                         {
-                          <Text>{ cell.render('Cell') }</Text> 
+                          <Text>{ cell.render("Cell") }</Text> 
                         }
                       </TableCell>
                     ))
@@ -196,23 +186,23 @@ const CustomTable: FC<CustomTableProps> = ({
                     paddingX={0}
                   >
                     { rowIdx === highlightedRow &&
-                      <Pane ref={buttonsRef} display={'flex'} width={'100%'} height={'100%'}>
+                      <Pane ref={buttonsRef} display="flex" width="100%" height="100%">
                         <CustomTableOption
                           icon={EditIcon}
                           onClick={
                             (e: React.MouseEvent<HTMLDivElement>) => {
                               e.stopPropagation();
-                              navigate(buildRoute(page[rowIdx], editRouteStructure));
+                              navigate(getItemUrl(entity, row, "edit"));
                             } 
                           }
                         />
                         <CustomTableOption
                           icon={CrossIcon}
-                          color={'danger'}
+                          color="danger"
                           onClick={
                             (e: React.MouseEvent<HTMLDivElement>) => {
                               e.stopPropagation();
-                              onDelete(userId, row.original[entityIdentifier], entityIdentifier);
+                              handleDeleteItem(entity, row, deleteMessage, setSource);
                             } 
                           }
                         />
@@ -226,9 +216,9 @@ const CustomTable: FC<CustomTableProps> = ({
         </TableBody>
       </Table>
       <Pane
-        width={'100%'}
-        display={'flex'}
-        justifyContent={'center'}
+        width="100%"
+        display="flex"
+        justifyContent="center"
       >
         <Pagination
           page={state.pageIndex + 1} 

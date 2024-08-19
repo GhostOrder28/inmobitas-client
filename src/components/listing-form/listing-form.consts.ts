@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { initReactI18next } from 'react-i18next';
+import { initReactI18next } from "react-i18next";
 import { CLIENT_FORM_INITIAL_STATE } from "../client-form/client-form.consts";
 import { Listing } from "../../pages/listing-page/listing-page.types";
 
@@ -14,13 +14,13 @@ const LISTING_FORM_INITIAL_STATE: Listing = {
   // presets
   contractTypeId: 1,
   // currencyTypeId: NaN,
-  // currencyName: '',
-  // currencySymbol: '',
+  // currencyName: "",
+  // currencySymbol: "",
   estateTypeId: 1,
 
   // contract
   contractId: NaN,
-  // estatePrice: NaN,
+  // listingPrice: NaN,
   // fee: NaN,
   // signedDate: NaN,
   // startDate: NaN,
@@ -29,14 +29,14 @@ const LISTING_FORM_INITIAL_STATE: Listing = {
   isExclusive: false,
   // isPercentage: false,
 
-  // estate
+  // listing
   estateId: NaN,
-  district: '',
-  neighborhood: '',
-  addressDetails: '',
+  district: "",
+  neighborhood: "",
+  addressDetails: "",
   totalArea: NaN,
   builtArea: NaN,
-  estateDetails: '',
+  estateDetails: "",
 
   // features
   numberOfBedrooms: NaN,
@@ -50,7 +50,7 @@ const LISTING_FORM_INITIAL_STATE: Listing = {
   // client preferences
   childrenAllowed: false,
   petsAllowed: false,
-  ownerPreferencesDetails: '',
+  ownerPreferencesDetails: "",
 }
 
 export {

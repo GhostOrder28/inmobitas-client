@@ -1,6 +1,5 @@
-import React, { useState } from "react";
 import { Pane } from "evergreen-ui";
-import { MenuMode } from '../photo-gallery/photo-gallery.component';
+import { MenuMode } from "../photo-gallery/photo-gallery.types";
 
 type GalleryMenuProps = {
   children: React.ReactNode[];
@@ -15,17 +14,17 @@ const GalleryMenu = ({
 }: GalleryMenuProps) => {
   return (
     <Pane
-      position={"fixed"}
-      display={"flex"}
+      position="fixed"
+      display="flex"
       bottom={menuMode ? -50 : 0}
-      width={width || '100%'}
+      width={width || "100%"}
       height={50}
       zIndex={20}
-      backgroundColor={"#F9FAFC"}
-      transition={"all .5s"}
+      backgroundColor="#F9FAFC"
+      transition="all .5s"
     >
       <Pane
-        display={"flex"}
+        display="flex"
         width="100%"
       >
         { children }

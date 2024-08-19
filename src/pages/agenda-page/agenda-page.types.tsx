@@ -10,19 +10,19 @@ export type AgendaEventFormData = Omit<AgendaEvent, "eventId">;
 export type AgendaTableColumns = [
   {
     Header: string;
-    accessor: 'date';
+    accessor: "date";
   },
   {
     Header: string;
-    accessor: 'time';
+    accessor: "time";
   },
   {
     Header: string;
-    accessor: 'event';
+    accessor: "event";
   },
   {
     Header: string;
-    accessor: 'options';
+    accessor: "options";
   }
 ];
 

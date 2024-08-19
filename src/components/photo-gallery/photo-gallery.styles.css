@@ -1,5 +1,5 @@
 .gallery-img-container::before {
-  content: '';
+  content: "";
   display: block;
   padding-top: 100%;
 }

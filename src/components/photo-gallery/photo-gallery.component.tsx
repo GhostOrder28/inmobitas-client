@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useEffect, useState, useRef } from "react";
+import { Dispatch, SetStateAction, useEffect, useState, useRef } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import ReactDOM from "react-dom";
@@ -16,40 +16,36 @@ import {
 } from "evergreen-ui";
 import { useTranslation } from "react-i18next";
 
-import useRelativeHeight from '../../hooks/use-relative-height';
+import useRelativeHeight from "../../hooks/use-relative-height";
 import useWindowDimensions from "../../hooks/use-window-dimensions";
 
-import { DESKTOP_BREAKPOINT_VALUE } from '../../constants/breakpoints.consts';
+import { DESKTOP_BREAKPOINT_VALUE } from "../../constants/breakpoints.consts";
 import http from "../../http/http";
 import { selectCurrentUserId } from "../../redux/user/user.selectors";
 import GalleryMenu from "../gallery-menu/gallery-menu.component";
 import InnerMenu from "../inner-menu/inner-menu.component";
 import "./photo-gallery.styles.css";
-import { Picture, PictureCategory, PictureCategoryFromPayload } from "../listing-detail/listing-detail.types";
+import { Picture, PictureCategory, PictureCategoryFromPayload } from "../listing-info/listing-info.types";
 import PopupMessage from "../popup-message/popup-message.component";
 import GalleryMenuButton from "../gallery-menu-button/gallery-menu-button.component";
-import GalleryCategorized from "./sub-components/gallery-categorized.component";
-import GalleryUncategorized from "./sub-components/gallery-uncategorized.component";
-import ContentSpinner from '../content-spinner/content-spinner.component';
-import GalleryCategoryButton from './sub-components/gallery-category-button.component';
-import ModalContainer from '../modal-container/modal-container.component';
-import { checkPositions, sortEntities } from '../../utils/utility-functions/utility-functions';
-import { isLastDayOfMonth } from "date-fns";
-
-type PhotoGalleryProps = {
-  generatePresentationFilename: () => string;
-  display: string;
-};
+import GalleryCategory from "./components/gallery-category/gallery-category.component";
+import GalleryUncategorized from "./components/gallery-uncategorized/gallery-uncategorized.component";
+import GalleryCategoryButton from "./components/gallery-category-button/gallery-category-button.component";
+import ModalContainer from "../modal-container/modal-container.component";
+import { checkPositions, sortEntities } from "../../utils/utility-functions/utility-functions";
+import { useDispatch } from "react-redux";
+import { format } from "date-fns";
+import { setIsLoading, unsetIsLoading } from "../../redux/app/app.actions";
 
 type FullScreenProps = {
-  userId: number | undefined; // actually this would never be undefined, but i don't know how to enforce a type in a selector and it returns an optional undefined per default.
+  userId: number | undefined; // actually this would never be undefined, but i don"t know how to enforce a type in a selector and it returns an optional undefined per default.
   fullscreenPicture: Picture;
   setFullscreenPicture: Dispatch<SetStateAction<Picture | null>>;
   cloudinaryPicturesPath: string;
 };
 
-export type IsLoading = 'presentation' | 'upload' | 'deletePictures' | 'deleteCategories' | null;
-export type MenuMode = 'pictures' | 'categories' | null;
+export type IsLoading = "presentation" | "upload" | "deletePictures" | "deleteCategories" | null;
+export type MenuMode = "pictures" | "categories" | null;
 
 const globalContainer = document.getElementById(
   "globalContainer"
@@ -65,11 +61,11 @@ const attachPicturesToCategory = (categories: PictureCategoryFromPayload[], pict
   });
 };
 
-const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryProps) => {
+const PhotoGallery = () => {
   const userId = useSelector(selectCurrentUserId);
-  const { listingid } = useParams();  
-  const cloudinaryPicturesPath = `/inmobitas/u_${userId}/l_${listingid}/pictures`;
-  const cloudRef = useRef(document.createElement('a'));
+  const { estateId } = useParams();  
+  const cloudinaryPicturesPath = `/inmobitas/u_${userId}/l_${estateId}/pictures`;
+  const cloudRef = useRef(document.createElement("a"));
 
   const [ menuMode, setMenuMode ] = useState<MenuMode>(null);
   const [ markedItems, setMarkedItems ] = useState<number[]>([]);
@@ -83,27 +79,29 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
 
   const [ fullscreenPicture, setFullscreenPicture ] = useState<Picture | null>(null);
 
-  const [isLoading, setIsLoading] = useState<IsLoading>(null);
-  const { t } = useTranslation(['ui', 'listing']);
+  const { t } = useTranslation(["ui", "listing"]);
   const [noImages, setNoImages] = useState(false);
   const galleryRef = useRef<HTMLDivElement | null>(null);
   const galleryHeight = useRelativeHeight(galleryRef);
   const { windowInnerWidth } = useWindowDimensions();
   const { colors } = useTheme();
+  const dispatch = useDispatch();
 
-  // useEffect(() => { console.log('categories: ', categories) }, [categories])
+  // useEffect(() => { console.log("categories: ", categories) }, [categories])
 
   useEffect(() => {
     try {
       (async function () {
+        console.log('fetching pictures...');
         const { data: picturesData } = await http.get<Picture[]>(
-          `/pictures/${userId}/${listingid}`
+          `/pictures/${userId}/${estateId}`
         );
 
         const { data: categoriesData } = await http.get<PictureCategoryFromPayload[]>(
-          `/categories/${userId}/${listingid}`
+          `/categories/${userId}/${estateId}`
         );
 
+        console.log('categoriesData: ', categoriesData);
         setPictures(picturesData)
         setCategories(categoriesData)
       })();
@@ -116,17 +114,17 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
   useEffect(() => {
     if (!pictures.length) return;
 
-    const orderedPictures = sortEntities(pictures, 'categoryId');
+    const orderedPictures = sortEntities(pictures, "categoryId");
 
     const groupedCategories = groupCategories(orderedPictures);
 
     const orderedPicturesInsideCategories = groupedCategories.map(cat => {
-      const ordered = sortEntities(cat.pictures, 'picturePosition');
+      const ordered = sortEntities(cat.pictures, "picturePosition");
       return { ...cat, pictures: ordered }
     });
 
     const categoriesWithBadPicturesPositions = orderedPicturesInsideCategories.filter(cat => {
-      const positionsCorrect = checkPositions(cat.pictures, 'picturePosition');
+      const positionsCorrect = checkPositions(cat.pictures, "picturePosition");
       return !positionsCorrect;
     }).map(c => c.categoryId);
 
@@ -144,17 +142,14 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
     };
 
   }, [ pictures ])
-  // useEffect(() => { console.log('pictures', pictures) }, [ pictures ])
-  // useEffect(() => { console.log('categorizedPictures', categorizedPictures) }, [ categorizedPictures ])
-  // useEffect(() => { console.log('uncategorizedPictures', uncategorizedPictures) }, [ uncategorizedPictures ])
 
   useEffect(() => {
-    const orderedCategories = sortEntities(categories, 'categoryPosition');
-    console.log('orderedCategories: ', orderedCategories);
+    const orderedCategories = sortEntities(categories, "categoryPosition");
+    console.log("orderedCategories: ", orderedCategories);
 
     if (categories.length) {
-      const categoriesPositionsCorrect = checkPositions(orderedCategories, 'categoryPosition');
-      console.log('categoriesPositionsCorrect: ', categoriesPositionsCorrect);
+      const categoriesPositionsCorrect = checkPositions(orderedCategories, "categoryPosition");
+      console.log("categoriesPositionsCorrect: ", categoriesPositionsCorrect);
 
       if (!categoriesPositionsCorrect) {
         (async function () {
@@ -165,7 +160,7 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
     } 
 
     const categorized = attachPicturesToCategory(orderedCategories, pictures);
-    console.log('categorized: ', categorized);
+    console.log("categorized: ", categorized);
 
     const uncategorized = pictures.filter(p => !p.categoryId);
 
@@ -189,11 +184,16 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
   };
 
   const submitDeletion = async (entity: Exclude<MenuMode, null>): Promise<void> => {
-    setIsLoading(entity === 'pictures' ? 'deletePictures' : 'deleteCategories');
+    if (entity === "pictures") {
+      dispatch(setIsLoading(t("waitForPictureDelete")))
+    } else {
+      dispatch(setIsLoading(t("waitForCategoryDelete")))
+    };
+
     const res = await Promise.all(
       markedItems.map(id => {
         const deletedEntity = http.delete<number>(
-          `/${entity}/${userId}/${listingid}/${id}`
+          `/${entity}/${userId}/${estateId}/${id}`
         );
         return deletedEntity;
       })
@@ -201,19 +201,19 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
 
     const deletedEntities = res.map((deletedEntity) => deletedEntity.data);
 
-    if (entity === 'pictures') {
+    if (entity === "pictures") {
       const picturesWithoutDeleted = pictures.filter(p => !deletedEntities.some(de => p.pictureId === de));
       setPictures(picturesWithoutDeleted);
     };
 
-    if (entity === 'categories') {
+    if (entity === "categories") {
       const categoriesWithoutDeleted = categories.filter(c => !deletedEntities.some(de => c.categoryId === de));
       setCategories(categoriesWithoutDeleted);
     };
 
     setMenuMode(null);
     setMarkedItems([]);
-    setIsLoading(null);
+    dispatch(unsetIsLoading())
   };
 
   const groupCategories = (orderedEntities: Picture[]) => {
@@ -235,39 +235,39 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
   };
 
   const updateCategoriesPosition = async () => {
-    const { data: { updatedCategories } } = await http.patch(`/categories/${listingid}?update=true`);
+    const { data: { updatedCategories } } = await http.patch(`/categories/${estateId}?update=true`);
     return updatedCategories;
   };
 
   const updatePicturesPosition = async (categoriesToUpdate: (number | undefined)[]) => {
     const queryString = categoriesToUpdate.map(cid => {
       return `categories=${cid}`
-    }).join('&');
+    }).join("&");
 
     const {
       data: {
         updatedPictures 
       } 
-    } = await http.patch<{ updatedPictures: Picture[] }>(`/pictures/${userId}/${listingid}?${queryString}`);
+    } = await http.patch<{ updatedPictures: Picture[] }>(`/pictures/${userId}/${estateId}?${queryString}`);
 
     return updatedPictures;
   };
 
   const generatePresentation = async () => {
     try {
-      if (pictures.length || generatePresentationFilename !== undefined) {
-        setIsLoading('presentation');
-        const res = await http.get(`/presentations/${userId}/${listingid}`, {
-          responseType: 'blob',
+      if (pictures.length) {
+        dispatch(setIsLoading(t("waitForPresentation")))
+        const res = await http.get(`/presentations/${userId}/${estateId}`, {
+          responseType: "blob",
           headers: {
-            'Content-Type': 'application/pdf'
+            "Content-Type": "application/pdf"
           }
         });
-        const url = window.URL.createObjectURL(new Blob([res.data], { type: 'application/pdf' }));
-        cloudRef.current.setAttribute('href', url);
-        cloudRef.current.setAttribute('download', generatePresentationFilename());
+        const url = window.URL.createObjectURL(new Blob([res.data], { type: "application/pdf" }));
+        cloudRef.current.setAttribute("href", url);
+        cloudRef.current.setAttribute("download", "temp_name.pdf");
         cloudRef.current.click()
-        setIsLoading(null);      
+        dispatch(unsetIsLoading())
       } else {
         setNoImages(true);
         setTimeout(() => {
@@ -279,19 +279,35 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
     }
   }
 
+  // const generatePresentationFilename = () => {
+  //   const now = new Date();
+  //   const date = format(now, "P").replaceAll('/', '-');
+  //   const timestamp = format(now, "t");
+  //   if (listing) {
+  //     console.log('listing: ', listing);
+  //     // // this whole process to get the district and neighborhood data is not really good, I need to find a better way to get that data
+  //     // const locationData = listingSpecifications[listingSpecifications.length - 2];
+  //     // console.log(locationData)
+  //     // // WARNING: District and Neighborhood are capitalized because they are being extracted from the returned grouped listing array, these are used as labels and that"s why they are capitalized.
+  //     // const [district, neighborhood] = locationData.items.filter(item => item.label === "District" || item.label === 'Neighborhood');
+  //     // return strParseIn(`${district.value}_${neighborhood.value ? neighborhood.value + "_" : ''}presentation_${date}_${timestamp}.pdf`);
+  //   }
+  //   return `presentation_${date}_${timestamp}.pdf` ;
+  // }
+
   const createNewCategory = async () => {
     try {
       const categoryObj = {
-        name: '',
+        name: "",
         categoryPosition: categories.length + 1
       };
 
       const { data: newCategory } = await http.post<PictureCategoryFromPayload>(
-        `/categories/${userId}/${listingid}`, 
+        `/categories/${userId}/${estateId}`, 
         categoryObj
       );
 
-      setCategories(prev => [ ...prev, { ...newCategory, categoryPictures: [], isNew: true } ])
+      setCategories(prev => [ ...prev, { ...newCategory, categoryPictures: [], newlyCreated: true } ])
     } catch (err) {
       console.error(`there was an error trying to create a category: ${err}`)
     }
@@ -299,9 +315,9 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
 
   return (
     <>
-      <InnerMenu entity='pictures' menuMode={ menuMode }>
+      <InnerMenu entity="pictures" menuMode={ menuMode }>
         <GalleryCategoryButton
-          onClick={ markedItems.length ? () => submitDeletion('pictures') : undefined }
+          onClick={ markedItems.length ? () => submitDeletion("pictures") : undefined }
           icon={ TrashIcon }
           borderColor={ colors.gray500 }
           size={ majorScale(6) }
@@ -317,7 +333,7 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
           size={ majorScale(6) }
         />
       </InnerMenu>
-      <InnerMenu entity='categories' menuMode={ menuMode }>
+      <InnerMenu entity="categories" menuMode={ menuMode }>
         <GalleryCategoryButton
           onClick={ markedItems.length ? () => setShowCategoryDeletionWarning(true) : undefined }
           icon={ TrashIcon }
@@ -338,31 +354,21 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
       <Pane 
         ref={galleryRef}
         height={galleryHeight}
-        display={display}
+        // display={display}
         position={"relative"}
-        overflow={'scroll'}
+        overflow={"scroll"}
       >
-        <PopupMessage message={ t('noImages') } displayCondition={noImages}/>
+        <PopupMessage message={ t("noImages") } displayCondition={noImages}/>
         <Pane position="relative">
-          { isLoading ?
-            <ContentSpinner
-              waitMessage={
-                isLoading === 'presentation' ? t('waitForPresentation') :
-                isLoading === 'upload' ? t('waitForPictureUpload') :
-                isLoading === 'deletePictures' ? t('waitForPictureDelete') :
-                isLoading === 'deleteCategories' ? t('waitForCategoryDelete') : ''
-              }
-            /> : ''
-          }
           { 
             categorizedPictures.map((c, idx) => (
-              <GalleryCategorized
+              <GalleryCategory
                 key={ `category-${c.categoryId}` }
                 categoryId={ c.categoryId }
                 name={ c.name }
                 position={ idx + 1 } // index is zero-based, position is one-based
                 categoryPictures={ c.categoryPictures }
-                isNew={ c.isNew }
+                newlyCreated={ c.newlyCreated }
 
                 menuMode={ menuMode }
                 markedItems={ markedItems }
@@ -372,7 +378,6 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
                 setPictures={ setPictures }
                 setCategories={ setCategories }
                 setFullscreenPicture={ setFullscreenPicture }
-                setIsLoading={ setIsLoading }
               />
             ))
           }
@@ -382,7 +387,6 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
             menuMode={ menuMode }
             markedItems={ markedItems }
             setPictures={ setPictures }
-            setIsLoading={ setIsLoading }
             setFullscreenPicture={ setFullscreenPicture }
             setMenuMode={ setMenuMode }
           />
@@ -411,7 +415,7 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
           fn={createNewCategory}
         />
         { windowInnerWidth > DESKTOP_BREAKPOINT_VALUE &&
-          <GalleryMenuButton Icon={TrashIcon} fn={() => setMenuMode('pictures')}/>
+          <GalleryMenuButton Icon={TrashIcon} fn={() => setMenuMode("pictures")}/>
         }
       </GalleryMenu>
       { showCategoryDeletionWarning ?
@@ -425,8 +429,8 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
             padding={ minorScale(5) }
           >
             <Pane>
-              <Text display="flex" justifyContent="center" size={600}>{ t('categoryDeletionYerOrNo', { ns: 'ui' })}</Text>
-              <Text display="flex" justifyContent="center" size={400}>{ t('picturesWillBeRemoved', { ns: 'ui' }) }</Text>
+              <Text display="flex" justifyContent="center" size={600}>{ t("categoryDeletionYerOrNo", { ns: "ui" })}</Text>
+              <Text display="flex" justifyContent="center" size={400}>{ t("picturesWillBeRemoved", { ns: "ui" }) }</Text>
             </Pane>
             <Pane
               display="flex"
@@ -438,21 +442,21 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
                 onClick={ () => { 
                   setMenuMode(null);
                   setShowCategoryDeletionWarning(false);
-                  submitDeletion('categories')
+                  submitDeletion("categories")
                 } }
               >
-                { t('yesDeleteIt', { ns: 'ui' }) }
+                { t("yesDeleteIt", { ns: "ui" }) }
               </Button>
               <Button 
                 intent="danger" 
                 flex={1}
                 onClick={ () => setShowCategoryDeletionWarning(false) }
               >
-                { t('cancel', { ns: 'ui' }) }
+                { t("cancel", { ns: "ui" }) }
               </Button>
             </Pane>
           </Pane>
-        </ModalContainer> : ''
+        </ModalContainer> : ""
       }
     </>
   );
@@ -464,12 +468,12 @@ const FullScreen = ({
 }: FullScreenProps) =>
   ReactDOM.createPortal(
     <Pane
-      position={"fixed"}
-      display={"flex"}
-      justifyContent={"center"}
-      alignItems={"center"}
-      width={"100vw"}
-      height={"100vh"}
+      position="fixed"
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      width="100vw"
+      height="100vh"
       top={0}
       left={0}
       zIndex={9999}
@@ -482,12 +486,12 @@ const FullScreen = ({
         />
       </Pane>
       <Pane
-        width={"100vw"}
-        height={"100vh"}
-        backgroundColor={"black"}
-        position={"absolute"}
+        width="100vw"
+        height="100vh"
+        backgroundColor="black"
+        position="absolute"
         zIndex={98}
-        cursor={"pointer"}
+        cursor="pointer"
         onClick={() => setFullscreenPicture(null)}
       ></Pane>
     </Pane>,

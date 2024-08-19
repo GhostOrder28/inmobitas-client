@@ -1,6 +1,6 @@
 const SIGN_IN_INITIAL_STATE = {
-  email: '',
-  password: '',
+  email: "",
+  password: "",
 }
 
 export {

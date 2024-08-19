@@ -1,17 +1,17 @@
-import React from 'react';
-import { ClientItem } from '../../pages/clients-page/clients-page.types';
-import { ListingItem } from '../../pages/listings-page/listings-page.types';
-import { Row } from 'react-table';
+import React from "react";
+import { PaneProps } from "evergreen-ui";
+import { ClientItem } from "../../pages/clients-page/clients-page.types";
+import { ListingItem } from "../../pages/listings-page/listings-page.types";
+import { Row } from "react-table";
+import { Entity } from "../../types/global.types";
 
 export type CustomTableProps = {
   source: (ListingItem | ClientItem)[];
   setSource: React.Dispatch<React.SetStateAction<any[]>>;
   labels: string[];
-  detailRouteStructure: string[];
-  editRouteStructure: string[];
-  deleteBaseUrl: string;
-  deleteMessage?: string;
-};
+  deleteMessage: string;
+  entity: Entity;
+} & PaneProps;
 
 export type ItemIds = {
   [index: string]: number;

@@ -1,6 +1,6 @@
-import React, { ReactNode } from 'react';
-import { Pane } from 'evergreen-ui';
-import { MenuMode } from '../photo-gallery/photo-gallery.component';
+import React, { ReactNode } from "react";
+import { Pane } from "evergreen-ui";
+import { MenuMode } from "../photo-gallery/photo-gallery.types";
 
 type PicturesContainerProps = {
   children: ReactNode;
@@ -14,7 +14,7 @@ const PicturesContainer = ({ children, menuMode }: PicturesContainerProps) => (
     position={"relative"}
     zIndex={10}
     width={"100%"}
-    padding={menuMode === 'pictures' ? "1.5px" : ""}
+    padding={menuMode === "pictures" ? "1.5px" : ""}
     transition={"all .3s"}
   >
     { children }
