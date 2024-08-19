@@ -4,6 +4,7 @@ import {
   Button, 
   Pane, 
   Heading, 
+  minorScale
 } from "evergreen-ui";
 import { AgendaEvent } from "../../pages/agenda-page/agenda-page.types";
 import useClickOutside from "../../hooks/use-click-outside";
@@ -46,6 +47,8 @@ const EventForm: FC<EventFormProps> = ({ currentEvent, setCurrentEvent, setEvent
     <Pane width={350} ref={formRef}>
       <Form 
         onSubmit={handleSubmit((formData) => onSubmitEventData(formData, setEvents, setError))} 
+        paddingX={ minorScale(5) }
+        gap={ minorScale(5) }
       >
         <Heading size={800}>{ currentEvent ? t("editEvent") : t("newEvent") }</Heading>
         <Input name="title" type="text" placeholder={ t("eventTitle") + " *" } { ...inputCommonProps } />

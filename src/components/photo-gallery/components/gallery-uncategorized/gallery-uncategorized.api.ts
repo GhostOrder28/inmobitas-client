@@ -3,7 +3,7 @@ import { store } from "../../../../redux/redux-store";
 import { setIsLoading, unsetIsLoading } from "../../../../redux/app/app.actions";
 import { selectCurrentUserId } from "../../../../redux/user/user.selectors";
 import { InvalidIdentifierError } from "../../../../errors/auth.errors";
-import { Picture } from "../../../listing-detail/listing-detail.types";
+import { Picture } from "../../../listing-info/listing-info.types";
 import { pictureUploader } from "../../../../utils/utility-functions/utility-functions";
 import { signOutWithError } from "../../../../redux/user/user.actions";
 
@@ -17,16 +17,16 @@ const { dispatch } = store;
 
 const onUpload = async (
   e: ChangeEvent<HTMLInputElement>, 
-  listingId: number,
+  estateId: number,
   setPictures: Dispatch<SetStateAction<Picture[]>>,
   currentPicturesLength: number,
 ) => {
   try {
-    if (!listingId) throw new InvalidIdentifierError(t("noListingIdError"));
+    if (!estateId) throw new InvalidIdentifierError(t("noListingIdError"));
 
     dispatch(setIsLoading(t("waitForPictureUpload", { ns: 'ui' })))
     
-    const newPictures = await pictureUploader(e, Number(listingId), currentPicturesLength);
+    const newPictures = await pictureUploader(e, Number(estateId), currentPicturesLength);
     if (!newPictures) throw new Error(t("picturesIsUndefinedError"));
 
     setPictures(prev => [ ...prev, ...newPictures ])

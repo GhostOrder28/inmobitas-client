@@ -1,4 +1,5 @@
 import { useState, useEffect, MutableRefObject, FC } from "react";
+import useWindowDimensions from "./use-window-dimensions";
 
 const paginationSpace = 50;
 
@@ -15,6 +16,7 @@ type RelativeHeightOptions = {
 const useRelativeHeight: RelativeHeight = (ref, options) => {
 
   const [componentHeight, setComponentHeight] = useState<number>();
+  const { windowInnerHeight } = useWindowDimensions();
   const calculateRelativeHeight = () => {
     if (ref?.current) {
       let height = 0;
@@ -31,10 +33,10 @@ const useRelativeHeight: RelativeHeight = (ref, options) => {
 
   useEffect(() => {
     calculateRelativeHeight();
-    window.addEventListener("resize", calculateRelativeHeight);
-    return () => window.removeEventListener("resize", calculateRelativeHeight);
+    // window.addEventListener("resize", calculateRelativeHeight);
+    // return () => window.removeEventListener("resize", calculateRelativeHeight);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [ windowInnerHeight ]);
 
   useEffect(() => {
     calculateRelativeHeight();

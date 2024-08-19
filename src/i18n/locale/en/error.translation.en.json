@@ -7,5 +7,5 @@
   "unexpectedError": "Unexpected Axios error occurred.",
   "nonAxiosError": "A non-axios error occurred.",
   "contactTheAdmin": "If this issue persist please communicate with the administrator.",
-  "emptyInputType": "Input type is empty"
+  "emptyInputType": "This component requires a type prop"
 }

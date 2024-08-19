@@ -34,7 +34,7 @@ const Navigation = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation(["ui", "listing", "agenda"]);
   const { windowInnerWidth } = useWindowDimensions();
-  const [ appWidth, appHeight ] = useCalculateAppSize();
+  const { appWidth, appHeight } = useCalculateAppSize();
 
   const signOut = () => {
     dispatch(userSignOutStart(http));

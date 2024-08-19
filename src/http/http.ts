@@ -1,6 +1,7 @@
 import axios, { AxiosError } from "axios"; 
 import { store } from "../redux/redux-store";
 import { signOutSuccess, signOutWithError } from "../redux/user/user.actions";
+import { unsetIsLoading } from "../redux/app/app.actions";
 import { AxiosResponse } from "axios";
 import { HTTPErrorData } from "./http.types";
 import { toaster } from "evergreen-ui";
@@ -25,7 +26,12 @@ http.interceptors.response.use<AxiosResponse | HTTPErrorData>(
   },
   function (error: AxiosError<HTTPErrorData> | Error) {
     if (!axios.isAxiosError(error)) return console.error(t("nonAxiosError", { ns: 'error' }));
-    if (!error.response) return console.error(t("noResponseError", { ns: 'error' }), error);
+    if (!error.response) {
+      console.error(t("noResponseError", { ns: 'error' }), error)
+      store.dispatch(signOutSuccess())
+      store.dispatch(unsetIsLoading())
+      return;
+    };
 
     const { response: { data: d } } = error;
 

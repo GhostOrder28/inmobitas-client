@@ -54,9 +54,7 @@ const ClientsPage = () => {
             t("name"),
             t("phone"),
           ]}
-          detailRouteStructure={["clientdetail", 'clientId']}
-          editRouteStructure={["editclient", 'clientId']}
-          deleteBaseUrl={"/clients"}
+          entity="client"
           deleteMessage={ t("waitForClientDelete", { ns: 'ui' }) }
         /> : ""
       }

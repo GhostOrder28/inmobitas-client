@@ -5,13 +5,11 @@ import useWindowDimensions from "./use-window-dimensions";
 import { DESKTOP_BREAKPOINT_VALUE } from "../constants/breakpoints.consts";
 import { DESKTOP_VIEW_WIDTH, DEFAULT_WIDTH, NAVBAR_HEIGHT } from "../constants/sizes.consts";
 
-const useCalculateAppSize = (): [ string | number, number ] => {
+const useCalculateAppSize = ()  => {
   const { windowInnerWidth, windowInnerHeight } = useWindowDimensions();
   const [ appWidth, setAppWidth ] = useState<number | string>("100%");
   const [ appHeight, setAppHeight ] = useState<number>(0);
   const isDesktop = useMediaQuery(`(min-width: ${ DESKTOP_BREAKPOINT_VALUE }px)`);
-  // const isTablet = useMediaQuery("(min-width:768px)");
-  // const isMobile = useMediaQuery("(min-width:480px)");
   
   useEffect(() => {
     if (isDesktop) {
@@ -25,7 +23,7 @@ const useCalculateAppSize = (): [ string | number, number ] => {
     setAppHeight(windowInnerHeight - NAVBAR_HEIGHT)
   }, [ windowInnerHeight ])
 
-  return [ appWidth, appHeight ];
+  return { appWidth, appHeight };
 }
 
 export default useCalculateAppSize;

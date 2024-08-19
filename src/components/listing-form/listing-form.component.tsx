@@ -10,6 +10,7 @@ import ContractTypeBlock from "./components/contract-type-block.component";
 import FormBlock from "./components/form-block.component";
 import FormSubmit from "../form-submit/form-submit.component";
 import FieldErrorMessage from "../field-error-message/field-error-message.component";
+import PageContainer from "../page-container/page-container";
 
 import { Presets, Listing } from "../../pages/listing-page/listing-page.types";
 
@@ -18,17 +19,16 @@ import { onSubmitListingData } from "./listing-form.api";
 import { useResetOnPathChange } from "./listing-form.utils";
 import "./listing-form.styles.css";
 
-import useCalculateAppSize from "../../hooks/use-calculate-app-size";
 import useGenerateForm from "../../hooks/use-generate-form";
 import Form from "../form/form.component";
 
 type ListingFormProps = {
-  dataPresets: Presets | undefined;
+  presets: Presets | undefined;
   listing?: Listing | undefined;
-  setListing: Dispatch<SetStateAction<Listing | undefined>>;
+  setListing?: Dispatch<SetStateAction<Listing | undefined>>;
 };
 
-const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => {
+const ListingForm = ({ presets, listing, setListing }: ListingFormProps) => {
   
   const location = useLocation();
   const { t } = useTranslation(["listing", "client", "ui", "error"]);
@@ -40,12 +40,11 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
     formState: { errors },
     inputCommonProps, 
     controlledCommonProps 
-  } = useGenerateForm<Listing>(LISTING_FORM_INITIAL_STATE, listing);
+  } = useGenerateForm<Listing>(LISTING_FORM_INITIAL_STATE, listing || LISTING_FORM_INITIAL_STATE);
 
   useResetOnPathChange<Listing>(reset, LISTING_FORM_INITIAL_STATE)
 
   const isDesktop = useMediaQuery(`(min-width: ${DESKTOP_BREAKPOINT_VALUE}px)`);
-  const [ _, appHeight ] = useCalculateAppSize();
   const [selectedMode, setSelectedMode] = useState<number>(1);
   const tabs = useMemo(() => [
     t("basic", { ns: "listing" }), 
@@ -53,12 +52,7 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
   ], [])
 
   return (
-    <Pane 
-      display="flex" 
-      flexDirection="column"
-      height={ appHeight }
-      marginX="auto" 
-    >
+    <>
       <Tablist display="flex" className="tablist">
         { tabs.map((tab, index) => (
           <Tab
@@ -75,7 +69,7 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
       </Tablist>
       <Form
         id="listing-form"
-        onSubmit={handleSubmit(listingData => onSubmitListingData(listingData, setListing, setError))}
+        onSubmit={handleSubmit(data => onSubmitListingData(setError, data, setListing))}
         flexDirection={ isDesktop ? "row" : "column" }
         gap={minorScale(8)}
       >
@@ -95,7 +89,7 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
           </FormBlock>
           <FormBlock title={ t("contract") }>
             <ContractTypeBlock 
-              selectOptions={ dataPresets?.contractTypes }
+              selectOptions={ presets?.contractTypes }
               { ...controlledCommonProps }
             />
           </FormBlock>
@@ -110,12 +104,12 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
           }
         </Pane>
         <Pane flex={1}>
-          <FormBlock title={ t("estate") }>
+          <FormBlock title={ t("listing") }>
             <Input 
               name="estateTypeId" 
               type="select" 
               label={ t("estateType") } 
-              selectOptions={ dataPresets?.estateTypes } 
+              selectOptions={ presets?.estateTypes } 
               optionLabelKey="estateName" 
               optionValueKey="estateTypeId"
               { ...inputCommonProps }
@@ -150,7 +144,7 @@ const ListingForm = ({ dataPresets, listing, setListing }: ListingFormProps) => 
         text={ location.pathname === "/newlisting" ? t("addNewListing") : t("commitChanges")  } 
         form="listing-form"
       />
-    </Pane>
+    </>
   );
 };
 

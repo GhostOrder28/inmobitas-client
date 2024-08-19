@@ -16,7 +16,7 @@ const ListingsPage = () => {
   const [listings, setListings] = useState<ListingItem[]>([]);
   const [noListings, setNoListings] = useState<boolean>(false);
   const userId = useSelector(selectCurrentUserId);
-  const { t } = useTranslation(["listing", 'ui']);
+  const { t } = useTranslation([ "ui" ]);
 
   useEffect(() => {
     (async function () {
@@ -37,8 +37,8 @@ const ListingsPage = () => {
     <Pane>
       { noListings &&
         <NoDataMessage
-          messageText={t("noListings", { ns: 'ui' }) + ', '}
-          linkText={t("startAddingOne", { ns: 'ui' })}
+          messageText={t("noListings") + ', '}
+          linkText={t("startAddingOne")}
           url={"/newlisting"}
         /> 
       }
@@ -48,10 +48,8 @@ const ListingsPage = () => {
           source={ listings }
           setSource={setListings}
           labels={ LABELS }
-          detailRouteStructure={["listingdetail", 'clientId', 'estateId']}
-          editRouteStructure={["editlisting", 'clientId', 'estateId']}
-          deleteBaseUrl={"/listings"}
-          deleteMessage={ t("waitForListingDelete", { ns: 'ui' }) }
+          entity="listing"
+          deleteMessage={ t("waitForListingDelete") }
         /> : ""
       }
     </Pane>

@@ -10,6 +10,6 @@ export type ClientListing = {
   estateId: number;
   district: string;
   neighborhood: string; 
-  estatePrice: number;
+  listingPrice: number;
   currencyTypeId: number;
 }

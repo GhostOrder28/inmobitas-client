@@ -1,26 +1,25 @@
-import { useEffect, useState } from "react"; 
+import { useEffect, useState, useCallback } from "react"; 
 
 type WindowDimensions = {
   windowInnerWidth: number;
   windowInnerHeight: number;
 }
 
+
 const useWindowDimensions = () => {
   const [windowDimensions, setWindowDimensions] = useState<WindowDimensions>({ windowInnerWidth: window.innerWidth, windowInnerHeight: window.innerHeight });
+
+  const getWindowDimensions = useCallback(() => {
+    setWindowDimensions({
+      windowInnerWidth: window.innerWidth,
+      windowInnerHeight: window.innerHeight
+    })
+  }, []);
+
   useEffect(() => {
-    window.addEventListener("resize", () => {
-      setWindowDimensions({
-        windowInnerWidth: window.innerWidth,
-        windowInnerHeight: window.innerHeight
-      })
-    });
+    window.addEventListener("resize", getWindowDimensions);
     return () => {
-    window.removeEventListener("resize", () => {
-      setWindowDimensions({
-        windowInnerWidth: window.innerWidth,
-        windowInnerHeight: window.innerHeight
-      })
-    });
+    window.removeEventListener("resize", getWindowDimensions);
     }
   }, []);
 

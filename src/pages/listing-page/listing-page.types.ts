@@ -15,13 +15,11 @@ export type Presets = {
 // }
 
 export type ContractPreset = {
-  // [index: string]: number | string;
   contractTypeId: number;
   contractName: string;
 }
 
 export type EstatePreset = {
-  // [index: string]: number | string;
   estateTypeId: number;
   estateName: string;
 }
@@ -29,7 +27,7 @@ export type EstatePreset = {
 export type Contract = {
   // [index: string]: number | boolean;
   contractId: number;
-  // estatePrice: number;
+  // listingPrice: number;
   // fee: number;
   // signedDate: number;
   // startDate: number;
@@ -39,15 +37,6 @@ export type Contract = {
   // isPercentage: boolean;
 } & Pick<ContractPreset, "contractTypeId">
 
-export type Estate = {
-  estateId: number;
-  district: string;
-  neighborhood: string;
-  addressDetails: string;
-  totalArea: number;
-  builtArea: number;
-  estateDetails: string;
-} & Pick<EstatePreset, "estateTypeId">
 
 export type Features = {
   numberOfBedrooms: number;
@@ -70,6 +59,16 @@ export type ClientPreferences = {
   petsAllowed: boolean;
   ownerPreferencesDetails: string;
 }
+
+export type Estate = {
+  estateId: number;
+  district: string;
+  neighborhood: string;
+  addressDetails: string;
+  totalArea: number;
+  builtArea: number;
+  estateDetails: string;
+} & Pick<EstatePreset, "estateTypeId">
 
 // in listing-details those partial props are not partial but always expected
 // is only in liting-form that those props are partial, but I don"t know how

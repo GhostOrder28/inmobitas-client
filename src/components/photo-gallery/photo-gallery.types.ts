@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
-import { Picture } from "../listing-detail/listing-detail.types"
+import { Picture } from "../listing-info/listing-info.types"
 
 export type MenuMode = "pictures" | "categories" | null;
 

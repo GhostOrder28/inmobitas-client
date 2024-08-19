@@ -25,7 +25,7 @@ import { selectCurrentUserId } from "../../redux/user/user.selectors";
 import GalleryMenu from "../gallery-menu/gallery-menu.component";
 import InnerMenu from "../inner-menu/inner-menu.component";
 import "./photo-gallery.styles.css";
-import { Picture, PictureCategory, PictureCategoryFromPayload } from "../listing-detail/listing-detail.types";
+import { Picture, PictureCategory, PictureCategoryFromPayload } from "../listing-info/listing-info.types";
 import PopupMessage from "../popup-message/popup-message.component";
 import GalleryMenuButton from "../gallery-menu-button/gallery-menu-button.component";
 import GalleryCategory from "./components/gallery-category/gallery-category.component";
@@ -34,13 +34,8 @@ import GalleryCategoryButton from "./components/gallery-category-button/gallery-
 import ModalContainer from "../modal-container/modal-container.component";
 import { checkPositions, sortEntities } from "../../utils/utility-functions/utility-functions";
 import { useDispatch } from "react-redux";
-import { isLastDayOfMonth } from "date-fns";
+import { format } from "date-fns";
 import { setIsLoading, unsetIsLoading } from "../../redux/app/app.actions";
-
-type PhotoGalleryProps = {
-  generatePresentationFilename: () => string;
-  display: string;
-};
 
 type FullScreenProps = {
   userId: number | undefined; // actually this would never be undefined, but i don"t know how to enforce a type in a selector and it returns an optional undefined per default.
@@ -66,10 +61,10 @@ const attachPicturesToCategory = (categories: PictureCategoryFromPayload[], pict
   });
 };
 
-const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryProps) => {
+const PhotoGallery = () => {
   const userId = useSelector(selectCurrentUserId);
-  const { listingId } = useParams();  
-  const cloudinaryPicturesPath = `/inmobitas/u_${userId}/l_${listingId}/pictures`;
+  const { estateId } = useParams();  
+  const cloudinaryPicturesPath = `/inmobitas/u_${userId}/l_${estateId}/pictures`;
   const cloudRef = useRef(document.createElement("a"));
 
   const [ menuMode, setMenuMode ] = useState<MenuMode>(null);
@@ -99,11 +94,11 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
       (async function () {
         console.log('fetching pictures...');
         const { data: picturesData } = await http.get<Picture[]>(
-          `/pictures/${userId}/${listingId}`
+          `/pictures/${userId}/${estateId}`
         );
 
         const { data: categoriesData } = await http.get<PictureCategoryFromPayload[]>(
-          `/categories/${userId}/${listingId}`
+          `/categories/${userId}/${estateId}`
         );
 
         console.log('categoriesData: ', categoriesData);
@@ -198,7 +193,7 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
     const res = await Promise.all(
       markedItems.map(id => {
         const deletedEntity = http.delete<number>(
-          `/${entity}/${userId}/${listingId}/${id}`
+          `/${entity}/${userId}/${estateId}/${id}`
         );
         return deletedEntity;
       })
@@ -240,7 +235,7 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
   };
 
   const updateCategoriesPosition = async () => {
-    const { data: { updatedCategories } } = await http.patch(`/categories/${listingId}?update=true`);
+    const { data: { updatedCategories } } = await http.patch(`/categories/${estateId}?update=true`);
     return updatedCategories;
   };
 
@@ -253,16 +248,16 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
       data: {
         updatedPictures 
       } 
-    } = await http.patch<{ updatedPictures: Picture[] }>(`/pictures/${userId}/${listingId}?${queryString}`);
+    } = await http.patch<{ updatedPictures: Picture[] }>(`/pictures/${userId}/${estateId}?${queryString}`);
 
     return updatedPictures;
   };
 
   const generatePresentation = async () => {
     try {
-      if (pictures.length || generatePresentationFilename !== undefined) {
+      if (pictures.length) {
         dispatch(setIsLoading(t("waitForPresentation")))
-        const res = await http.get(`/presentations/${userId}/${listingId}`, {
+        const res = await http.get(`/presentations/${userId}/${estateId}`, {
           responseType: "blob",
           headers: {
             "Content-Type": "application/pdf"
@@ -270,7 +265,7 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
         });
         const url = window.URL.createObjectURL(new Blob([res.data], { type: "application/pdf" }));
         cloudRef.current.setAttribute("href", url);
-        cloudRef.current.setAttribute("download", generatePresentationFilename());
+        cloudRef.current.setAttribute("download", "temp_name.pdf");
         cloudRef.current.click()
         dispatch(unsetIsLoading())
       } else {
@@ -284,6 +279,22 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
     }
   }
 
+  // const generatePresentationFilename = () => {
+  //   const now = new Date();
+  //   const date = format(now, "P").replaceAll('/', '-');
+  //   const timestamp = format(now, "t");
+  //   if (listing) {
+  //     console.log('listing: ', listing);
+  //     // // this whole process to get the district and neighborhood data is not really good, I need to find a better way to get that data
+  //     // const locationData = listingSpecifications[listingSpecifications.length - 2];
+  //     // console.log(locationData)
+  //     // // WARNING: District and Neighborhood are capitalized because they are being extracted from the returned grouped listing array, these are used as labels and that"s why they are capitalized.
+  //     // const [district, neighborhood] = locationData.items.filter(item => item.label === "District" || item.label === 'Neighborhood');
+  //     // return strParseIn(`${district.value}_${neighborhood.value ? neighborhood.value + "_" : ''}presentation_${date}_${timestamp}.pdf`);
+  //   }
+  //   return `presentation_${date}_${timestamp}.pdf` ;
+  // }
+
   const createNewCategory = async () => {
     try {
       const categoryObj = {
@@ -292,7 +303,7 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
       };
 
       const { data: newCategory } = await http.post<PictureCategoryFromPayload>(
-        `/categories/${userId}/${listingId}`, 
+        `/categories/${userId}/${estateId}`, 
         categoryObj
       );
 
@@ -343,7 +354,7 @@ const PhotoGallery = ({ display, generatePresentationFilename }: PhotoGalleryPro
       <Pane 
         ref={galleryRef}
         height={galleryHeight}
-        display={display}
+        // display={display}
         position={"relative"}
         overflow={"scroll"}
       >

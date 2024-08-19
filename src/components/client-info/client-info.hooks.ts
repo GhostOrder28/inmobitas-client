@@ -1,6 +1,6 @@
 import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { ListingItem } from "../../pages/listings-page/listings-page.types";
-import { getClientListings } from "./client-detail.api";
+import { getClientListings } from "./client-info.api";
 
 const useGetClientListings = (clientId: string | undefined): [ ListingItem[], Dispatch<SetStateAction<ListingItem[]>> ] => {
   const [ clientListings, setClientListings ] = useState<ListingItem[]>([]);

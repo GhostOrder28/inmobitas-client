@@ -20,7 +20,7 @@ const LISTING_FORM_INITIAL_STATE: Listing = {
 
   // contract
   contractId: NaN,
-  // estatePrice: NaN,
+  // listingPrice: NaN,
   // fee: NaN,
   // signedDate: NaN,
   // startDate: NaN,
@@ -29,7 +29,7 @@ const LISTING_FORM_INITIAL_STATE: Listing = {
   isExclusive: false,
   // isPercentage: false,
 
-  // estate
+  // listing
   estateId: NaN,
   district: "",
   neighborhood: "",

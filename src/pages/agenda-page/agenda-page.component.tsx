@@ -41,6 +41,7 @@ import CustomTableOption from "../../components/custom-table/custom-table-option
 import useOrientation from "../../hooks/use-orientation";
 import { getPageSize } from "../../components/custom-table/custom-table.utils";
 import { EVENT_FORM_INITIAL_STATE } from "../../components/event-form/event-form.consts";
+import useCalculateAppSize from "../../hooks/use-calculate-app-size";
 
 const views = ["month", 'week', 'day', 'today'];
 const rowHeight = 50;
@@ -68,6 +69,7 @@ const AgendaPage = () => {
   const orientation = useOrientation();
   const clientDevice = useClientDevice();
   const [timeoutId, setTimeoutId] = useState<ReturnType<typeof setTimeout>>();
+  const { appHeight } = useCalculateAppSize();
 
   const requestEventsData = useCallback(async () => {
     const currentCalendarYear = getYear(currentDate);
@@ -198,7 +200,12 @@ const AgendaPage = () => {
   }, [ events ])
 
   return (
-    <Pane>
+    <Pane
+      display="flex" 
+      flexDirection="column"
+      height={ appHeight }
+      marginX="auto" 
+    >
       <Pane paddingX={20} flex={1}>
         <AgendaHeader
           currentDate={currentDate}

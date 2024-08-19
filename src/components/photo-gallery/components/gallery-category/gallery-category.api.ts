@@ -2,13 +2,13 @@ import { Dispatch, SetStateAction, ChangeEventHandler, ChangeEvent } from "react
 import http from "../../../../http/http";
 import axios from "axios";
 import { GalleryCategoryForm } from "./gallery-category.types";
-import { PictureCategoryFromPayload } from "../../../listing-detail/listing-detail.types";
+import { PictureCategoryFromPayload } from "../../../listing-info/listing-info.types";
 import { handleValidationErrors } from "../../../../utils/utility-functions/utility-functions";
 import { UseFormSetError } from "react-hook-form";
 import { store } from "../../../../redux/redux-store";
 import { selectCurrentUserId } from "../../../../redux/user/user.selectors";
 import { InvalidIdentifierError } from "../../../../errors/auth.errors";
-import { Picture } from "../../../listing-detail/listing-detail.types";
+import { Picture } from "../../../listing-info/listing-info.types";
 import { pictureUploader } from "../../../../utils/utility-functions/utility-functions";
 import { signOutWithError } from "../../../../redux/user/user.actions";
 import { setIsLoading, unsetIsLoading } from "../../../../redux/app/app.actions";
@@ -56,17 +56,17 @@ const updateName = async (
 
 const onUpload = async (
   e: ChangeEvent<HTMLInputElement>, 
-  listingId: number,
+  estateId: number,
   setPictures: Dispatch<SetStateAction<Picture[]>>,
   currentPicturesLength: number,
   categoryId: number,
 ) => {
   try {
-    if (!listingId) throw new InvalidIdentifierError(t("noListingIdError"));
+    if (!estateId) throw new InvalidIdentifierError(t("noListingIdError"));
 
     dispatch(setIsLoading(t("waitForPictureUpload", { ns: "ui" })))
 
-    const newPictures = await pictureUploader(e, listingId, currentPicturesLength, categoryId);
+    const newPictures = await pictureUploader(e, estateId, currentPicturesLength, categoryId);
     if (!newPictures) throw new UploadError(t("picturesUploadError", { ns: "error" }));
 
     setPictures(prev => [ ...prev, ...newPictures ])

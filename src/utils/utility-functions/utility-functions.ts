@@ -5,7 +5,7 @@ import { ValidationError } from "../../http/http.types";
 import { AnyAction } from "redux";
 import { ItemIds } from "../../components/custom-table/custom-table.types";
 import { RouteSource, Uncertain } from "../utility-types";
-import { Picture } from "../../components/listing-detail/listing-detail.types";
+import { Picture } from "../../components/listing-info/listing-info.types";
 import { ContractPreset, EstatePreset } from "../../pages/listing-page/listing-page.types";
 import { FormState, UseFormSetError, FieldErrors } from "react-hook-form";
 import { Matchable, FormattedError, Preset } from "./utility-functions.type";
@@ -26,19 +26,9 @@ export const parseCamellCase = (str: string) => {
   return parsedStr;
 }
 
-export const buildRoute = (source: RouteSource, structure: string[]) => {
-  if (source.original) source = source.original
-  const arrayFromItemIds = Object.keys(source).filter(prop => prop.includes("Id"));
-  const itemParamsIds: ItemIds = arrayFromItemIds.reduce((acc, curr) => {
-    return { ...acc, [curr]: source[curr] }
-  }, {});
-  console.log(itemParamsIds)
-
-  const detailUrl = structure.reduce((acc, curr) => {
-    if (structure[0] === curr) return "/" + curr;
-    return acc + "/" + itemParamsIds[curr]
-  }, "");
-  return detailUrl;
+export const getPathLastFragment = (pathname: string) => {
+  const fragments = pathname.split("/");
+  return fragments[fragments.length - 1];
 }
 
 // this is not being used anywhere
@@ -48,14 +38,14 @@ export const buildRoute = (source: RouteSource, structure: string[]) => {
 
 export const pictureUploader = async (
   e: ChangeEvent<HTMLInputElement>, 
-  listingId: number, 
+  estateId: number, 
   currentPicturesLength: number,
   categoryId?: number, 
 ) => {
   const filesToUpload = e.target.files ? [...e.target.files] : [];
   try {
     const userId = selectCurrentUserId(store.getState());
-    await http.get(`/checkverified/${userId}/${listingId}/${filesToUpload.length}`);
+    await http.get(`/checkverified/${userId}/${estateId}/${filesToUpload.length}`);
     const uploadedFiles = await Promise.all<{ data: Picture }>(
       filesToUpload.map((file: File, idx) => {
         const newPicturePosition = currentPicturesLength + (idx + 1);
@@ -65,7 +55,7 @@ export const pictureUploader = async (
         formData.append("categoryId", String(categoryId));
         formData.append("position", String(newPicturePosition));
 
-        return http.post(`/pictures/${userId}/${listingId}`, formData);
+        return http.post(`/pictures/${userId}/${estateId}`, formData);
       })
     );
     const newPictures = uploadedFiles.map((file) => file.data);
@@ -99,15 +89,6 @@ export function sortEntities <O extends { [key: string]: any }>(arr: O[], key: s
   return clonedArr;
 };
 
-// Non redux "selectors"
-
-// export const selectValidationErrMsg = (errObj: AxiosError<{ validationErrors: ValidationError[] }> | undefined, field: string): string | undefined => {  
-//   const error = errObj?.response?.data.validationErrors.find (
-//     validationError => validationError.context.key === field
-//   );
-//   return error?.message;
-// };
-
 export function handleValidationErrors <F>(formData: Uncertain<F>, rawErrors: ValidationError[], setter: UseFormSetError<F>): void 
 export function handleValidationErrors <F>(formData: Uncertain<F>, rawErrors: ValidationError[]): FormattedError[]
 export function handleValidationErrors <F>(formData: Uncertain<F>, rawErrors: ValidationError[], setter?: UseFormSetError<F>): FormattedError[] | void {
@@ -131,7 +112,6 @@ export function handleValidationErrors <F>(formData: Uncertain<F>, rawErrors: Va
     return errors;
   };
 }
-
 
 export const presetSelector = <P extends Preset>(preset: P[], presetId: number): P => {
   const selection = preset.find(item => {

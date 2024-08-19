@@ -7,3 +7,4 @@ import { AgendaEvent } from "../pages/agenda-page/agenda-page.types";
 
 export type Forms = [ Listing, Client, SignInData, AgendaEvent ]
 export type FormErrors = OneOf<[ FieldErrors<Client>, FieldErrors<Listing>, FieldErrors<AgendaEvent> ]>
+export type Entity = "client" | "listing";

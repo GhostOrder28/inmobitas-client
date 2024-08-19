@@ -34,7 +34,7 @@ const userPersistConfig = {
 //   storage: localStorage,
 // };
 
-const rootReducer = combineReducers({
+export const rootReducer = combineReducers({
   user: persistReducer(userPersistConfig, userReducer),
   app: appReducer,
 });

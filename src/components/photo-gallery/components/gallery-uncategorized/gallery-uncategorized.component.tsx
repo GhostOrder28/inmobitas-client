@@ -25,7 +25,7 @@ const GalleryUncategorized = ({
   setMenuMode,
 }: Uncategorized) => {
   const timeout = useRef<NodeJS.Timeout>();
-  const { listingId } = useParams();
+  const { estateId } = useParams();
   const { t } = useTranslation(["listing"]);
   const { colors } = useTheme();
 
@@ -56,7 +56,7 @@ const GalleryUncategorized = ({
                   id={ `upload-btn-uncategorized` }
                   className="upload-btn"
                   type="file"
-                  onChange={(e) => onUpload(e, Number(listingId!!), setPictures, categoryPictures.length)}
+                  onChange={(e) => onUpload(e, Number(estateId!!), setPictures, categoryPictures.length)}
                   multiple
                   accept="image/*"
                 />

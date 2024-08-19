@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from "react";
-import { Picture } from "../../listing-detail/listing-detail.types";
-import { PictureCategory, PictureCategoryFromPayload } from "../../listing-detail/listing-detail.types";
+import { Picture } from "../../listing-info/listing-info.types";
+import { PictureCategory, PictureCategoryFromPayload } from "../../listing-info/listing-info.types";
 import { MenuMode } from "../photo-gallery.types";
 import { TextInput } from "evergreen-ui";
 

@@ -43,7 +43,7 @@ const GalleryCategory = ({
   const [ editMode, setEditMode ] = useState<boolean>(false);
   const timeout = useRef<NodeJS.Timeout>();
   const categoryTouchTimeout = useRef<NodeJS.Timeout>();
-  const { listingId } = useParams();
+  const { estateId } = useParams();
   const { t } = useTranslation(["error", "ui"]);
   const { colors } = useTheme();
 
@@ -115,7 +115,7 @@ const GalleryCategory = ({
                       id={ `upload-btn-${categoryId}` }
                       className="upload-btn"
                       type="file"
-                      onChange={(e) => onUpload(e, Number(listingId!!), setPictures, categoryPictures.length, categoryId)}
+                      onChange={(e) => onUpload(e, Number(estateId!!), setPictures, categoryPictures.length, categoryId)}
                       multiple
                       accept="image/*"
                     />
