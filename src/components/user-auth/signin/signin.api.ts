@@ -19,7 +19,6 @@ const onSubmitSigninData = async (userData: SignInData) => {
 const onSignInAsGuest = () => {
   dispatch(setIsLoading(t("waitForGuest", { ns: "ui" })))
   store.dispatch(generateGuestStart(http))
-  dispatch(unsetIsLoading())
 }
 
 export { 

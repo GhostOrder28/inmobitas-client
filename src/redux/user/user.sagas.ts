@@ -31,6 +31,7 @@ import {
   GenerateGuestUserError,
 } from "../redux.types";
 import { createGetRequest, createPostRequest } from "../redux-utils/create-request";
+import { unsetIsLoading } from "../app/app.actions";
 
 function isResponse(res: AxiosResponse | Error): res is AxiosResponse {
   return (res as AxiosResponse).data !== undefined;
@@ -109,6 +110,7 @@ export function* userSignOut ({ http }: UserSignOutStart) {
 
 export function* signInAfterSignUp ({ payload, http }: SignInStart) {
   try {
+    yield* put(unsetIsLoading());
     yield* put(signInStart(payload, http));
   } catch (err) {
     yield* put(signInFailure(err as AxiosError<AxiosResponse<SignInFailureError>>));

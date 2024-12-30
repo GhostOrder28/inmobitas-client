@@ -4,6 +4,9 @@ import logger from "redux-logger";
 import rootReducer from "./root-reducer";
 import createSagaMiddleware from "redux-saga";
 import rootSaga from "./root-saga";
+import { composeWithDevTools } from '@redux-devtools/extension';
+import * as appActionCreators from "./app/app.actions"
+import * as userActionCreators from "./user/user.actions"
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -13,10 +16,15 @@ if (process.env.NODE_ENV === "development") {
   middlewares.push(logger);
 }
 
-// @ts-ignore
-const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;;
+const store = createStore(rootReducer, compose(applyMiddleware(...middlewares)));
 
-const store = createStore(rootReducer, composeEnhancer(applyMiddleware(...middlewares)));
+// const composeEnhancers = composeWithDevTools({
+//   actionCreators: appActionCreators
+// });
+// const store = createStore(rootReducer, composeEnhancers(
+//   applyMiddleware(...middlewares)
+// ));
+
 // @ts-ignore
 window.store = store
 sagaMiddleware.run(rootSaga)
