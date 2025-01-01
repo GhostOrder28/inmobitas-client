@@ -2,7 +2,6 @@ import axios, { AxiosError } from "axios";
 import { store } from "../redux/redux-store";
 import { signOutSuccess, signOutWithError } from "../redux/user/user.actions";
 import { unsetIsLoading } from "../redux/app/app.actions";
-import { AxiosResponse } from "axios";
 import { HTTPErrorData } from "./http.types";
 import { toaster } from "evergreen-ui";
 
@@ -20,7 +19,7 @@ export const options = {
 
 const http = axios.create(options);
 
-http.interceptors.response.use<AxiosResponse | HTTPErrorData>(
+http.interceptors.response.use(
   function (response) {
     return response; 
   },

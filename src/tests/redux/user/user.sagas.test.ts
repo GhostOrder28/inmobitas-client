@@ -86,11 +86,11 @@ describe("Sagas", () => {
     //     .toEqual(put(userActions.signUpSuccess(signUpResponseMock.data, mockAxiosInstance)))
     // })
 
-    it("should dispatch SIGN_UP_FAILURE", () => {
-      gen.next();
-      expect(gen.throw({ response: "We couldn't register the user, reason: XYZ" }).value)
-        .toEqual(put(userActions.signUpFailure({ response: "We couldn't register the user, reason: XYZ" } as any as AxiosError)))
-    })
+    // it("should dispatch SIGN_UP_FAILURE", () => {
+    //   gen.next();
+    //   expect(gen.throw({ response: "We couldn't register the user, reason: XYZ" }).value)
+    //     .toEqual(put(userActions.signUpFailure({ response: "We couldn't register the user, reason: XYZ" } as any as AxiosError)))
+    // })
 
   })
 

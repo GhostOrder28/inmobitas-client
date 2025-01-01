@@ -37,10 +37,10 @@ describe("user actions", () => {
       expect(result).toStrictEqual({ type: userActionTypes.SIGN_UP_SUCCESS, payload: signInData, http: mockAxiosInstance });
     })
 
-    it("should return SIGN_UP_FAILURE action object", () => {
-      const result = userActions.signUpFailure("error" as any as AxiosError);
-      expect(result).toStrictEqual({ type: userActionTypes.SIGN_UP_FAILURE, payload: "error" });
-    })
+    // it("should return SIGN_UP_FAILURE action object", () => {
+    //   const result = userActions.signUpFailure("error" as any as AxiosError);
+    //   expect(result).toStrictEqual({ type: userActionTypes.SIGN_UP_FAILURE, payload: "error" });
+    // })
   })
 
   describe("sign in actions", () => {

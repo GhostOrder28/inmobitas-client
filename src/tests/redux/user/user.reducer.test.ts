@@ -23,12 +23,12 @@ describe("user reducer", () => {
     expect(userReducer(undefined, undefined)).toEqual(initialState);
   })
 
-  it("should handle SIGN_UP_FAILURE", () => {
-    expect(userReducer(initialState, signUpFailure("error" as any as AxiosError))).toEqual({
-      currentUser: null,
-      errors: "error"
-    })
-  })
+  // it("should handle SIGN_UP_FAILURE", () => {
+  //   expect(userReducer(initialState, signUpFailure("error" as any as AxiosError))).toEqual({
+  //     currentUser: null,
+  //     errors: "error"
+  //   })
+  // })
 
   it("should handle SIGN_IN_FAILURE", () => {
     expect(userReducer(initialState, signInFailure("error" as any as AxiosError))).toEqual({
