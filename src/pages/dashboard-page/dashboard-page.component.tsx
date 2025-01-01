@@ -1,45 +1,21 @@
-import React, { useEffect, useState, useRef } from "react";
+import { useRef } from "react";
 import { Card, Pane, Text, Heading, Strong } from "evergreen-ui";
-import http from "../../http/http";
-import { useSelector, useDispatch } from "react-redux";
-import { selectCurrentUser, selectCurrentUserId } from "../../redux/user/user.selectors";
-import { AgendaEvent } from "../agenda-page/agenda-page.types";
+import { useSelector } from "react-redux";
+import { selectCurrentUser } from "../../redux/user/user.selectors";
 import { format } from "date-fns";
 import { useTranslation } from "react-i18next";
 import ContentSpinner from "../../components/content-spinner/content-spinner.component";
 import useRelativeHeight from "../../hooks/use-relative-height";
 import { strParseOut } from "../../utils/utility-functions/utility-functions";
-import { signOutStart } from "../../redux/user/user.actions";
+import useTodayEvents from "./hooks/use-today-events.hook";
 
 const DashboardPage = () => {
-  const userId = useSelector(selectCurrentUserId);
   const userInfo = useSelector(selectCurrentUser);
-  const [todayEvents, setTodayEvents] = useState<AgendaEvent[]>();
   const { t } = useTranslation(["ui"]);
   const todayEventsRef = useRef<HTMLDivElement | null>(null);
   const todayEventsHeight = useRelativeHeight(todayEventsRef, { extraSpace: 60 });
-  const now = new Date();
+  const todayEvents = useTodayEvents();
 
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    const getTodayEvents = async () => {
-      try {
-        const res = await http.get<AgendaEvent[]>(`/events/${userId}/${now}`);
-        const eventData = res.data.map((event: AgendaEvent) => ({
-          ...event,
-          startDate: new Date (event.startDate),
-          ...event.endDate ? { endDate: new Date (event.endDate) } : {},
-        }))
-        setTodayEvents(eventData)
-      } catch (err) {
-        console.error(err)
-        dispatch(signOutStart(http))
-      }
-    }
-    getTodayEvents()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
   return (
     <Pane
       margin={30}
