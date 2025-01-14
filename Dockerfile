@@ -1,4 +1,4 @@
-FROM node:alpine3.18 
+FROM node:alpine3.18 as base
 
 WORKDIR /app
 
@@ -11,6 +11,12 @@ COPY . .
 RUN npm install --include=dev
 RUN npm run build
 
-CMD [ "npm", "run", "start" ]
+# CMD [ "npm", "run", "start" ]
 
+FROM caddy:latest
+RUN apk add --no-cache jq
+COPY --from=base /app/build/ /srv
+COPY --from=base /app/Caddyfile /etc/caddy/Caddyfile
+
+EXPOSE 443
 EXPOSE 3000
